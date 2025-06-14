@@ -46,12 +46,18 @@ def main(args=None):
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Run the database query node.")
-    parser.add_argument('database1', type=str,
-                        help="Path to the database file.")
-    parser.add_argument('database2', type=str,
-                        help="Path to the configuration file.")
-    parser.add_argument('outputdb', type=str,
-                        help="The specific id to get the path file (e.g., 'white shelf').")
+    parser.add_argument('--path_database1', type=str, required=True,
+                        help="Path to database 1")
+    parser.add_argument('--name_database1', type=str, required=True,
+                        help="Name database 1")
+    parser.add_argument('--path_database2', type=str, required=True,
+                        help="Path to database 2")
+    parser.add_argument('--name_database2', type=str, required=True,
+                        help="Name database 2")
+    parser.add_argument('--path_outputdb', type=str, required=True,
+                        help="Path to output database")
+    parser.add_argument('--name_outputdb', type=str, required=True,
+                        help="Name output database")
     parsed_args = parser.parse_args()
 
     # Pass the database path to the node
