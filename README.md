@@ -48,4 +48,4 @@ Note: I have added our database in format of procthor in file `procthor_database
 
 Picture of our dataset for arena-models in isaacsim
 
-![Dataset isaacsim for resedential](https://github.com/user-attachments/assets/500b22c1-afb8-47ae-b839-154d49c3e44e)
+![Dataset isaacsim for resedential](https://github.com/Arena-Rosnav/arena-models/blob/isaac-project/resedential_capture5.png)
