@@ -1,0 +1,1960 @@
+{
+    "Warehouse": [
+        {
+            "assetId": "Wet Floor Sign",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Beam",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Card Box",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "cardbox"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Rack Pile",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Pallet",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Barel Plastic",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Rack Frame",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Fire Extinguisher",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Traffic Cone",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Crate Plastic Note",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Bottle Plastic",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Warehouse",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Warehouse",
+            "primaryProperty": "",
+            "scenes": "Warehouse",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        }
+    ],
+    "Office": [
+        {
+            "assetId": "Table Workings Double",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "wood"
+                ],
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Reception Table Corner",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Armchair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "leather"
+                ],
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Chair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "leather"
+                ],
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Table Round",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Sofa",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "leather"
+                ],
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Table Round Corner",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Long Rectangle Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Water Cooler",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Sofa",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "fabric"
+                ],
+                [
+                    "Office",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "sit",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Sofa",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "leather"
+                ],
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Reception Stand",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Reception Table Straight",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Table Work Security",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "touch",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Chair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "leather"
+                ],
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "sit",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Recliner",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Office",
+                    "fabric"
+                ],
+                [
+                    "Office",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Office",
+            "primaryProperty": "sit",
+            "scenes": "Office",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        }
+    ],
+    "Hospital": [
+        {
+            "assetId": "Xray Light Box",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ],
+                [
+                    "Hospital",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Towel Dispenser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Toilet Paper",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Medical Bag",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "fabric"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Wheel Chair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ],
+                [
+                    "Hospital",
+                    "fabric"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "sit",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Chair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "fabric"
+                ],
+                [
+                    "Hospital",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "sit",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Med Shelf",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Chart Rack",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Wash Basin",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "porcelain"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Supply Cart",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Shelf",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Cart",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Scale",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "stand",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Disposal Stand",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Medical Cabinet",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Bed",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "fabric"
+                ],
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "lie",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Desk",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Gas Cart",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Shelf Set",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Bed Side Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Toilet",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "porceplain"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "sit",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Water Dispenser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Trashcan",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Supply Cabin",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Soap Dispenser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Drinks Machine",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Supply Cart",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Side Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ],
+                [
+                    "Hospital",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Mop Set",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Bed",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "fabric"
+                ],
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "lie",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Reception Desk",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Medical Box",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Hospital",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        }
+    ],
+    "Residential": [
+        {
+            "assetId": "Griddle",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Chair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch,sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Dressing Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Cabinet Wall",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Cabinet Base Sink",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Sauce Pan",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Table Television",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Towel Dispenser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Single Sofa",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "fabric"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Microwave",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Dresser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Toilet Paper",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Lounge Chair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "fabric"
+                ],
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Mirror",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "glass"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Cabinet Wall",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Frying Pan",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Soap Dispenser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Coffee Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Cabinet Base",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ],
+                [
+                    "Residential",
+                    "stone"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Chair",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch,sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Fridge",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Sofa",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ],
+                [
+                    "Residential",
+                    "fabric"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "sit,lie",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Bedside Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "lie",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Cooking Pot",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Bed",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "fabric"
+                ],
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "lie",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Rectangle Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Dresser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Dishwasher",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Toilet",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "porceplain"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Round Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Coffee Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Night Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Trashcan",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Wash Basin",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "porcelain"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Closet",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Ceiling Fan",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ],
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Frying Pan",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Soap Dispenser",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Sofa",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "fabric"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Stove",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Media Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Sofa",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "fabric"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "sit",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Night Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Wall Oven",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Side Table",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Faucet",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "steel"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Bed",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "fabric"
+                ],
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "lie",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Cabinet Base",
+            "boundingBox": "",
+            "materials": [
+                [
+                    "Residential",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Residential",
+            "primaryProperty": "touch",
+            "scenes": "Residential",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        }
+    ]
+}
