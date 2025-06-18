@@ -1,6 +1,5 @@
 import rclpy
 from rclpy.node import Node
-import requests
 import gdown
 
 
@@ -16,10 +15,7 @@ class DownDatabase(Node):
         # Extract the file ID from the shared link
         file_id = shared_link.split('/')[-2]
 
-        # Create the download URL
-        download_url = f'https://drive.google.com/uc?id={file_id}'
-
-        gdown.download(download_url, destination, quiet=False, resume=True)
+        gdown.download(id=file_id, output=destination, quiet=False, resume=True)
 
         self.get_logger().info("Downloaded successfully!")
 
