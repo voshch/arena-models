@@ -8,7 +8,7 @@ import os
 class DownDatabase(Node):
     def __init__(self):
         super().__init__('down_db_node')
-        shared_link = 'https://drive.google.com/file/d/1YwoGqwcEAKoc1OEELblp-7XusLBO3iEU/view?usp=sharing'
+        shared_link = 'https://drive.google.com/file/d/17P3VIh4dVY0lu0ftonYckU3gpMJe_rp0/view?usp=sharing'
         destination = 'Dataset-arena-models.zip'  # Change the file name and extension as needed
         self.download_file(shared_link, destination)
         self.unzip_file(destination)

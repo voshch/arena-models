@@ -48,8 +48,7 @@ Note: I have added our database in format of procthor in file `procthor_database
 
 Picture of our dataset for arena-models in isaacsim
 
-![Dataset isaacsim](https://github.com/Arena-Rosnav/arena-models/blob/isaac-project/resedential_capture5.png)
-(https://github.com/Arena-Rosnav/arena-models/blob/master/Arena-model-dataset1.png)
-(https://github.com/Arena-Rosnav/arena-models/blob/master/Hospital_dataset1.png)
-(https://github.com/Arena-Rosnav/arena-models/blob/master/Hospital_dataset2.png)
-(https://github.com/Arena-Rosnav/arena-models/blob/master/Office_dataset1.png)
+![Dataset isaacsim for resedential](https://github.com/Arena-Rosnav/arena-models/blob/isaac-project/resedential_capture5.png)
+![Dataset isaacsim for all enviroments](https://github.com/Arena-Rosnav/arena-models/blob/master/Arena-model-dataset1.png)
+![Dataset isaacsim for hospital](https://github.com/Arena-Rosnav/arena-models/blob/master/Hospital_dataset2.png)
+![Dataset isaacsim for office](https://github.com/Arena-Rosnav/arena-models/blob/master/Office_dataset1.png)
