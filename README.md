@@ -25,9 +25,6 @@ This repository serves as a development platform for building an asset (vector) 
      ros2 run arena_models down
      ```
 
-5. **Unzip the Dataset:**
-   - Unzip `arena-models.zip`. Create a new folder named `Dataset-arena-models` and move the contents of `arena-models` into the new folder in `arena_models_ws`.
-
 ## Usage
 
 ### Building the Database
@@ -37,12 +34,15 @@ ros2 run arena_models build --buildtypes procthor --input_path Dataset-arena-mod
 ```
 To query the database, use:
 ```bash
-ros2 run arena_models query --path_database arena_models_ws/ --name_database arena-models --target src/arena_models/ sofa
+ros2 run arena_models query --path_database arena_models_database/ --name_database arena-models --target src/arena_models/ sofa
 ```
+- Note: The query result will be stored in 'config_id_file.txt'
+
 To retrieve an object from the database by its ID, execute:
 ```bash
-ros2 run arena_models get --path_database arena_models_ws/ --name_database arena-models --target src/arena_models/ -id 20
+ros2 run arena_models get --path_database arena_models_database/ --name_database arena-models --target src/arena_models/ -id 20
 ```
+- Note: The query result will be stored in 'config_result_file.txt'
 
 Note: I have added our database in format of procthor in file `procthor_database.json`
 

@@ -1,0 +1,1 @@
+result:{'ids': ['20'], 'embeddings': None, 'documents': ['white wood office table'], 'uris': None, 'included': ['metadatas', 'documents'], 'data': None, 'metadatas': [{'desc': 'Table', 'usd_path': 'Objects/Office/Table_B/Table_B.usd', 'hull': '', 'material': 'wood', 'forward': '', 'scale': '', 'bbox': '', 'color': 'white', 'fitted_bbox': '', 'tags': 'office', 'hoi': 'touch'}]}

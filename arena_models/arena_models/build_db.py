@@ -22,7 +22,7 @@ class BuildDatabase(Node):
         main_path = os.path.join(
             os.getcwd(), f"{input_path}")
         
-        list_type_models = [os.path.join(main_path, dir) for dir in os.listdir(main_path)]
+        list_type_models = [os.path.join(main_path, dir) for dir in os.listdir(main_path) if os.path.isdir(os.path.join(main_path, dir))]
 
         modelsDict = dict()
         data_procthor = dict()
@@ -58,18 +58,19 @@ class BuildDatabase(Node):
                             self.add_infrastructure(desc,bbox,material_list,max_image_pixel_length,env,primary_property,scenes,split)
                 data_procthor[env] = self.data_list
 
-        self.get_logger().info(f"{data_procthor}")
-        with open('Dataset-arena-models/procthor_database.json', 'w') as json_file:
-            json.dump(data_procthor, json_file, indent=4)
+        # self.get_logger().info(f"{data_procthor}")
+        if buildtypes == 'procthor':
+            with open('Dataset-arena-models/procthor_database.json', 'w') as json_file:
+                json.dump(data_procthor, json_file, indent=4)
         
         spacy_model = load_spacy_model()
-        client = chromadb.PersistentClient(path="./arena_models_ws")
+        client = chromadb.PersistentClient(path="./arena_models_database")
         guid = 0
         for model in modelsDict:
             guid += 1
             model_str = processors_object(model)
             new_embedding = embed_text_with_weight(model_str, spacy_model)
-            self.get_logger().info(f"{modelsDict[model]}")
+            # self.get_logger().info(f"{modelsDict[model]}")
             store_embedding(model_str, new_embedding,
                             modelsDict[model], guid, client, f"{output_database_name}")
             
