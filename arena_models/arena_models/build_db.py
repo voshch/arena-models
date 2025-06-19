@@ -30,20 +30,20 @@ class BuildDatabase(Node):
             list_type_env = [os.path.join(type_model, dir) for dir in os.listdir(type_model)]
             for type_env in list_type_env:
                 list_models = [os.path.join(type_env, dir) for dir in os.listdir(type_env)]
-                env = type_env.split("/", 7)[-1]
+                env = type_env.split("/", 8)[-1]
                 self.data_list = []
                 # self.get_logger().info(f"{list_models}")
                 for model in list_models:
-                    name = model.split("/", 7)[-1]
+                    name = model.split("/", 8)[-1]
                     if name != "Materials":
                         # self.get_logger().info(f"{name}")
                         yaml_file_path = f"{model}/annotation.yaml"
                         usd_path = f"{model}/{name}.usd"
                         new_model = self.read_annotation_file(yaml_file_path)
-                        new_model["usd_path"] = usd_path.split("/", 5)[-1]
+                        new_model["usd_path"] = usd_path.split("/", 6)[-1]
                         modelsDict[yaml_file_path] = new_model
                         if buildtypes == 'procthor':
-                            env = type_env.split("/", 7)[-1]
+                            env = type_env.split("/", 8)[-1]
                             desc = new_model['desc']
                             bbox = new_model['bbox']
                             materials = new_model['material'].split(",")
