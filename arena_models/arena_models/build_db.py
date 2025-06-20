@@ -38,7 +38,9 @@ class BuildDatabase(Node):
                     if name != "Materials":
                         # self.get_logger().info(f"{name}")
                         yaml_file_path = f"{model}/annotation.yaml"
-                        usd_path = f"{model}/{name}.usd"
+                        for filename in os.listdir(model):
+                            if filename.endswith('.usd') or filename.endswith('.usda'):
+                                usd_path = f"{model}/{filename}"
                         new_model = self.read_annotation_file(yaml_file_path)
                         new_model["usd_path"] = usd_path.split("/", 6)[-1]
                         modelsDict[yaml_file_path] = new_model
