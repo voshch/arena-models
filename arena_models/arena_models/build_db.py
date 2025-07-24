@@ -45,9 +45,12 @@ class BuildDatabase(Node):
                         new_model["usd_path"] = usd_path.split("/", 6)[-1]
                         modelsDict[yaml_file_path] = new_model
                         if buildtypes == 'procthor':
+                            min_b, max_b = self.get_usd_bounding_box(usd_path)
                             env = type_env.split("/", 8)[-1]
                             desc = new_model['desc']
-                            bbox = new_model['bbox']
+                            bbox = {"x" : max_b[0] - min_b[0],
+                                    "y" : max_b[1] - min_b[1],
+                                    "z" : max_b[2] - min_b[2]}
                             materials = new_model['material'].split(",")
                             material_list = []
                             for material in materials:
@@ -107,6 +110,39 @@ class BuildDatabase(Node):
         "states": {}
         }
         self.data_list.append(infrastructure_data)
+    def get_usd_bounding_box(self, stage_path: str):
+        try:
+            # Open the USD stage
+            stage = Usd.Stage.Open(stage_path)
+            if not stage:
+                print(f"Error: Could not open stage at {stage_path}")
+                return None, None
+
+            # Get the default prim. If there is no default prim, you might want to
+            # traverse all root prims or use a specific known prim path.
+            prim = stage.GetDefaultPrim()
+            if not prim:
+                print("Error: No default prim found on the stage.")
+                return None, None
+
+            # Use BBoxCache to compute the bounding box.
+            # Usd.TimeCode.Default() computes it for the default time.
+            # You can specify a frame number for animated scenes.
+            bbox_cache = UsdGeom.BBoxCache(Usd.TimeCode.Default(), ['default', 'render'])
+
+            # Compute the world-space bounding box of the prim
+            world_bbox = bbox_cache.ComputeWorldBound(prim)
+
+            # Get the min and max points of the bounding box
+            bounding_box = world_bbox.GetRange()
+            min_bound = bounding_box.GetMin()
+            max_bound = bounding_box.GetMax()
+
+            return min_bound, max_bound
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None, None
 
 def main(args=None):
     rclpy.init(args=args)

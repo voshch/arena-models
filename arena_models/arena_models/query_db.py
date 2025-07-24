@@ -7,7 +7,7 @@ import os
 
 class QueryDatabase(Node):
     def __init__(self, database_path, name_database, target_path, query_target):
-        super().__init__('qurey_database_node')
+        super().__init__('query_database_node')
         client = chromadb.PersistentClient(path=f"{database_path}")
         spacy_model = load_spacy_model()
         embedding_text = embed_text_with_weight(query_target, spacy_model)

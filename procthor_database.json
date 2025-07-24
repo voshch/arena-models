@@ -2,7 +2,11 @@
     "Warehouse": [
         {
             "assetId": "Wet Floor Sign",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.26698865293736773,
+                "y": 0.23233272033186125,
+                "z": 0.6443737813225285
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -19,7 +23,11 @@
         },
         {
             "assetId": "Beam",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 8.9999976975731,
+                "y": 0.2000001147308986,
+                "z": 0.20000012904405295
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -36,7 +44,11 @@
         },
         {
             "assetId": "Card Box",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": -6.805646932770577e+38,
+                "y": -6.805646932770577e+38,
+                "z": -6.805646932770577e+38
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -53,7 +65,11 @@
         },
         {
             "assetId": "Rack Pile",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.624020753263963,
+                "y": 0.985978371516353,
+                "z": 0.2890574760082775
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -70,7 +86,11 @@
         },
         {
             "assetId": "Pallet",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.213234950604253,
+                "y": 1.0028731312705617,
+                "z": 0.21111953263462624
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -87,7 +107,11 @@
         },
         {
             "assetId": "Barel Plastic",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5999998721480395,
+                "y": 0.7080822595637528,
+                "z": 0.9013595379585126
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -104,7 +128,11 @@
         },
         {
             "assetId": "Rack Frame",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": -6.805646932770577e+38,
+                "y": -6.805646932770577e+38,
+                "z": -6.805646932770577e+38
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -121,7 +149,11 @@
         },
         {
             "assetId": "Fire Extinguisher",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.1828198582793803,
+                "y": 0.29575496966194414,
+                "z": 0.6735597269186435
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -138,7 +170,11 @@
         },
         {
             "assetId": "Traffic Cone",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.33569705212793366,
+                "y": 0.3339443704349314,
+                "z": 0.46281219210895624
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -155,7 +191,11 @@
         },
         {
             "assetId": "Crate Plastic Note",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.2928740245206498,
+                "y": 0.4662874689782974,
+                "z": 0.13627782751674752
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -172,7 +212,11 @@
         },
         {
             "assetId": "Bottle Plastic",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.14416148817178254,
+                "y": 0.18485802237261773,
+                "z": 0.35069182565752044
+            },
             "materials": [
                 [
                     "Warehouse",
@@ -191,7 +235,11 @@
     "Office": [
         {
             "assetId": "Table Workings Double",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.7000000382959826,
+                "y": 1.6999998857080953,
+                "z": 0.7475000944128463
+            },
             "materials": [
                 [
                     "Office",
@@ -208,7 +256,11 @@
         },
         {
             "assetId": "Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.7502307500638636,
+                "y": 2.4587216399895766,
+                "z": 0.7499995243690422
+            },
             "materials": [
                 [
                     "Office",
@@ -229,7 +281,11 @@
         },
         {
             "assetId": "Reception Table Corner",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 2.0825446617034515,
+                "y": 2.0825421440033125,
+                "z": 1.1176205047517196
+            },
             "materials": [
                 [
                     "Office",
@@ -246,7 +302,11 @@
         },
         {
             "assetId": "Armchair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8200002868473462,
+                "y": 1.0400003582239066,
+                "z": 0.7900000091255964
+            },
             "materials": [
                 [
                     "Office",
@@ -267,7 +327,11 @@
         },
         {
             "assetId": "Chair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6000918635705439,
+                "y": 0.5992689952417685,
+                "z": 0.8772270603304672
+            },
             "materials": [
                 [
                     "Office",
@@ -288,7 +352,11 @@
         },
         {
             "assetId": "Table Round",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.2500000483542664,
+                "y": 1.2500000483542664,
+                "z": 0.7500000310220265
+            },
             "materials": [
                 [
                     "Office",
@@ -305,7 +373,11 @@
         },
         {
             "assetId": "Sofa",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8200001724064307,
+                "y": 2.0399998018145595,
+                "z": 0.7899999297321836
+            },
             "materials": [
                 [
                     "Office",
@@ -326,7 +398,11 @@
         },
         {
             "assetId": "Table Round Corner",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.2500006205588434,
+                "y": 1.2500002772360972,
+                "z": 0.749999952167819
+            },
             "materials": [
                 [
                     "Office",
@@ -343,7 +419,11 @@
         },
         {
             "assetId": "Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.9000001706182914,
+                "y": 1.9999999552965164,
+                "z": 0.7598601099251369
+            },
             "materials": [
                 [
                     "Office",
@@ -360,7 +440,11 @@
         },
         {
             "assetId": "Long Rectangle Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8000007450580426,
+                "y": 2.799999937415123,
+                "z": 0.7499997289235637
+            },
             "materials": [
                 [
                     "Office",
@@ -377,7 +461,11 @@
         },
         {
             "assetId": "Water Cooler",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.3400000877678373,
+                "y": 0.4193494893755876,
+                "z": 1.099999990274957
+            },
             "materials": [
                 [
                     "Office",
@@ -394,7 +482,11 @@
         },
         {
             "assetId": "Sofa",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.5512030124664307,
+                "y": 0.7948621153186655,
+                "z": 0.8500001296841281
+            },
             "materials": [
                 [
                     "Office",
@@ -415,7 +507,11 @@
         },
         {
             "assetId": "Sofa",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.46854956533276493,
+                "y": 0.4008386522344054,
+                "z": 0.6531965038534894
+            },
             "materials": [
                 [
                     "Office",
@@ -436,7 +532,11 @@
         },
         {
             "assetId": "Reception Stand",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6900612867609865,
+                "y": 0.3600004878640064,
+                "z": 0.7044977435512038
+            },
             "materials": [
                 [
                     "Office",
@@ -453,7 +553,11 @@
         },
         {
             "assetId": "Reception Table Straight",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8586546896698763,
+                "y": 1.9999994975328548,
+                "z": 1.1176201693592849
+            },
             "materials": [
                 [
                     "Office",
@@ -470,7 +574,11 @@
         },
         {
             "assetId": "Table Work Security",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8000000584125502,
+                "y": 1.6999998857080953,
+                "z": 0.7475001160779327
+            },
             "materials": [
                 [
                     "Office",
@@ -487,7 +595,11 @@
         },
         {
             "assetId": "Chair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6885506094571063,
+                "y": 0.583421694112829,
+                "z": 1.1850460025750307
+            },
             "materials": [
                 [
                     "Office",
@@ -508,7 +620,11 @@
         },
         {
             "assetId": "Recliner",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6636581654029001,
+                "y": 0.6446603249461873,
+                "z": 0.8781029611791392
+            },
             "materials": [
                 [
                     "Office",
@@ -531,7 +647,11 @@
     "Hospital": [
         {
             "assetId": "Xray Light Box",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.09999999776482582,
+                "y": 0.7199999839067459,
+                "z": 0.4415000053904947
+            },
             "materials": [
                 [
                     "Hospital",
@@ -552,7 +672,11 @@
         },
         {
             "assetId": "Towel Dispenser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.0797834754783628,
+                "y": 0.2799999937415123,
+                "z": 0.3888212498540895
+            },
             "materials": [
                 [
                     "Hospital",
@@ -569,7 +693,11 @@
         },
         {
             "assetId": "Toilet Paper",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.12000007875428924,
+                "y": 0.27049995771423063,
+                "z": 0.32685097909483163
+            },
             "materials": [
                 [
                     "Hospital",
@@ -586,7 +714,11 @@
         },
         {
             "assetId": "Medical Bag",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8158369644916732,
+                "y": 0.5515272780166427,
+                "z": 0.4206570972355357
+            },
             "materials": [
                 [
                     "Hospital",
@@ -603,7 +735,11 @@
         },
         {
             "assetId": "Wheel Chair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.1054383221543205,
+                "y": 0.8252604109363162,
+                "z": 1.1590564903386866
+            },
             "materials": [
                 [
                     "Hospital",
@@ -624,7 +760,11 @@
         },
         {
             "assetId": "Chair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6943857800725297,
+                "y": 0.6856734694762494,
+                "z": 1.0653944134996585
+            },
             "materials": [
                 [
                     "Hospital",
@@ -645,7 +785,11 @@
         },
         {
             "assetId": "Med Shelf",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.909999979659915,
+                "y": 0.8052987109430418,
+                "z": 2.01190394672966
+            },
             "materials": [
                 [
                     "Hospital",
@@ -662,7 +806,11 @@
         },
         {
             "assetId": "Chart Rack",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.247887888672473,
+                "y": 0.4314655970454453,
+                "z": 1.637145654324911
+            },
             "materials": [
                 [
                     "Hospital",
@@ -679,7 +827,11 @@
         },
         {
             "assetId": "Wash Basin",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5500000477092098,
+                "y": 1.00000001579523,
+                "z": 0.43991867065720136
+            },
             "materials": [
                 [
                     "Hospital",
@@ -696,7 +848,11 @@
         },
         {
             "assetId": "Supply Cart",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8421569635981996,
+                "y": 0.455783414189888,
+                "z": 0.7820838753413284
+            },
             "materials": [
                 [
                     "Hospital",
@@ -713,7 +869,11 @@
         },
         {
             "assetId": "Shelf",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.9639885877671404,
+                "y": 0.8778912157291643,
+                "z": 1.7468389502129185
+            },
             "materials": [
                 [
                     "Hospital",
@@ -730,7 +890,11 @@
         },
         {
             "assetId": "Cart",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.053811583806315,
+                "y": 0.6259218266772812,
+                "z": 1.5897906612378336
+            },
             "materials": [
                 [
                     "Hospital",
@@ -747,7 +911,11 @@
         },
         {
             "assetId": "Scale",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.46244210163260746,
+                "y": 0.610164781283629,
+                "z": 1.5511675678677648
+            },
             "materials": [
                 [
                     "Hospital",
@@ -764,7 +932,11 @@
         },
         {
             "assetId": "Disposal Stand",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5775144066472109,
+                "y": 0.6395127725710097,
+                "z": 0.9507954194218939
+            },
             "materials": [
                 [
                     "Hospital",
@@ -781,7 +953,11 @@
         },
         {
             "assetId": "Medical Cabinet",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8721871753293158,
+                "y": 0.6551567312667501,
+                "z": 1.9677354193984986
+            },
             "materials": [
                 [
                     "Hospital",
@@ -798,7 +974,11 @@
         },
         {
             "assetId": "Bed",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.1066455212240172,
+                "y": 2.553644352101287,
+                "z": 1.3024172682519861
+            },
             "materials": [
                 [
                     "Hospital",
@@ -819,7 +999,11 @@
         },
         {
             "assetId": "Desk",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.4905840731281614,
+                "y": 0.4542697042017494,
+                "z": 0.8256776243669322
+            },
             "materials": [
                 [
                     "Hospital",
@@ -836,7 +1020,11 @@
         },
         {
             "assetId": "Gas Cart",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.1757700976184733,
+                "y": 0.17577022159613165,
+                "z": 0.9227987774580986
+            },
             "materials": [
                 [
                     "Hospital",
@@ -853,7 +1041,11 @@
         },
         {
             "assetId": "Shelf Set",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.7225873943584986,
+                "y": 0.5595005864016578,
+                "z": 2.6360780269784163
+            },
             "materials": [
                 [
                     "Hospital",
@@ -870,7 +1062,11 @@
         },
         {
             "assetId": "Bed Side Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5295163036245931,
+                "y": 0.4999999888241291,
+                "z": 0.8999999798834324
+            },
             "materials": [
                 [
                     "Hospital",
@@ -887,7 +1083,11 @@
         },
         {
             "assetId": "Toilet",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5601533153618874,
+                "y": 0.36008134037074413,
+                "z": 0.9992796186224693
+            },
             "materials": [
                 [
                     "Hospital",
@@ -904,7 +1104,11 @@
         },
         {
             "assetId": "Water Dispenser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.40036196767474763,
+                "y": 0.3399999924004078,
+                "z": 1.4916873193155076
+            },
             "materials": [
                 [
                     "Hospital",
@@ -921,7 +1125,11 @@
         },
         {
             "assetId": "Trashcan",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.2500000420957793,
+                "y": 0.25000005163252226,
+                "z": 0.3449999938012902
+            },
             "materials": [
                 [
                     "Hospital",
@@ -938,7 +1146,11 @@
         },
         {
             "assetId": "Supply Cabin",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.7334308460333006,
+                "y": 1.4742677740543826,
+                "z": 2.199999969899654
+            },
             "materials": [
                 [
                     "Hospital",
@@ -955,7 +1167,11 @@
         },
         {
             "assetId": "Soap Dispenser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.13144281570368666,
+                "y": 0.12648902610341395,
+                "z": 0.2572650088981163
+            },
             "materials": [
                 [
                     "Hospital",
@@ -972,7 +1188,11 @@
         },
         {
             "assetId": "Drinks Machine",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8450003509901861,
+                "y": 1.2150001635774927,
+                "z": 1.8299998619126039
+            },
             "materials": [
                 [
                     "Hospital",
@@ -989,7 +1209,11 @@
         },
         {
             "assetId": "Supply Cart",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5964266452991964,
+                "y": 1.1128857173125652,
+                "z": 1.0339062268903945
+            },
             "materials": [
                 [
                     "Hospital",
@@ -1006,7 +1230,11 @@
         },
         {
             "assetId": "Side Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.9181052956408564,
+                "y": 0.4212341977380021,
+                "z": 0.8122324207671187
+            },
             "materials": [
                 [
                     "Hospital",
@@ -1027,7 +1255,11 @@
         },
         {
             "assetId": "Mop Set",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.7513028549111738,
+                "y": 0.4561874669152317,
+                "z": 0.8985678066633382
+            },
             "materials": [
                 [
                     "Hospital",
@@ -1044,7 +1276,11 @@
         },
         {
             "assetId": "Bed",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.0920789855998976,
+                "y": 2.2138768273470504,
+                "z": 0.8908771315766019
+            },
             "materials": [
                 [
                     "Hospital",
@@ -1065,7 +1301,11 @@
         },
         {
             "assetId": "Reception Desk",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 2.4197321541667236,
+                "y": 2.8672899749735734,
+                "z": 1.3209603586578282
+            },
             "materials": [
                 [
                     "Hospital",
@@ -1082,7 +1322,11 @@
         },
         {
             "assetId": "Medical Box",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5274722172139832,
+                "y": 0.3366697999089254,
+                "z": 0.6526932379746455
+            },
             "materials": [
                 [
                     "Hospital",
@@ -1101,7 +1345,11 @@
     "Residential": [
         {
             "assetId": "Griddle",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 54.69146728515625,
+                "y": 36.26470947265625,
+                "z": 4.26055908203125
+            },
             "materials": [
                 [
                     "Residential",
@@ -1118,7 +1366,11 @@
         },
         {
             "assetId": "Chair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.41603200137615204,
+                "y": 0.5711801423025284,
+                "z": 0.9500000641362821
+            },
             "materials": [
                 [
                     "Residential",
@@ -1135,7 +1387,11 @@
         },
         {
             "assetId": "Dressing Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.1202049851417542,
+                "y": 0.8405442215641141,
+                "z": 1.550000064241476
+            },
             "materials": [
                 [
                     "Residential",
@@ -1152,7 +1408,11 @@
         },
         {
             "assetId": "Cabinet Wall",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.8360660076141357,
+                "y": 0.6592672181867592,
+                "z": 1.8000000401029763
+            },
             "materials": [
                 [
                     "Residential",
@@ -1169,7 +1429,11 @@
         },
         {
             "assetId": "Cabinet Base Sink",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6884239912033081,
+                "y": 0.5777911252152417,
+                "z": 0.9000000530956602
+            },
             "materials": [
                 [
                     "Residential",
@@ -1186,7 +1450,11 @@
         },
         {
             "assetId": "Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.1771729588508606,
+                "y": 0.9411271021077597,
+                "z": 0.7500001253186339
+            },
             "materials": [
                 [
                     "Residential",
@@ -1203,7 +1471,11 @@
         },
         {
             "assetId": "Sauce Pan",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 15.186513423919678,
+                "y": 26.38127374649048,
+                "z": 9.896172046661377
+            },
             "materials": [
                 [
                     "Residential",
@@ -1220,7 +1492,11 @@
         },
         {
             "assetId": "Table Television",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 2.1406139135360718,
+                "y": 0.8079872708346104,
+                "z": 2.0000001075899596
+            },
             "materials": [
                 [
                     "Residential",
@@ -1237,7 +1513,11 @@
         },
         {
             "assetId": "Towel Dispenser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.0797834754783628,
+                "y": 0.2799999937415123,
+                "z": 0.3888212498540895
+            },
             "materials": [
                 [
                     "Residential",
@@ -1254,7 +1534,11 @@
         },
         {
             "assetId": "Single Sofa",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.3178489804267883,
+                "y": 0.98459108395678,
+                "z": 0.8000001430271407
+            },
             "materials": [
                 [
                     "Residential",
@@ -1271,7 +1555,11 @@
         },
         {
             "assetId": "Microwave",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 74.54967498779297,
+                "y": 54.446807861328125,
+                "z": 46.785072326660156
+            },
             "materials": [
                 [
                     "Residential",
@@ -1288,7 +1576,11 @@
         },
         {
             "assetId": "Dresser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.9943450093269348,
+                "y": 0.6074361344588607,
+                "z": 1.0000000808849872
+            },
             "materials": [
                 [
                     "Residential",
@@ -1305,7 +1597,11 @@
         },
         {
             "assetId": "Toilet Paper",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.12000007875428924,
+                "y": 0.27049995771423063,
+                "z": 0.32685097909483163
+            },
             "materials": [
                 [
                     "Residential",
@@ -1322,7 +1618,11 @@
         },
         {
             "assetId": "Lounge Chair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8035979866981506,
+                "y": 0.7465381099176545,
+                "z": 0.950000087486608
+            },
             "materials": [
                 [
                     "Residential",
@@ -1343,7 +1643,11 @@
         },
         {
             "assetId": "Mirror",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.011671708959384955,
+                "y": 0.9999999776482582,
+                "z": 1.3351177431389585
+            },
             "materials": [
                 [
                     "Residential",
@@ -1360,7 +1664,11 @@
         },
         {
             "assetId": "Cabinet Wall",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.9011619985103607,
+                "y": 0.21935510191417024,
+                "z": 0.7500000292088786
+            },
             "materials": [
                 [
                     "Residential",
@@ -1377,7 +1685,11 @@
         },
         {
             "assetId": "Frying Pan",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 23.87359046936035,
+                "y": 39.183349609375,
+                "z": 2.95249080657959
+            },
             "materials": [
                 [
                     "Residential",
@@ -1394,7 +1706,11 @@
         },
         {
             "assetId": "Soap Dispenser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 9.342941284179688,
+                "y": 13.429509162902832,
+                "z": 19.63701581954956
+            },
             "materials": [
                 [
                     "Residential",
@@ -1411,7 +1727,11 @@
         },
         {
             "assetId": "Coffee Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8933029770851135,
+                "y": 1.1902350986249886,
+                "z": 0.6000001823312319
+            },
             "materials": [
                 [
                     "Residential",
@@ -1428,7 +1748,11 @@
         },
         {
             "assetId": "Cabinet Base",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.899986982345581,
+                "y": 0.5262321240078904,
+                "z": 0.9000000462301639
+            },
             "materials": [
                 [
                     "Residential",
@@ -1449,7 +1773,11 @@
         },
         {
             "assetId": "Chair",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.4263579994440079,
+                "y": 0.5145891381693044,
+                "z": 0.9500000566007343
+            },
             "materials": [
                 [
                     "Residential",
@@ -1466,7 +1794,11 @@
         },
         {
             "assetId": "Fridge",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 186.54753875732422,
+                "y": 70.06390380859375,
+                "z": 183.58661460876465
+            },
             "materials": [
                 [
                     "Residential",
@@ -1483,7 +1815,11 @@
         },
         {
             "assetId": "Sofa",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 2.05115807056427,
+                "y": 0.9932971140158947,
+                "z": 1.0000001322654843
+            },
             "materials": [
                 [
                     "Residential",
@@ -1504,7 +1840,11 @@
         },
         {
             "assetId": "Bedside Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.4783239960670471,
+                "y": 0.5001250990518873,
+                "z": 0.7000000546747376
+            },
             "materials": [
                 [
                     "Residential",
@@ -1521,7 +1861,11 @@
         },
         {
             "assetId": "Cooking Pot",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 14.42762804031372,
+                "y": 18.17077350616455,
+                "z": 9.249941110610962
+            },
             "materials": [
                 [
                     "Residential",
@@ -1538,7 +1882,11 @@
         },
         {
             "assetId": "Bed",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.8792980313301086,
+                "y": 2.0110380962159584,
+                "z": 1.1300002630175185
+            },
             "materials": [
                 [
                     "Residential",
@@ -1559,7 +1907,11 @@
         },
         {
             "assetId": "Rectangle Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.9926620125770569,
+                "y": 2.364759068221791,
+                "z": 0.7500003148866965
+            },
             "materials": [
                 [
                     "Residential",
@@ -1576,7 +1928,11 @@
         },
         {
             "assetId": "Dresser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.1755079627037048,
+                "y": 0.47427814945123,
+                "z": 1.1000000869957842
+            },
             "materials": [
                 [
                     "Residential",
@@ -1593,7 +1949,11 @@
         },
         {
             "assetId": "Dishwasher",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 59.34425354003907,
+                "y": 60.39652252197266,
+                "z": 40.87553405761719
+            },
             "materials": [
                 [
                     "Residential",
@@ -1610,7 +1970,11 @@
         },
         {
             "assetId": "Toilet",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5601533153618874,
+                "y": 0.36008134037074413,
+                "z": 0.9992796186224693
+            },
             "materials": [
                 [
                     "Residential",
@@ -1627,7 +1991,11 @@
         },
         {
             "assetId": "Round Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.6289040446281433,
+                "y": 1.6265820734034144,
+                "z": 0.8000002285134119
+            },
             "materials": [
                 [
                     "Residential",
@@ -1644,7 +2012,11 @@
         },
         {
             "assetId": "Coffee Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6643509864807129,
+                "y": 0.5408490534787482,
+                "z": 0.4000000779788615
+            },
             "materials": [
                 [
                     "Residential",
@@ -1661,7 +2033,11 @@
         },
         {
             "assetId": "Night Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.7723770141601562,
+                "y": 0.45603209955794277,
+                "z": 0.8000000726452547
+            },
             "materials": [
                 [
                     "Residential",
@@ -1678,7 +2054,11 @@
         },
         {
             "assetId": "Trashcan",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.2500000420957793,
+                "y": 0.25000005163252226,
+                "z": 0.3449999938012902
+            },
             "materials": [
                 [
                     "Residential",
@@ -1695,7 +2075,11 @@
         },
         {
             "assetId": "Wash Basin",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5500000477092098,
+                "y": 1.00000001579523,
+                "z": 0.43991867065720136
+            },
             "materials": [
                 [
                     "Residential",
@@ -1712,7 +2096,11 @@
         },
         {
             "assetId": "Closet",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.5331670045852661,
+                "y": 0.6859132362150182,
+                "z": 1.800000043651108
+            },
             "materials": [
                 [
                     "Residential",
@@ -1729,7 +2117,11 @@
         },
         {
             "assetId": "Ceiling Fan",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 273.2936854243417,
+                "y": 274.7372326742752,
+                "z": 76.97831501329688
+            },
             "materials": [
                 [
                     "Residential",
@@ -1750,7 +2142,11 @@
         },
         {
             "assetId": "Frying Pan",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 28.051445960998535,
+                "y": 43.15351867675781,
+                "z": 4.641148805618286
+            },
             "materials": [
                 [
                     "Residential",
@@ -1767,7 +2163,11 @@
         },
         {
             "assetId": "Soap Dispenser",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.13144281570368666,
+                "y": 0.12648902610341395,
+                "z": 0.2572650088981163
+            },
             "materials": [
                 [
                     "Residential",
@@ -1784,7 +2184,11 @@
         },
         {
             "assetId": "Sofa",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 2.9290629625320435,
+                "y": 2.456448078788452,
+                "z": 0.900000303253965
+            },
             "materials": [
                 [
                     "Residential",
@@ -1801,7 +2205,11 @@
         },
         {
             "assetId": "Stove",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 12.186001005560176,
+                "y": 6.860034281909978,
+                "z": 9.617618978286073
+            },
             "materials": [
                 [
                     "Residential",
@@ -1818,7 +2226,11 @@
         },
         {
             "assetId": "Media Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.238759994506836,
+                "y": 0.4731541282307608,
+                "z": 0.9000000391624013
+            },
             "materials": [
                 [
                     "Residential",
@@ -1835,7 +2247,11 @@
         },
         {
             "assetId": "Sofa",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.7083449959754944,
+                "y": 0.7274810909580094,
+                "z": 0.850000120711802
+            },
             "materials": [
                 [
                     "Residential",
@@ -1852,7 +2268,11 @@
         },
         {
             "assetId": "Night Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.6415329873561859,
+                "y": 0.44500610454184486,
+                "z": 0.8000000711770546
+            },
             "materials": [
                 [
                     "Residential",
@@ -1869,7 +2289,11 @@
         },
         {
             "assetId": "Wall Oven",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 73.6519775390625,
+                "y": 68.16627502441406,
+                "z": 74.00017547607422
+            },
             "materials": [
                 [
                     "Residential",
@@ -1886,7 +2310,11 @@
         },
         {
             "assetId": "Side Table",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.5355130136013031,
+                "y": 0.48937109493106057,
+                "z": 0.7000000532427553
+            },
             "materials": [
                 [
                     "Residential",
@@ -1903,7 +2331,11 @@
         },
         {
             "assetId": "Faucet",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 12.500404357910156,
+                "y": 16.984704971313477,
+                "z": 26.46949201822281
+            },
             "materials": [
                 [
                     "Residential",
@@ -1920,7 +2352,11 @@
         },
         {
             "assetId": "Bed",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 1.4811809659004211,
+                "y": 2.3085130459439096,
+                "z": 0.9000002835552238
+            },
             "materials": [
                 [
                     "Residential",
@@ -1941,7 +2377,11 @@
         },
         {
             "assetId": "Cabinet Base",
-            "boundingBox": "",
+            "boundingBox": {
+                "x": 0.8322519958019257,
+                "y": 0.5801591283452008,
+                "z": 0.9000000534109789
+            },
             "materials": [
                 [
                     "Residential",
