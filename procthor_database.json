@@ -43,27 +43,6 @@
             "states": {}
         },
         {
-            "assetId": "Card Box",
-            "boundingBox": {
-                "x": -6.805646932770577e+38,
-                "y": -6.805646932770577e+38,
-                "z": -6.805646932770577e+38
-            },
-            "materials": [
-                [
-                    "Warehouse",
-                    "cardbox"
-                ]
-            ],
-            "maxImagePixelLength": 1,
-            "objectType": "Warehouse",
-            "primaryProperty": "",
-            "scenes": "Warehouse",
-            "secondaryProperties": [],
-            "split": "test",
-            "states": {}
-        },
-        {
             "assetId": "Rack Pile",
             "boundingBox": {
                 "x": 0.624020753263963,
@@ -116,27 +95,6 @@
                 [
                     "Warehouse",
                     "plastic"
-                ]
-            ],
-            "maxImagePixelLength": 1,
-            "objectType": "Warehouse",
-            "primaryProperty": "",
-            "scenes": "Warehouse",
-            "secondaryProperties": [],
-            "split": "test",
-            "states": {}
-        },
-        {
-            "assetId": "Rack Frame",
-            "boundingBox": {
-                "x": -6.805646932770577e+38,
-                "y": -6.805646932770577e+38,
-                "z": -6.805646932770577e+38
-            },
-            "materials": [
-                [
-                    "Warehouse",
-                    "metal"
                 ]
             ],
             "maxImagePixelLength": 1,
@@ -671,6 +629,27 @@
             "states": {}
         },
         {
+            "assetId": "Bedside Cabinet",
+            "boundingBox": {
+                "x": 0.48210033774375916,
+                "y": 0.6250686645507812,
+                "z": 0.7500000298023224
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "wood"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "sit",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
             "assetId": "Towel Dispenser",
             "boundingBox": {
                 "x": 0.0797834754783628,
@@ -815,6 +794,52 @@
                 [
                     "Hospital",
                     "metal"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Privacy Curtain Rail",
+            "boundingBox": {
+                "x": 2.7139898538589478,
+                "y": 0.3480493724346161,
+                "z": 2.0
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "steel"
+                ],
+                [
+                    "Hospital",
+                    "canvas"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Instrument Table",
+            "boundingBox": {
+                "x": 0.8335286378860474,
+                "y": 0.6805346608161926,
+                "z": 0.8999999761581421
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "steel"
                 ]
             ],
             "maxImagePixelLength": 1,
@@ -973,6 +998,31 @@
             "states": {}
         },
         {
+            "assetId": "Surgical Table",
+            "boundingBox": {
+                "x": 0.3060702383518219,
+                "y": 0.9261819124221802,
+                "z": 0.7999999523162842
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "steel"
+                ],
+                [
+                    "Hospital",
+                    "canvas"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "lie",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
             "assetId": "Bed",
             "boundingBox": {
                 "x": 1.1066455212240172,
@@ -1013,6 +1063,31 @@
             "maxImagePixelLength": 1,
             "objectType": "Hospital",
             "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Exam Table",
+            "boundingBox": {
+                "x": 0.3768540471792221,
+                "y": 0.6722212135791779,
+                "z": 0.7499999701976776
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "steel"
+                ],
+                [
+                    "Hospital",
+                    "leather"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "lie",
             "scenes": "Hospital",
             "secondaryProperties": [],
             "split": "test",
@@ -1092,6 +1167,31 @@
                 [
                     "Hospital",
                     "porceplain"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "sit",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Medical Stool",
+            "boundingBox": {
+                "x": 0.3660196214914322,
+                "y": 0.3252456486225128,
+                "z": 0.4999999701976776
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "steel"
+                ],
+                [
+                    "Hospital",
+                    "canvas"
                 ]
             ],
             "maxImagePixelLength": 1,
@@ -1208,6 +1308,31 @@
             "states": {}
         },
         {
+            "assetId": "Patient Armchair",
+            "boundingBox": {
+                "x": 0.7237685322761536,
+                "y": 0.5255630612373352,
+                "z": 0.8999999761581421
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "wood"
+                ],
+                [
+                    "Hospital",
+                    "canvas"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "sit",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
             "assetId": "Supply Cart",
             "boundingBox": {
                 "x": 0.5964266452991964,
@@ -1223,6 +1348,31 @@
             "maxImagePixelLength": 1,
             "objectType": "Hospital",
             "primaryProperty": "touch",
+            "scenes": "Hospital",
+            "secondaryProperties": [],
+            "split": "test",
+            "states": {}
+        },
+        {
+            "assetId": "Waiting Room Bench",
+            "boundingBox": {
+                "x": 1.864617943763733,
+                "y": 0.640091061592102,
+                "z": 0.7999999523162842
+            },
+            "materials": [
+                [
+                    "Hospital",
+                    "steel"
+                ],
+                [
+                    "Hospital",
+                    "plastic"
+                ]
+            ],
+            "maxImagePixelLength": 1,
+            "objectType": "Hospital",
+            "primaryProperty": "sit",
             "scenes": "Hospital",
             "secondaryProperties": [],
             "split": "test",
@@ -2206,9 +2356,9 @@
         {
             "assetId": "Stove",
             "boundingBox": {
-                "x": 12.186001005560176,
-                "y": 6.860034281909978,
-                "z": 9.617618978286073
+                "x": 121.86000823974612,
+                "y": 68.60034179687503,
+                "z": 96.17618834972384
             },
             "materials": [
                 [

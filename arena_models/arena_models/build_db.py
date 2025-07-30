@@ -41,6 +41,10 @@ class BuildDatabase(Node):
                         for filename in os.listdir(model):
                             if filename.endswith('.usd') or filename.endswith('.usda'):
                                 usd_path = f"{model}/{filename}"
+                        check_usd_verify = True            
+                        check_usd_verify = self.check_usd_asset(usd_path)
+                        if check_usd_verify == False:
+                            continue
                         new_model = self.read_annotation_file(yaml_file_path)
                         new_model["usd_path"] = usd_path.split("/", 6)[-1]
                         modelsDict[yaml_file_path] = new_model
@@ -143,6 +147,18 @@ class BuildDatabase(Node):
         except Exception as e:
             print(f"An error occurred: {e}")
             return None, None
+    def check_usd_asset(self, asset_path):
+        try:
+            stage = Usd.Stage.Open(asset_path)
+            if stage:
+                # print(f"Successfully opened asset: {asset_path}")
+                return True
+            else:
+                print(f"Failed to open asset: {asset_path}")
+                return False
+        except Exception as e:
+            print(f"Error opening asset: {asset_path}\n{e}")
+            return False
 
 def main(args=None):
     rclpy.init(args=args)
