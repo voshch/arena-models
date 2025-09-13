@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arena_models"
+version = "0.1.0"
+description = "TODO"
+authors = [
+    { name = "kuro", email = "giang.nht108201@gmail.com" },
+    { name = "Vova Shcherbyna", email = "dev@voshch.dev" },
+]
+dependencies = [
+    "bpy"
+]
+requires-python = "==3.11.*"
+
+[project.urls]
+Homepage = "https://github.com/arena-models/arena-models"
+Repository = "https://github.com/arena-models/arena-models"
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["arena_models*", "text_processing*"]
