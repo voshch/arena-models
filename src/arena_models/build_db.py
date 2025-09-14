@@ -1,27 +1,26 @@
-import rclpy
-from rclpy.node import Node
-import yaml
-import os
-import chromadb
-import argparse
-from text_processing.processor import processors_object
-from text_processing.language_processing import load_spacy_model, embed_text, store_embedding, embed_text_with_weight
-import sys
 import json
+from text_processing.language_processing import load_spacy_model, embed_text, store_embedding, embed_text_with_weight
+from text_processing.processor import processors_object
+import argparse
+import chromadb
+import os
+import yaml
 
-class BuildDatabase(Node):
+import logging
+logger = logging.getLogger()
+
+
+class DatabaseBuilder():
     def __init__(self, input_path, output_database_name, buildtypes):
-        super().__init__('build_db_node')
         self.data_list = []
-        self.building_database(input_path, output_database_name, buildtypes)
+        self.build(input_path, output_database_name, buildtypes)
         raise SystemExit
-        
 
-    def building_database(self, input_path, output_database_name, buildtypes):
+    def build(self, input_path, output_database_name, buildtypes):
 
         main_path = os.path.join(
             os.getcwd(), f"{input_path}")
-        
+
         list_type_models = [os.path.join(main_path, dir) for dir in os.listdir(main_path) if os.path.isdir(os.path.join(main_path, dir))]
 
         modelsDict = dict()
@@ -41,7 +40,7 @@ class BuildDatabase(Node):
                         for filename in os.listdir(model):
                             if filename.endswith('.usd') or filename.endswith('.usda'):
                                 usd_path = f"{model}/{filename}"
-                        check_usd_verify = True            
+                        check_usd_verify = True
                         check_usd_verify = self.check_usd_asset(usd_path)
                         if check_usd_verify == False:
                             continue
@@ -52,26 +51,26 @@ class BuildDatabase(Node):
                             min_b, max_b = self.get_usd_bounding_box(usd_path)
                             env = type_env.split("/", 8)[-1]
                             desc = new_model['desc']
-                            bbox = {"x" : max_b[0] - min_b[0],
-                                    "y" : max_b[1] - min_b[1],
-                                    "z" : max_b[2] - min_b[2]}
+                            bbox = {"x": max_b[0] - min_b[0],
+                                    "y": max_b[1] - min_b[1],
+                                    "z": max_b[2] - min_b[2]}
                             materials = new_model['material'].split(",")
                             material_list = []
                             for material in materials:
-                                material_list.append([env,material])
+                                material_list.append([env, material])
                             max_image_pixel_length = 1
                             primary_property = new_model['hoi']
                             scenes = env
                             split = 'test'
-                            self.get_logger().info(f"{primary_property}")
-                            self.add_infrastructure(desc,bbox,material_list,max_image_pixel_length,env,primary_property,scenes,split)
+                            logger.info(f"{primary_property}")
+                            self.add_infrastructure(desc, bbox, material_list, max_image_pixel_length, env, primary_property, scenes, split)
                 data_procthor[env] = self.data_list
 
-        # self.get_logger().info(f"{data_procthor}")
+        # logger.info(f"{data_procthor}")
         if buildtypes == 'procthor':
             with open('Dataset-arena-models/procthor_database.json', 'w') as json_file:
                 json.dump(data_procthor, json_file, indent=4)
-        
+
         spacy_model = load_spacy_model()
         client = chromadb.PersistentClient(path="./arena_models_database")
         guid = 0
@@ -82,38 +81,36 @@ class BuildDatabase(Node):
             # self.get_logger().info(f"{modelsDict[model]}")
             store_embedding(model_str, new_embedding,
                             modelsDict[model], guid, client, f"{output_database_name}")
-            
-        self.get_logger().info("Database built successfully!")
-        
 
-
+        logger.info("Database built successfully!")
 
     def read_annotation_file(self, file_path: str) -> dict:
         with open(file_path, "r") as yaml_file:
             yaml_content = yaml.safe_load(yaml_file)
             yaml_content: dict
             for key, value in yaml_content.items():
-                if value == None:
+                if value is None:
                     yaml_content[key] = ''
-                if value != None:
+                if value is not None:
                     if isinstance(value, list):
                         yaml_content[key] = ",".join(value)
             return yaml_content
-    
+
     def add_infrastructure(self, asset_id, bounding_box, materials, max_image_pixel_length, objectType, primary_property, scenes, split):
         infrastructure_data = {
-        "assetId": asset_id,
-        "boundingBox": bounding_box,
-        "materials": materials,
-        "maxImagePixelLength": max_image_pixel_length,
-        "objectType": objectType,
-        "primaryProperty": primary_property,
-        "scenes": scenes,
-        "secondaryProperties": [],
-        "split": split,
-        "states": {}
+            "assetId": asset_id,
+            "boundingBox": bounding_box,
+            "materials": materials,
+            "maxImagePixelLength": max_image_pixel_length,
+            "objectType": objectType,
+            "primaryProperty": primary_property,
+            "scenes": scenes,
+            "secondaryProperties": [],
+            "split": split,
+            "states": {}
         }
         self.data_list.append(infrastructure_data)
+
     def get_usd_bounding_box(self, stage_path: str):
         try:
             # Open the USD stage
@@ -147,6 +144,7 @@ class BuildDatabase(Node):
         except Exception as e:
             print(f"An error occurred: {e}")
             return None, None
+
     def check_usd_asset(self, asset_path):
         try:
             stage = Usd.Stage.Open(asset_path)
@@ -160,24 +158,16 @@ class BuildDatabase(Node):
             print(f"Error opening asset: {asset_path}\n{e}")
             return False
 
-def main(args=None):
-    rclpy.init(args=args)
 
+def main():
     # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Run database build node")
-    parser.add_argument('--buildtypes', type=str, default="isaacsim",
-                        help="Build database type.")
-    parser.add_argument('--input_path', type=str, required=True,
-                        help="Input dataset path.")
-    parser.add_argument('--output_database_name', type=str, required=True,
-                        help="Name of database")
+    parser = argparse.ArgumentParser(description="Run database build")
+    parser.add_argument('--buildtypes', type=str, default="isaacsim", help="Build database type.")
+    parser.add_argument('--input_path', type=str, required=True, help="Input dataset path.")
+    parser.add_argument('--output_database_name', type=str, required=True, help="Name of database")
     parsed_args = parser.parse_args()
-    node = BuildDatabase(parsed_args.input_path, parsed_args.output_database_name, parsed_args.buildtypes)
-    rclpy.spin_once(node)
-    node.destroy_node()
-    rclpy.shutdown()
-    
-    
+    DatabaseBuilder(parsed_args.input_path, parsed_args.output_database_name, parsed_args.buildtypes)
+
 
 if __name__ == '__main__':
     main()

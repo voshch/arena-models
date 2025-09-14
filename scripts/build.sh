@@ -40,7 +40,7 @@ cd "$src_dir"
     python -m pip install virtualenv
     python -m venv .venv
     . .venv/bin/activate
-    python -m pip install -e .
+    python -m pip install .
     echo 'success'
 cd -
 
