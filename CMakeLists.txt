@@ -18,6 +18,7 @@ file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/.python-version" PYTHON_VERSION_CONTE
 string(STRIP "${PYTHON_VERSION_CONTENT}" PYTHON_VERSION)
 pyenv_venv(PYTHON ${PYTHON_VERSION})
 venv_pip_install(${venv_build_dir})
+venv_python(-m spacy download en_core_web_md)
 venv_install()
 venv_script("arena_models" "-m arena_models")
 

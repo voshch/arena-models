@@ -4,6 +4,9 @@ import os
 import typing
 
 import bpy
+import mathutils
+
+from arena_models.utils.geom import BoundingBox
 
 from .CoordinateSystem import CoordinateSystem
 
@@ -59,6 +62,10 @@ class ModelConverter:
                 cls.__exts[e.lower()] = subcls
         return decorator
 
+    @classmethod
+    def exts(cls) -> tuple[str, ...]:
+        return tuple(cls.__exts.keys())
+
     def transform_coordinates(self, coords: CoordinateSystem) -> None:
         x, y, z = self._coordinates.get_transformation_to(coords)
         bpy.ops.object.select_all(action='SELECT')
@@ -82,6 +89,19 @@ class ModelConverter:
             self._coordinates = ext_cls.coordinates()
         else:
             raise ValueError(f"Unsupported file extension: {ext}")
+
+    def bounding_box(self) -> BoundingBox:
+        coords = []
+        for obj in bpy.context.scene.objects:
+            if obj.type == 'MESH':
+                for corner in obj.bound_box:
+                    world_corner = obj.matrix_world @ mathutils.Vector(corner)
+                    coords.append(world_corner)
+        if not coords:
+            return BoundingBox.empty()
+        min_corner = mathutils.Vector(map(min, zip(*coords)))
+        max_corner = mathutils.Vector(map(max, zip(*coords)))
+        return BoundingBox(((min_corner.x, max_corner.x), (min_corner.y, max_corner.y), (min_corner.z, max_corner.z)))
 
     def save(self, path: str, *, ext: str | None = None) -> None:
         ext = os.path.splitext(path)[-1].lower().strip(".")

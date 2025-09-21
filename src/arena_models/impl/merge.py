@@ -41,29 +41,3 @@ def merge_database(database1, database2, outputdb):
 
     logger.info(f"Databases merged successfully into: {outputdb}")
     raise SystemExit
-
-
-def main(args=None):
-
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Merge databases.")
-    parser.add_argument('--path_database1', type=str, required=True,
-                        help="Path to database 1")
-    parser.add_argument('--name_database1', type=str, required=True,
-                        help="Name database 1")
-    parser.add_argument('--path_database2', type=str, required=True,
-                        help="Path to database 2")
-    parser.add_argument('--name_database2', type=str, required=True,
-                        help="Name database 2")
-    parser.add_argument('--path_outputdb', type=str, required=True,
-                        help="Path to output database")
-    parser.add_argument('--name_outputdb', type=str, required=True,
-                        help="Name output database")
-    parsed_args = parser.parse_args()
-
-    # Pass the database path to the node
-    merge_database(parsed_args.database1, parsed_args.database2, parsed_args.outputdb)
-
-
-if __name__ == '__main__':
-    main()

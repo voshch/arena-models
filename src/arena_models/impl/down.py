@@ -2,6 +2,7 @@ import gdown
 import zipfile
 import os
 import logging
+
 logger = logging.getLogger()
 
 
@@ -36,9 +37,6 @@ class DownDatabase:
             logger.info("Cleaned up the ZIP file!")
 
 
-def main(args=None):
+def download_database():
+    """Download the database from the remote source."""
     DownDatabase()
-
-
-if __name__ == '__main__':
-    main()
