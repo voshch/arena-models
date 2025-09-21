@@ -4,23 +4,20 @@ project(arena_models)
 find_package(ament_cmake REQUIRED)
 
 find_package(ament_cmake_venv REQUIRED)
+find_package(ament_cmake_venv_pyenv REQUIRED)
 
 file(GLOB_RECURSE SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*")
 
-add_custom_target(copy_src_dir
+# clean rebuilds
+
+execute_process(
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/src ${venv_build_dir}
-  DEPENDS ${SRC_FILES}
-  COMMENT "Copying source directory to venv build directory"
 )
-
-add_custom_target(run_build_script ALL
-  COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/build.sh ${venv_build_dir} ${venv_dir}
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  DEPENDS copy_src_dir ${CMAKE_CURRENT_SOURCE_DIR}/scripts/build.sh
-  BYPRODUCTS ${venv_dir}
-  COMMENT "Running build.sh script"
-)
-
+  
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/.python-version" PYTHON_VERSION_CONTENT)
+string(STRIP "${PYTHON_VERSION_CONTENT}" PYTHON_VERSION)
+pyenv_venv(PYTHON ${PYTHON_VERSION})
+venv_pip_install(${venv_build_dir})
 venv_install()
 venv_script("arena_models" "-m arena_models")
 

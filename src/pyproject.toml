@@ -11,11 +11,16 @@ authors = [
     { name = "Vova Shcherbyna", email = "dev@voshch.dev" },
 ]
 dependencies = [
-    "bpy",
-    "chromadb",
     "gdown",
-    "numpy",
-    "scipy",
+    "bpy~=4.5.3",
+    "chromadb~=1.0.21",
+    "numpy~=1.26.4",
+    "scipy~=1.15.3",
+    "spacy~=3.8.7",
+    "pyyaml~=6.0.2",
+    "mathutils~=3.3.0",
+    "attrs~=25.3.0",
+    "cattrs~=25.2.0",
 ]
 requires-python = "==3.11.*"
 
