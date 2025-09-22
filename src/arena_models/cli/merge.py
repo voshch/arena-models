@@ -8,7 +8,7 @@ def merge_command(
     path_outputdb: str = typer.Option(..., "--path-outputdb", help="Path to output database"),
 ):
     """Merge multiple databases into one."""
-    from arena_models.impl.merge import merge_database
+    from ..impl.merge import merge_database
     merge_database(path_database1, path_database2, path_outputdb)
 
 
@@ -40,6 +40,8 @@ def add_to_cmd(cmd):
         ),
     ):
         """Merge two databases into one."""
+        raise NotImplementedError("Merge command is not yet implemented.")
+
         typer.echo(f"Merging databases {database1} and {database2} into {output}")
 
         merge_command(str(database1), str(database2), str(output))

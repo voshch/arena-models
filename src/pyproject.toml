@@ -33,4 +33,4 @@ Repository = "https://github.com/arena-models/arena-models"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["arena_models*", "text_processing*"]
+include = ["arena_models*"]

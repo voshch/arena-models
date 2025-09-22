@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 
 class BoundingBox(tuple[tuple[float, float], tuple[float, float], tuple[float, float]]):
     @property
@@ -27,3 +29,10 @@ class BoundingBox(tuple[tuple[float, float], tuple[float, float], tuple[float, f
     @classmethod
     def empty(cls) -> "BoundingBox":
         return cls(((0.0, 0.0), (0.0, 0.0), (0.0, 0.0)))
+
+    def round(self, ndigits: int = 4) -> BoundingBox:
+        return BoundingBox((
+            (round(self.min_x, ndigits), round(self.max_x, ndigits)),
+            (round(self.min_y, ndigits), round(self.max_y, ndigits)),
+            (round(self.min_z, ndigits), round(self.max_z, ndigits)),
+        ))

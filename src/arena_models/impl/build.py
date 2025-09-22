@@ -7,75 +7,14 @@ import os
 import typing
 from collections.abc import Callable, Iterator
 
-import attrs
-import cattrs
-import chromadb
 import yaml
-from text_processing.language_processing import (
-    embed_text_with_weight,
-    load_spacy_model,
-    store_embedding,
-)
-
-from arena_models.utils.enums import AssetType
-from arena_models.utils.geom import BoundingBox
-
-logger = logging.getLogger()
-
-converter = cattrs.Converter()
-converter.register_structure_hook(BoundingBox, lambda d, t: d if isinstance(d, BoundingBox) else None)
+from arena_models.utils.Database import Database
 
 
-@attrs.define
-class Annotation:
-    name: str
-    path: str
-    bounding_box: BoundingBox
-    desc: str = ""
-    material: list[str] = attrs.field(factory=list)
-    color: list[str] = attrs.field(factory=list)
-    tags: list[str] = attrs.field(factory=list)
-    hoi: list[str] = attrs.field(factory=list)
+from . import DATABASE_NAME, Annotation, ObjectAnnotation, AssetType, converter
 
-    @property
-    def as_dict(self) -> dict:
-        return {
-            "name": self.name,
-            "path": self.path,
-            "desc": self.desc,
-            "material": ",".join(self.material),
-            "color": ",".join(self.color),
-            "tags": ",".join(self.tags),
-            "hoi": ",".join(self.hoi),
-        }
-
-    @property
-    def as_procthor(self) -> dict:
-        return {
-            "assetId": self.path,
-            "bounding_box": {
-                "x": self.bounding_box.max_x - self.bounding_box.min_x,
-                "y": self.bounding_box.max_y - self.bounding_box.min_y,
-                "z": self.bounding_box.max_z - self.bounding_box.min_z,
-            },
-            "objectType": self.desc,
-            "tags": self.tags,
-            "primaryProperty": self.hoi[0] if self.hoi else "",
-            "secondaryProperties": self.hoi[1:],
-            "materials": [[material, material] for material in self.material],
-        }
-
-    @property
-    def as_processed(self) -> str:
-        res = []
-        for color in self.color:
-            res.append(color.lower())
-        for material in self.material:
-            res.append(material.lower())
-        for tag in self.tags:
-            res.append(tag.lower())
-        res.append(self.desc.lower())
-        return " ".join(res)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('arena_models.build')
 
 
 class DatabaseBuilder(abc.ABC):
@@ -96,7 +35,7 @@ class DatabaseBuilder(abc.ABC):
     @classmethod
     def read_annotation_file(cls, file_path: str) -> dict:
         with open(os.path.join(file_path, "annotation.yaml"), "r") as yaml_file:
-            return {k: v for k, v in yaml.safe_load(yaml_file).items() if k in attrs.fields(Annotation)}
+            return yaml.safe_load(yaml_file)
 
     def __init__(self, input_path, output_path, **kwargs):
         self.input_path = input_path
@@ -105,8 +44,7 @@ class DatabaseBuilder(abc.ABC):
         self._pipeline: list[Callable[[Annotation], typing.Any]] = []
         self._post: list[Callable] = []
 
-        self._spacy_model = load_spacy_model()
-        self._client = chromadb.PersistentClient(path=os.path.join(self.output_path, "arena_models_database"))
+        self._db = Database(path=os.path.join(self.output_path, DATABASE_NAME))
         self._save_annotations()
 
     def build(self):
@@ -123,6 +61,7 @@ class DatabaseBuilder(abc.ABC):
 
     def discover(self) -> Iterator[str]:
         for root, dirs, files in os.walk(self.input_path):
+            logger.info("Scanning directory: %s", root)
             if "annotation.yaml" in files:
                 # don't recurse into subdirs
                 dirs.clear()
@@ -158,7 +97,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder):
         target_path = os.path.join(self.output_path, entity_path, "usd", f"{entity_name}.usdz")
         with ModelConverter() as model_converter:
             model_converter.load(os.path.join(realpath, main_file))
-            bounding_box = model_converter.bounding_box()
+            bounding_box = model_converter.bounding_box().round(4)
             os.makedirs(os.path.dirname(target_path), exist_ok=True)
             model_converter.save(target_path)
 
@@ -170,7 +109,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder):
                 path=entity_path,
                 bounding_box=bounding_box,
             ),
-            Annotation
+            ObjectAnnotation
         )
 
     def procthor(self):
@@ -183,19 +122,10 @@ class ObjectDatabaseBuilder(DatabaseBuilder):
         self._post.append(export)
 
     def _save_annotations(self) -> None:
-        guid = 0
 
         def process(annotation: Annotation) -> None:
-            nonlocal guid
-            guid += 1
-            model_str = annotation.as_processed
-            new_embedding = embed_text_with_weight(model_str, self._spacy_model)
-            store_embedding(
-                model_str,
-                new_embedding,
-                annotation.as_dict,
-                guid,
-                self._client,
-                "models",
+            self._db.store(
+                AssetType.OBJECT.value,
+                annotation
             )
         self._pipeline.append(process)

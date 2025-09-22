@@ -1,6 +1,3 @@
-import chromadb
-from text_processing.language_processing import load_spacy_model, embed_text, store_embedding, embed_text_with_weight, querying_embeddings
-import argparse
 import os
 import shutil
 

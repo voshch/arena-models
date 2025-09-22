@@ -1,11 +1,12 @@
-import typer
 from pathlib import Path
 from typing import Optional
+
+import typer
 
 
 def download_command():
     """Download the database from the remote source."""
-    from arena_models.impl.down import download_database
+    from ..impl.down import download_database
     download_database()
 
 

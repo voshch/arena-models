@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(arena_models)
 
 if(NOT DEFINED EDITABLE)
-    set(EDITABLE OFF)
+    set(EDITABLE ON)
 endif()
 
 find_package(ament_cmake REQUIRED)
