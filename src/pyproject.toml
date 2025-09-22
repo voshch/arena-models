@@ -17,6 +17,7 @@ dependencies = [
     "numpy~=1.26.4",
     "scipy~=1.15.3",
     "spacy~=3.8.7",
+    "en_core_web_md @ https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl",
     "pyyaml~=6.0.2",
     "mathutils~=3.3.0",
     "attrs~=25.3.0",
