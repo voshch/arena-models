@@ -1,7 +1,8 @@
 """Database command group for arena_models CLI."""
 
 import typer
-from .query import add_to_db_cmd as add_query
+from .build import build_command
+from .query import add_to_cmd as add_query
 
 
 def add_to_cmd(cmd):
@@ -27,6 +28,7 @@ def add_to_cmd(cmd):
             if ctx.parent and ctx.parent.obj:
                 ctx.obj['silent'] = ctx.parent.obj.get('silent', False)
 
+    db_app.command("build")(build_command)
     add_query(db_app)
 
     cmd.add_typer(db_app, name="db")

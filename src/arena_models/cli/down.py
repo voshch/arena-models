@@ -1,7 +1,7 @@
-from pathlib import Path
 from typing import Optional
 
 import typer
+import os
 
 
 def download_command():
@@ -14,8 +14,8 @@ def add_to_cmd(cmd):
     """Add download command to the main app."""
     @cmd.command()
     def download(
-        output_dir: Optional[Path] = typer.Option(
-            Path.cwd(),
+        output_dir: str = typer.Option(
+            os.getcwd(),
             "--output",
             "-o",
             help="Directory to download the dataset to"

@@ -15,9 +15,9 @@ string(STRIP "${PYTHON_VERSION_CONTENT}" PYTHON_VERSION)
 pyenv_venv(PYTHON ${PYTHON_VERSION})
 
 if(EDITABLE)
-    venv_pip_install_editable(${CMAKE_CURRENT_SOURCE_DIR}/src)
+    venv_pip_install_editable("${CMAKE_CURRENT_SOURCE_DIR}/src[build]")
 else()
-    venv_pip_install(${CMAKE_CURRENT_SOURCE_DIR}/src)
+    venv_pip_install("${CMAKE_CURRENT_SOURCE_DIR}/src[build]")
 endif()
 
 venv_install()
