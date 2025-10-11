@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import io
 import os
+import sys
+import tempfile
 import typing
 
 import bpy
@@ -9,6 +12,7 @@ import mathutils
 from arena_models.utils.geom import BoundingBox
 
 from .CoordinateSystem import CoordinateSystem
+from .io_utils import capture_all_output
 
 
 class _ModelConverterExt(typing.Protocol):
@@ -47,9 +51,15 @@ class ModelConverter:
     _coordinates: CoordinateSystem
 
     def __enter__(self):
+        # Create temporary files to act as a bridge
+        self.__ctx = capture_all_output(self._stdout, self._stderr)
+        self.__ctx.__enter__()
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        self.__ctx.__exit__(exc_type, exc_val, exc_tb)
+
         if self._reset:
             bpy.ops.wm.read_factory_settings(use_empty=True)
 
@@ -80,6 +90,16 @@ class ModelConverter:
     def __init__(self, *, reset: bool = True):
         self._reset: bool = reset
         self._coordinates: CoordinateSystem = CoordinateSystem.default()
+        self._stdout = io.StringIO()
+        self._stderr = io.StringIO()
+
+    @property
+    def stdout(self) -> str:
+        return self._stdout.getvalue()
+
+    @property
+    def stderr(self) -> str:
+        return self._stderr.getvalue()
 
     def load(self, path: str) -> None:
         ext = os.path.splitext(path)[-1].lower().strip(".")
