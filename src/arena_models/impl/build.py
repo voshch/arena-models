@@ -132,7 +132,17 @@ class ObjectDatabaseBuilder(DatabaseBuilder):
             from arena_models.utils.ModelConverter import ModelConverter
             annotation = self.read_annotation_file(realpath)
 
-            main_file = next((f for f in next(os.walk(realpath))[2] if f.endswith(ModelConverter.exts())), None)
+            main_file = next(
+                (
+                    os.path.join(
+                        os.path.relpath(walk[0], realpath),
+                        f,
+                    )
+                    for walk in os.walk(realpath)
+                    for f in walk[2]
+                    if f.endswith(ModelConverter.exts())
+                ), None
+            )
             if main_file is None:
                 logger.warning("No supported model file found in %s", realpath)
                 return None
@@ -153,13 +163,12 @@ class ObjectDatabaseBuilder(DatabaseBuilder):
             for line in model_converter.stderr.splitlines():
                 logger.warning("ModelConverter: %s", line)
 
+            annotation['name'] = entity_name
+            annotation['path'] = entity_path
+            annotation['bounding_box'] = bounding_box
+
             return converter.structure(
-                dict(
-                    **annotation,
-                    name=entity_name,
-                    path=entity_path,
-                    bounding_box=bounding_box,
-                ),
+                annotation,
                 ObjectAnnotation
             )
         except (KeyboardInterrupt, SystemExit):
