@@ -11,7 +11,7 @@ authors = [
     { name = "Vova Shcherbyna", email = "dev@voshch.dev" },
 ]
 dependencies = [
-    "gdown",
+    "google-cloud-storage",
     "chromadb~=1.0.21",
     "numpy~=1.26.4",
     "scipy~=1.15.3",
