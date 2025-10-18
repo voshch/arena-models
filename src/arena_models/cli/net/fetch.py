@@ -13,7 +13,13 @@ def fetch_command(
         "--output",
         "-o",
         help="Directory to download the files to"
-    )
+    ),
+    no_annotation: bool = typer.Option(
+        False,
+        "--no-annotation",
+        help="Do not download annotation files",
+        is_flag=True
+    ),
 ):
     """Fetch specific files from a path within the bucket."""
     source = ctx.obj.get('source') if ctx.obj else "TODO"
@@ -22,7 +28,7 @@ def fetch_command(
     safe_echo(f"Output directory: {output_dir}", ctx)
 
     from arena_models.impl.fetch import fetch_database
-    fetch_database(bucket=source, bucket_path=relative_path, destination=output_dir, relative_path=relative_path)
+    fetch_database(bucket=source, bucket_path=relative_path, destination=output_dir, relative_path=relative_path, annotations=not no_annotation)
 
     safe_echo("Fetch completed successfully!", ctx)
 

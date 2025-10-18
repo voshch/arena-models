@@ -1,3 +1,4 @@
+import atexit
 import logging
 import sys
 
@@ -69,3 +70,11 @@ def format_file_size(size_bytes):
         return f"{int(size)}{units[unit_index]}"
     else:
         return f"{size:.1f}{units[unit_index]}"
+
+
+def _exit_handler():
+    global _manager
+    _manager.__exit__()
+
+
+atexit.register(_exit_handler)

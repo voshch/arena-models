@@ -1,17 +1,19 @@
 import typer
 from pathlib import Path
 
-from arena_models.cli.utils import safe_echo
 from arena_models.impl import AssetType
+from arena_models.utils.logging import get_logger, get_manager
+
+logger = get_logger('cli.db.build')
 
 
 def build_command(
     ctx: typer.Context,
-    asset_type: str = typer.Option(
-        ...,
+    asset_type: list[str] = typer.Option(
+        [],
         "--buildtype",
         "-t",
-        help=f"Type of asset to build. Options: {', '.join([e.name.lower() for e in AssetType])}"
+        help="Type of asset to build. Optional, defaults to all types. Specify multiple times for multiple types.",
     ),
     input_path: Path = typer.Option(
         ...,
@@ -23,16 +25,11 @@ def build_command(
         readable=True,
         exists=True,
     ),
-    procthor: bool = typer.Option(
-        False,
-        "--procthor",
-        help="Enable ProcTHOR export format"
-    ),
-    formats: list[str] = typer.Option(
+    options: list[str] = typer.Option(
         [],
-        "--format",
-        "-f",
-        help="Output formats for the built database"
+        "--option",
+        "-o",
+        help="Options for the build process",
     ),
     overwrite: bool = typer.Option(
         False,
@@ -48,25 +45,40 @@ def build_command(
     output_path = ctx.obj.get('database_path') if ctx.obj else None
 
     # Validate asset type
-    try:
-        asset_type_enum = AssetType[asset_type.upper()]
-    except KeyError:
-        valid_types = [e.name for e in AssetType]
-        safe_echo(f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}", ctx)
-        raise typer.Exit(1)
+    if asset_type:
+        try:
+            asset_type_enum = [AssetType[t.upper()] for t in asset_type]
+        except KeyError:
+            valid_types = [e.name for e in AssetType]
+            logger.fatal(f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}")
+            raise typer.Exit(1)
+    else:
+        asset_type_enum = list(DatabaseBuilder.get_registered())
 
-    # Log build start
-    safe_echo(f"Building {asset_type} database from {input_path} to {output_path}", ctx)
-    if procthor:
-        safe_echo("ProcTHOR export enabled", ctx)
+    logger.info(f"Starting database build from {input_path} to {output_path} with types: {', '.join([t.name for t in asset_type_enum])}")
+    manager = get_manager()
+    _ = manager.status_bar()  # bug in display removes the progress bar at the end otherwise
+    global_progress = manager.counter(
+        total=len(asset_type_enum),
+        desc="Databases",
+        bar_format='{desc}{desc_pad}{count:{len_total}d}/{total:d} [{elapsed}]',
+        autorefresh=True,
+    )
+    with global_progress:
+        for t in global_progress(asset_type_enum):
+            logger.info(f"Building {t} database from {input_path} to {output_path}")
 
-    # Build the database
-    builder = DatabaseBuilder.Builder(asset_type_enum)(input_path=str(input_path), output_path=str(output_path), formats=formats, overwrite=overwrite)
-    if procthor:
-        builder.procthor()
-    builder.build()
+            # Build the database
+            builder = DatabaseBuilder.Builder(t)(input_path=str(input_path), output_path=str(output_path), overwrite=overwrite)
+            for extra in options:
+                builder.enable(extra)
+            builder.build()
 
-    safe_echo("Database build completed successfully!", ctx)
+    logger.info(f"Database build completed in {global_progress.elapsed}s")
+
+
+def add_to_cmd(db_cmd):
+    db_cmd.command("build")(build_command)
 
 
 if __name__ == '__main__':

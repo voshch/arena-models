@@ -2,10 +2,11 @@ import os
 
 from google.cloud import storage
 
+from arena_models.impl import ANNOTATION_NAME
 from arena_models.utils.logging import format_file_size, get_logger, get_manager
 
 
-def fetch_database(bucket: str, bucket_path: str, destination: str, relative_path: str = ""):
+def fetch_database(bucket: str, bucket_path: str, destination: str, relative_path: str = "", annotations: bool = True) -> None:
     """Download a specific path from Google Cloud Storage bucket.
 
     Args:
@@ -30,7 +31,7 @@ def fetch_database(bucket: str, bucket_path: str, destination: str, relative_pat
 
         logger.info("Scanning bucket path '%s' for files...", bucket_path)
         blobs_list = list(bucket_obj.list_blobs(prefix=bucket_path))
-        file_blobs = [blob for blob in blobs_list if not blob.name.endswith('/')]
+        file_blobs = [blob for blob in blobs_list if not blob.name.endswith('/') and (annotations or not os.path.basename(blob.name) == ANNOTATION_NAME)]
         total_files = len(file_blobs)
         total_size = sum(blob.size or 0 for blob in file_blobs)
 

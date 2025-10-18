@@ -30,7 +30,7 @@ def query_command(
 
     safe_echo(f"Searching for: '{query_text}' in database {database_path}", ctx)
 
-    from ...impl.query import query_database
+    from arena_models.impl.query import query_database
     result = query_database(database_path=database_path, asset_type=asset_type_enum, query_target=query_text)
     typer.echo(result)
 
