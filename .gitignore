@@ -2,6 +2,6 @@
 __pycache__
 *.pyc
 *.egg-info
-build/
+/src/build/
 
 .vscode/
