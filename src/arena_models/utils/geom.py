@@ -26,6 +26,10 @@ class BoundingBox(tuple[tuple[float, float], tuple[float, float], tuple[float, f
     def max_z(self) -> float:
         return self[2][1]
 
+    @property
+    def volume(self) -> float:
+        return (self.max_x - self.min_x) * (self.max_y - self.min_y) * (self.max_z - self.min_z)
+
     @classmethod
     def empty(cls) -> "BoundingBox":
         return cls(((0.0, 0.0), (0.0, 0.0), (0.0, 0.0)))

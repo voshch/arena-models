@@ -7,11 +7,25 @@ import attrs
 import cattrs.preconf.pyyaml
 
 from arena_models.utils.geom import BoundingBox
+from arena_models.utils.logging import get_logger
+
+logger = get_logger('arena_models.impl')
 
 converter = cattrs.preconf.pyyaml.make_converter(prefer_attrib_converters=True)
 
 converter.register_structure_hook(BoundingBox, lambda d, t: d if isinstance(d, BoundingBox) else BoundingBox(d))
-converter.register_unstructure_hook(BoundingBox, list)
+
+
+def _unstructure_bounding_box(box: BoundingBox) -> list:
+    if (volume := box.volume) < 1e-9:
+        if volume < 0:
+            logger.warning("Serializing Negative-volume (%d) BoundingBox: %s", volume, box)
+        else:
+            logger.warning("Serializing Zero-volume (%d) BoundingBox: %s", volume, box)
+    return list(box)
+
+
+converter.register_unstructure_hook(BoundingBox, _unstructure_bounding_box)
 
 
 class AssetType(enum.Enum):

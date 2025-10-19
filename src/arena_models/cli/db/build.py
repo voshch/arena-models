@@ -31,11 +31,10 @@ def build_command(
         "-o",
         help="Options for the build process",
     ),
-    overwrite: bool = typer.Option(
-        False,
+    overwrite: int = typer.Option(
+        0,
         "--overwrite",
-        help="Overwrite existing files",
-        is_flag=True
+        help="Overwrite behavior: 0 = skip existing, 1 = overwrite existing, -1 = assume built, only use annotations.",
     ),
 ):
     """Build a database from source model files."""
