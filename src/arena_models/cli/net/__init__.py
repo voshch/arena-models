@@ -2,7 +2,8 @@
 
 import typer
 
-from .fetch import fetch_command
+from .fetch import add_to_cmd as add_fetch_cmd
+from .exists import add_to_cmd as add_exists_cmd
 
 
 def add_to_cmd(cmd):
@@ -30,6 +31,7 @@ def add_to_cmd(cmd):
             if ctx.parent and ctx.parent.obj:
                 ctx.obj['silent'] = ctx.parent.obj.get('silent', False)
 
-    net_app.command("fetch")(fetch_command)
+    add_fetch_cmd(net_app)
+    add_exists_cmd(net_app)
 
     cmd.add_typer(net_app, name="net")

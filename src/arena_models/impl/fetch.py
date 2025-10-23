@@ -6,6 +6,34 @@ from arena_models.impl import ANNOTATION_NAME
 from arena_models.utils.logging import format_file_size, get_logger, get_manager
 
 
+class Bucket:
+    def __init__(self, bucket: str):
+        client = storage.Client.create_anonymous_client()
+        self.bucket = client.bucket(bucket)
+
+    def listdir(self, prefix: str):
+        return self.bucket.list_blobs(prefix=prefix)
+
+    def asset_exists(self, asset: str) -> bool:
+        if not os.path.basename(asset) == ANNOTATION_NAME:
+            asset = os.path.join(asset, ANNOTATION_NAME)
+        blob = self.bucket.blob(asset)
+        return blob.exists()
+
+
+def asset_exists(bucket: str, asset: str) -> bool:
+    """Check if an asset exists in the Google Cloud Storage bucket.
+
+    Args:
+        bucket: The Google Cloud Storage bucket name
+        asset: The asset path to check
+    Returns:
+        True if the asset exists, False otherwise
+    """
+    bucket_obj = Bucket(bucket)
+    return bucket_obj.asset_exists(asset)
+
+
 def fetch_database(bucket: str, bucket_path: str, destination: str, relative_path: str = "", annotations: bool = True) -> None:
     """Download a specific path from Google Cloud Storage bucket.
 
@@ -17,6 +45,7 @@ def fetch_database(bucket: str, bucket_path: str, destination: str, relative_pat
     """
     logger = get_logger('fetch')
     try:
+        bucket_obj = Bucket(bucket)
 
         bucket_path = bucket_path.strip('/')
         if bucket_path and not bucket_path.endswith('/'):
@@ -25,12 +54,8 @@ def fetch_database(bucket: str, bucket_path: str, destination: str, relative_pat
         full_destination = os.path.join(destination, relative_path) if relative_path else destination
         os.makedirs(full_destination, exist_ok=True)
 
-        client = storage.Client.create_anonymous_client()
-
-        bucket_obj = client.bucket(bucket)
-
         logger.info("Scanning bucket path '%s' for files...", bucket_path)
-        blobs_list = list(bucket_obj.list_blobs(prefix=bucket_path))
+        blobs_list = bucket_obj.listdir(bucket_path)
         file_blobs = [blob for blob in blobs_list if not blob.name.endswith('/') and (annotations or not os.path.basename(blob.name) == ANNOTATION_NAME)]
         total_files = len(file_blobs)
         total_size = sum(blob.size or 0 for blob in file_blobs)

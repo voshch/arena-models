@@ -22,7 +22,7 @@ def fetch_command(
     ),
 ):
     """Fetch specific files from a path within the bucket."""
-    source = ctx.obj.get('source') if ctx.obj else "TODO"
+    source = ctx.obj['source']
 
     safe_echo(f"Fetching '{relative_path}' from bucket: {source}", ctx)
     safe_echo(f"Output directory: {output_dir}", ctx)
