@@ -57,7 +57,7 @@ class MaterialAnnotation(Annotation):
 
 class MaterialDatabaseBuilder(DatabaseBuilder[MaterialAnnotation]):
     _annotation_cls = MaterialAnnotation
-    _DISCOVER_PATH = 'Materials'
+    _DISCOVER_PATH = 'Material'
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)

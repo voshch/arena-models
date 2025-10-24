@@ -80,7 +80,7 @@ class ObjectAnnotation(Annotation):
 
 class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
     _annotation_cls = ObjectAnnotation
-    _DISCOVER_PATH = 'Objects'
+    _DISCOVER_PATH = 'Object'
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
