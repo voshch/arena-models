@@ -1,4 +1,4 @@
-"""Query command for database operations."""
+"""List command for database operations."""
 
 import os
 import typer
@@ -6,13 +6,12 @@ from ...impl import AssetType
 from ..utils import safe_echo
 
 
-def query_command(
+def list_cmd(
     ctx: typer.Context,
     asset_type: str = typer.Argument(
         ...,
         help=f"Type of asset to query. Options: {', '.join([e.name.lower() for e in AssetType])}"
     ),
-    query_text: str = typer.Argument(..., help="Text description to search for"),
 ):
     """Search for models in the database using natural language."""
     # Get database path from parent context
@@ -29,16 +28,17 @@ def query_command(
         safe_echo(f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}", ctx)
         raise typer.Exit(1)
 
-    safe_echo(f"Searching for {asset_type_enum.name} '{query_text}' in database {database_path}", ctx)
+    safe_echo(f"Searching for {asset_type_enum.name} in database {database_path}", ctx)
 
-    from arena_models.impl.query import query_database
-    result = query_database(database_path=database_path, asset_type=asset_type_enum, query_target=query_text)
-    typer.echo(os.path.join(database_path, result.path))
+    from arena_models.impl.listall import list_database
+    result = list_database(database_path=database_path, asset_type=asset_type_enum)
+    for item in result:
+        typer.echo(os.path.join(database_path, item.path))
 
 
 def add_to_cmd(db_cmd):
-    db_cmd.command("query")(query_command)
+    db_cmd.command("list")(list_cmd)
 
 
 if __name__ == '__main__':
-    typer.run(query_command)
+    typer.run(list_cmd)

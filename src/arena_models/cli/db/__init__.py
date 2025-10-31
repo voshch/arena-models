@@ -4,6 +4,7 @@ import typer
 
 from .build import add_to_cmd as add_build
 from .query import add_to_cmd as add_query
+from .listall import add_to_cmd as add_list
 
 
 def add_to_cmd(cmd):
@@ -31,5 +32,6 @@ def add_to_cmd(cmd):
 
     add_build(db_app)
     add_query(db_app)
+    add_list(db_app)
 
     cmd.add_typer(db_app, name="db")

@@ -31,11 +31,8 @@ class MaterialAnnotation(Annotation):
     @property
     def as_metadata(self):
         return {
-            "name": self.name,
-            "path": self.path,
-            "desc": self.desc,
+            **super().as_metadata,
             "color": ",".join(self.color),
-            "tags": ",".join(self.tags),
         }
 
     @classmethod
@@ -44,8 +41,8 @@ class MaterialAnnotation(Annotation):
             name=metadata.get("name", ""),
             path=metadata.get("path", ""),
             desc=metadata.get("desc", ""),
-            color=color.split(",") if (color := metadata.get("color")) else [],
             tags=tags.split(",") if (tags := metadata.get("tags")) else [],
+            color=color.split(",") if (color := metadata.get("color")) else [],
         )
 
     @property

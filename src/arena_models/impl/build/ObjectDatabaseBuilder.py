@@ -38,12 +38,9 @@ class ObjectAnnotation(Annotation):
     @property
     def as_metadata(self):
         return {
-            "name": self.name,
-            "path": self.path,
-            "desc": self.desc,
+            **super().as_metadata,
             "material": ",".join(self.material),
             "color": ",".join(self.color),
-            "tags": ",".join(self.tags),
             "hoi": ",".join(self.hoi),
             "bounding_box": json.dumps(list(self.bounding_box)),
         }
@@ -54,9 +51,9 @@ class ObjectAnnotation(Annotation):
             name=metadata.get("name", ""),
             path=metadata.get("path", ""),
             desc=metadata.get("desc", ""),
+            tags=tags.split(",") if (tags := metadata.get("tags")) else [],
             material=material.split(",") if (material := metadata.get("material")) else [],
             color=color.split(",") if (color := metadata.get("color")) else [],
-            tags=tags.split(",") if (tags := metadata.get("tags")) else [],
             hoi=hoi.split(",") if (hoi := metadata.get("hoi")) else [],
             bounding_box=BoundingBox(json.loads(bounding_box)) if (bounding_box := metadata.get("bounding_box")) else BoundingBox.empty(),
         )

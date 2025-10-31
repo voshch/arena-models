@@ -1,5 +1,6 @@
 import argparse
 import functools
+import os
 import typing
 import uuid
 
@@ -44,6 +45,10 @@ class Database:
             metadatas=[annotation.as_metadata],
             ids=[unique_id]
         )
+
+    def list_all(self, collection: str):
+        """List all paths in the collection."""
+        return self.collection(collection).get()
 
     def query(self, collection: str, embedding: TextOrEmbedding, num_results: int = 1):
         """Query the collection for similar embeddings."""

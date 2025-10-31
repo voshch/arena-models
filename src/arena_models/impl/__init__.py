@@ -37,12 +37,20 @@ DATABASE_NAME = '.db'
 ANNOTATION_NAME = 'annotation.yaml'
 
 
+def parse_to_list(x: typing.Any):
+    if x is None:
+        return []
+    if isinstance(x, list):
+        return x
+    return [x]
+
+
 @attrs.define
-class Annotation(typing.Protocol):
+class Annotation:
     name: str
     path: str
     desc: str = ""
-    tags: list[str] = attrs.field(factory=list, converter=lambda x: list() if x is None else list(x))
+    tags: list[str] = attrs.field(factory=list, converter=parse_to_list)
 
     @property
     def as_text(self) -> str:
@@ -50,8 +58,18 @@ class Annotation(typing.Protocol):
 
     @property
     def as_metadata(self) -> dict:
-        ...
+        return {
+            "name": self.name,
+            "path": self.path,
+            "desc": self.desc,
+            "tags": ",".join(self.tags),
+        }
 
     @classmethod
     def from_metadata(cls, metadata: dict) -> typing.Self:
-        ...
+        return cls(
+            name=metadata['name'],
+            path=metadata['path'],
+            desc=metadata.get('desc', ""),
+            tags=metadata.get('tags', [])
+        )
