@@ -28,7 +28,7 @@ def query_command(
         safe_echo(f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}", ctx)
         raise typer.Exit(1)
 
-    safe_echo(f"Searching for: '{query_text}' in database {database_path}", ctx)
+    safe_echo(f"Searching for {asset_type_enum.name} '{query_text}' in database {database_path}", ctx)
 
     from arena_models.impl.query import query_database
     result = query_database(database_path=database_path, asset_type=asset_type_enum, query_target=query_text)
