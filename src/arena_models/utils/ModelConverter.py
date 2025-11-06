@@ -110,6 +110,23 @@ class ModelConverter:
         else:
             raise ValueError(f"Unsupported file extension: {ext}")
 
+    def rectify(self):
+        """Rectify the model's orientation and position (make it upright and floor-touching).
+        """
+
+        self.transform_coordinates(CoordinateSystem.default())
+        bbox = self.bounding_box()
+        translation = mathutils.Vector((
+            0.0,
+            0.0,
+            -bbox.min_z,
+        ))
+        bpy.ops.object.select_all(action='SELECT')
+        try:
+            bpy.ops.transform.translate(value=translation)
+        finally:
+            bpy.ops.object.select_all(action='DESELECT')
+
     def bounding_box(self) -> BoundingBox:
         coords = []
         for obj in bpy.context.scene.objects:

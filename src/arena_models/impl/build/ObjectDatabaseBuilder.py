@@ -118,8 +118,8 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
 
             with ModelConverter() as model_converter:
                 model_converter.load(os.path.join(annotation.path, main_file))
+                model_converter.rectify()
                 bounding_box = model_converter.bounding_box().round(4)
-
                 for model_path in model_paths:
                     os.makedirs(os.path.dirname(model_path), exist_ok=True)
                     model_converter.save(model_path)
