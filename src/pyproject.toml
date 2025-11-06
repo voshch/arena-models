@@ -24,7 +24,7 @@ dependencies = [
     "typer~=0.19.1",
     "enlighten~=1.14.1",
 ]
-requires-python = "==3.11.*"
+# requires-python = "==3.11.*" # only required for arena_models[build]
 
 
 [project.optional-dependencies]

@@ -1,0 +1,1 @@
+note: if you want to install arena_models[build], you must use Python 3.11.* (bpy dependency)
