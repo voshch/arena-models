@@ -1,8 +1,7 @@
-import argparse
 import functools
-import os
 import typing
 import uuid
+from pathlib import Path
 
 import chromadb
 import chromadb.api.models.Collection
@@ -21,11 +20,11 @@ def as_embedding(fn: typing.Callable[[typing.Text], typing.List[float]], v: Text
 
 
 class Database:
-    def __init__(self, path: str, model: typing.Optional[str] = None, *, embedder: typing.Optional[typing.Callable[[str], list[float]]] = None):
+    def __init__(self, path: Path, model: typing.Optional[str] = None, *, embedder: typing.Optional[typing.Callable[[str], list[float]]] = None):
         if model is None:
             model = "en_core_web_md"
 
-        self._client = chromadb.PersistentClient(path=path)
+        self._client = chromadb.PersistentClient(path=str(path))
         self._model = spacy.load(model)
 
         if embedder is None:

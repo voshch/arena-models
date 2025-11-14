@@ -1,7 +1,9 @@
-import typer
 from pathlib import Path
 
+import typer
+
 from arena_models.impl import AssetType
+from arena_models.impl.build import DatabaseBuilder
 from arena_models.utils.logging import get_logger, get_manager
 
 logger = get_logger('cli.db.build')
@@ -38,10 +40,10 @@ def build_command(
     ),
 ):
     """Build a database from source model files."""
-    from arena_models.impl.build import DatabaseBuilder
 
     # Get output path from context
-    output_path = ctx.obj.get('database_path') if ctx.obj else None
+    output_path = Path(ctx.obj.get('database_path')) if ctx.obj else None
+    assert output_path is not None
 
     # Validate asset type
     if asset_type:
@@ -68,16 +70,21 @@ def build_command(
             logger.info(f"Building {t} database from {input_path} to {output_path}")
 
             # Build the database
-            builder = DatabaseBuilder.Builder(t)(input_path=str(input_path), output_path=str(output_path), overwrite=overwrite)
+            builder = DatabaseBuilder.Builder(t)(input_path=input_path, output_path=output_path, overwrite=overwrite)
             for extra in options:
-                builder.enable(extra)
+                builder.enable(*extra.split('='))
             builder.build()
 
     logger.info(f"Database build completed in {global_progress.elapsed}s")
 
 
 def add_to_cmd(db_cmd):
-    db_cmd.command("build")(build_command)
+    options = [""]
+    for builder, option in DatabaseBuilder.get_all_options().items():
+        options.append(f"{builder.name}: {', '.join(option)}")
+    merged_options = '\n\t'.join(options)
+    expanded_help = f"{build_command.__doc__}\n\nAvailable options: {merged_options}\n"
+    db_cmd.command("build", help=expanded_help)(build_command)
 
 
 if __name__ == '__main__':

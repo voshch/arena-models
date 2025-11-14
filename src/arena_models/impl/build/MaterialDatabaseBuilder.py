@@ -85,6 +85,6 @@ class MaterialDatabaseBuilder(DatabaseBuilder[MaterialAnnotation]):
         self._pipeline.append(lambda annotation: self._procthor.update({annotation.path.replace(os.sep, "_"): annotation.as_procthor}))
 
         def export():
-            with open(os.path.join(self.output_path, "arena-materials-database.json"), "w") as f:
+            with open(self.output_path / "arena-materials-database.json", "w") as f:
                 json.dump(self._procthor, f, indent=4)
         self._post.append(export)

@@ -20,6 +20,11 @@ def fetch_command(
         help="Do not download annotation files",
         is_flag=True
     ),
+    model_formats: list[str] = typer.Option(
+        ["usdz"],
+        "--format",
+        help="Only download models of specified formats",
+    )
 ):
     """Fetch specific files from a path within the bucket."""
     source = ctx.obj['source']
@@ -28,7 +33,7 @@ def fetch_command(
     safe_echo(f"Output directory: {output_dir}", ctx)
 
     from arena_models.impl.fetch import fetch_database
-    fetch_database(bucket=source, bucket_path=relative_path, destination=output_dir, relative_path=relative_path, annotations=not no_annotation)
+    fetch_database(bucket=source, bucket_path=relative_path, destination=output_dir, relative_path=relative_path, annotations=not no_annotation, model_formats=model_formats)
 
     safe_echo("Fetch completed successfully!", ctx)
 

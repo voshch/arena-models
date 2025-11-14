@@ -34,7 +34,7 @@ def asset_exists(bucket: str, asset: str) -> bool:
     return bucket_obj.asset_exists(asset)
 
 
-def fetch_database(bucket: str, bucket_path: str, destination: str, relative_path: str = "", annotations: bool = True) -> None:
+def fetch_database(bucket: str, bucket_path: str, destination: str, relative_path: str = "", annotations: bool = True, model_formats: list[str] | None = None) -> None:
     """Download a specific path from Google Cloud Storage bucket.
 
     Args:
@@ -42,6 +42,8 @@ def fetch_database(bucket: str, bucket_path: str, destination: str, relative_pat
         bucket_path: The path inside the bucket to download
         destination: The local directory path to download to
         relative_path: The relative path within destination to save the files (optional)
+        annotations: Whether to download annotation files (default: True)
+        model_formats: List of model formats to download (e.g., ['usdz']). If None, download all formats (optional)
     """
     logger = get_logger('fetch')
     try:
@@ -56,7 +58,12 @@ def fetch_database(bucket: str, bucket_path: str, destination: str, relative_pat
 
         logger.info("Scanning bucket path '%s' for files...", bucket_path)
         blobs_list = bucket_obj.listdir(bucket_path)
-        file_blobs = [blob for blob in blobs_list if not blob.name.endswith('/') and (annotations or not os.path.basename(blob.name) == ANNOTATION_NAME)]
+        file_blobs = [
+            blob for blob in blobs_list
+            if not blob.name.endswith('/')
+            and (annotations or not os.path.basename(blob.name) == ANNOTATION_NAME)
+            and (model_formats is None or any(blob.name.endswith(f".{fmt}") for fmt in model_formats))
+        ]
         total_files = len(file_blobs)
         total_size = sum(blob.size or 0 for blob in file_blobs)
 

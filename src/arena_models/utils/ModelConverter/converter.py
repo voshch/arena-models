@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import io
 import os
-import sys
-import tempfile
 import typing
 
 import bpy
@@ -11,8 +9,10 @@ import mathutils
 
 from arena_models.utils.geom import BoundingBox
 
-from .CoordinateSystem import CoordinateSystem
-from .io_utils import capture_all_output
+from ..CoordinateSystem import CoordinateSystem
+from ..io_utils import capture_all_output
+
+from . import ModelFormat
 
 
 class _ModelConverterExt(typing.Protocol):
@@ -54,19 +54,18 @@ class ModelConverter:
         # Create temporary files to act as a bridge
         self.__ctx = capture_all_output(self._stdout, self._stderr)
         self.__ctx.__enter__()
+        if self._reset:
+            bpy.ops.wm.read_factory_settings(use_empty=True)
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.__ctx.__exit__(exc_type, exc_val, exc_tb)
 
-        if self._reset:
-            bpy.ops.wm.read_factory_settings(use_empty=True)
-
-    __exts: typing.ClassVar[dict[str, _ModelConverterExt]] = {}
+    __exts: typing.ClassVar[dict[ModelFormat, _ModelConverterExt]] = {}
 
     @classmethod
-    def register(cls, *ext: str):
+    def register(cls, *ext: ModelFormat):
         def decorator(subcls: typing.Type[_ModelConverterExt]):
             for e in ext:
                 cls.__exts[e.lower()] = subcls
@@ -140,8 +139,8 @@ class ModelConverter:
         max_corner = mathutils.Vector(map(max, zip(*coords)))
         return BoundingBox(((min_corner.x, max_corner.x), (min_corner.y, max_corner.y), (min_corner.z, max_corner.z)))
 
-    def save(self, path: str, *, ext: str | None = None) -> None:
-        ext = os.path.splitext(path)[-1].lower().strip(".")
+    def save(self, path: str, *, ext: ModelFormat | None = None) -> None:
+        ext = ModelFormat(os.path.splitext(path)[-1].lower().strip("."))
         if ext in self.__exts:
             ext_cls = self.__exts[ext]
             self.transform_coordinates(ext_cls.coordinates())
@@ -150,28 +149,34 @@ class ModelConverter:
             raise ValueError(f"Unsupported file extension: {ext}")
 
 
-ModelConverter.register('usd', 'usda', 'usdc', 'usdz')(_ModelConverterExt.inline(
+ModelConverter.register(ModelFormat.USD, ModelFormat.USDA, ModelFormat.USDC, ModelFormat.USDZ)(_ModelConverterExt.inline(
     CoordinateSystem('X+', 'Y+', 'Z+'),
     bpy.ops.wm.usd_import,
     bpy.ops.wm.usd_export)
 )
 
-ModelConverter.register('obj')(_ModelConverterExt.inline(
+ModelConverter.register(ModelFormat.OBJ)(_ModelConverterExt.inline(
     CoordinateSystem.default(),
     bpy.ops.wm.obj_import,
     bpy.ops.wm.obj_export)
 )
 
-ModelConverter.register('fbx')(_ModelConverterExt.inline(
+ModelConverter.register(ModelFormat.FBX)(_ModelConverterExt.inline(
     CoordinateSystem.default(),
     bpy.ops.import_scene.fbx,
     bpy.ops.export_scene.fbx)
 )
 
-ModelConverter.register('dae')(_ModelConverterExt.inline(
+ModelConverter.register(ModelFormat.DAE)(_ModelConverterExt.inline(
     CoordinateSystem.default(),
     bpy.ops.wm.collada_import,
     bpy.ops.wm.collada_export)
+)
+
+ModelConverter.register(ModelFormat.GLB, ModelFormat.GLTF)(_ModelConverterExt.inline(
+    CoordinateSystem.default(),
+    bpy.ops.import_scene.gltf,
+    bpy.ops.export_scene.gltf)
 )
 
 

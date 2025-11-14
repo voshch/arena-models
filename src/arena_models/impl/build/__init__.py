@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import abc
 import os
+from pathlib import Path
 import typing
 from collections.abc import Callable, Iterable, Iterator
 
@@ -31,10 +32,10 @@ class OptionRegistry:
                 self._registry = registry
                 self._instance = instance
 
-            def __call__(self, name):
+            def __call__(self, name, *args, **kwargs):
                 if name in self._registry:
                     func = self._registry[name]
-                    return func.__get__(self._instance, type(self._instance)).__call__()
+                    return func.__get__(self._instance, type(self._instance)).__call__(*args, **kwargs)
 
         return BoundRegistry(self._registry, instance)
 
@@ -57,6 +58,14 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         return cls.__registry.keys()
 
     @classmethod
+    def get_all_options(cls) -> dict[AssetType, list[str]]:
+        options = {}
+        for type_, builder_fn in cls.__registry.items():
+            builder_cls = builder_fn(type_)
+            options[type_] = list(builder_cls.enable._registry.keys())
+        return options
+
+    @classmethod
     def Builder(cls, type_: AssetType) -> typing.Type[DatabaseBuilder]:
         if type_ not in cls.__registry:
             raise ValueError(f"No builder registered for type: {type_}")
@@ -67,15 +76,15 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
     _annotation_cls: typing.ClassVar[typing.Type[Annotation]]
 
     @classmethod
-    def read_annotation_file(cls, dir_path: str) -> AnnotationT | None:
+    def read_annotation_file(cls, dir_path: Path) -> AnnotationT | None:
         try:
-            with open(os.path.join(dir_path, ANNOTATION_NAME), "r") as yaml_file:
+            with open(dir_path / ANNOTATION_NAME, "r") as yaml_file:
                 return typing.cast(
                     AnnotationT,
                     converter.structure(
                         {
                             **yaml.safe_load(yaml_file),
-                            'name': os.path.basename(dir_path),
+                            'name': dir_path.name,
                             'path': dir_path,
                         },
                         cls._annotation_cls
@@ -84,7 +93,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         except Exception:
             return None
 
-    def __init__(self, input_path, output_path, overwrite: int = 0, **kwargs):
+    def __init__(self, input_path: Path, output_path: Path, overwrite: int = 0, **kwargs):
         self.input_path = input_path
         self.output_path = output_path
         self._overwrite = overwrite
@@ -92,11 +101,11 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         self._pipeline: list[Callable[[AnnotationT], typing.Any]] = []
         self._post: list[Callable] = []
 
-        self._db = Database(path=os.path.join(self.output_path, DATABASE_NAME))
+        self._db = Database(path=self.output_path / DATABASE_NAME)
 
         def save_annotation(annotation: AnnotationT) -> None:
-            annotation_path = os.path.join(self.output_path, annotation.path, ANNOTATION_NAME)
-            os.makedirs(os.path.dirname(annotation_path), exist_ok=True)
+            annotation_path = self.output_path / annotation.path / ANNOTATION_NAME
+            os.makedirs(annotation_path.parent, exist_ok=True)
             with open(annotation_path, "w") as f:
                 yaml.safe_dump(converter.unstructure(annotation), f)
         self._pipeline.append(save_annotation)
@@ -108,7 +117,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
 
         status_bar = manager.status_bar(
             status_format='Building {build_type} database from {input_path}: {stage}{fill}',
-            input_path=self.input_path,
+            input_path=str(self.input_path),
             build_type=self._type.name,
             stage='Initializing',
         )
@@ -132,10 +141,10 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                     progress.update()
                     status_bar.update(stage=f'Processing {annotation.path}')
 
-                    target_path = os.path.relpath(annotation.path, self.input_path)
-                    dest_path = os.path.join(self.output_path, target_path)
+                    target_path = Path(annotation.path).relative_to(self.input_path)
+                    dest_path = self.output_path / target_path
 
-                    if os.path.exists(os.path.join(dest_path, ANNOTATION_NAME)) and not self._overwrite:
+                    if (dest_path / ANNOTATION_NAME).exists() and not self._overwrite:
                         logger.info("Skipping existing entity at %s", annotation.path)
                         skipped.update_from(progress, 1)
                         continue
@@ -150,7 +159,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                             failure.update_from(progress, 1)
                             continue
 
-                    annotation.path = target_path
+                    annotation.path = str(target_path)
                     for fn in self._pipeline:
                         fn(annotation)
                     success.update_from(progress, 1)
@@ -182,18 +191,18 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         if base_path is None:
             base_path = self._DISCOVER_PATH
 
-        for root, dirs, files in os.walk(os.path.join(self.input_path, base_path)):
+        for root, dirs, files in os.walk(self.input_path / base_path):
             if not filter_(root):
                 continue
             logger.info("Scanning directory: %s", root)
             if ANNOTATION_NAME in files:
                 # don't recurse into subdirs
                 dirs.clear()
-                if (annotation := self.read_annotation_file(root)) is not None:
+                if (annotation := self.read_annotation_file(Path(root))) is not None:
                     yield annotation
 
     @abc.abstractmethod
-    def process_entity(self, annotation: AnnotationT, dest: str) -> AnnotationT | None:
+    def process_entity(self, annotation: AnnotationT, dest: Path) -> AnnotationT | None:
         ...
 
 
