@@ -7,11 +7,11 @@ from pathlib import Path
 
 import attrs
 
-from arena_models.impl import Annotation, AssetType
+from arena_models.impl import Annotation, AssetType, convert_list_str
 from arena_models.utils.geom import BoundingBox
 from arena_models.utils.logging import get_logger
-from arena_models.utils.ModelConverter.UsdBaker import UsdBaker
 from arena_models.utils.ModelConverter import ModelFormat
+from arena_models.utils.ModelConverter.UsdBaker import UsdBaker
 
 from . import DatabaseBuilder, OptionRegistry
 
@@ -21,9 +21,9 @@ logger = get_logger('build.object')
 @attrs.define
 class ObjectAnnotation(Annotation):
     bounding_box: BoundingBox = attrs.field(factory=BoundingBox.empty)
-    material: list[str] = attrs.field(factory=list, converter=lambda x: list() if x is None else list(x))
-    color: list[str] = attrs.field(factory=list, converter=lambda x: list() if x is None else list(x))
-    hoi: list[str] = attrs.field(factory=list, converter=lambda x: list() if x is None else list(x))
+    material: list[str] = attrs.field(factory=list, converter=convert_list_str)
+    color: list[str] = attrs.field(factory=list, converter=convert_list_str)
+    hoi: list[str] = attrs.field(factory=list, converter=convert_list_str)
 
     @property
     def as_text(self):

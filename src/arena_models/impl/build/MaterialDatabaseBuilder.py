@@ -6,18 +6,17 @@ import shutil
 
 import attrs
 
-from arena_models.impl import ANNOTATION_NAME, Annotation, AssetType
+from arena_models.impl import ANNOTATION_NAME, Annotation, AssetType, convert_list_str
 from arena_models.utils.logging import get_logger
 
 from . import DatabaseBuilder, OptionRegistry
-
 
 logger = get_logger('build.object')
 
 
 @attrs.define
 class MaterialAnnotation(Annotation):
-    color: list[str] = attrs.field(factory=list, converter=lambda x: list() if x is None else list(x))
+    color: list[str] = attrs.field(factory=list, converter=convert_list_str)
 
     @property
     def as_text(self):

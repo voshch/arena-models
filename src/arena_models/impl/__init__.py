@@ -1,5 +1,4 @@
 """Implementation modules for arena_models CLI commands."""
-
 import enum
 import typing
 
@@ -37,20 +36,21 @@ DATABASE_NAME = '.db'
 ANNOTATION_NAME = 'annotation.yaml'
 
 
-def parse_to_list(x: typing.Any):
-    if x is None:
+def convert_list_str(value: typing.Any) -> list[str]:
+    if value is None:
         return []
-    if isinstance(x, list):
-        return x
-    return [x]
+    if isinstance(value, list):
+        return value
+    return [str(value)]
 
 
 @attrs.define
 class Annotation:
+
     name: str
     path: str
     desc: str = ""
-    tags: list[str] = attrs.field(factory=list, converter=parse_to_list)
+    tags: list[str] = attrs.field(factory=list, converter=convert_list_str)
 
     @property
     def as_text(self) -> str:
