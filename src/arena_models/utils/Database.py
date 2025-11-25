@@ -8,6 +8,8 @@ import chromadb.api.models.Collection
 import numpy as np
 import spacy
 
+import re
+
 from ..impl import Annotation
 
 TextOrEmbedding = typing.Text | typing.List[float]
@@ -30,6 +32,39 @@ class Database:
         if embedder is None:
             embedder = self.embed
         self.as_embedding = functools.partial(as_embedding, embedder)
+    
+    def _normalize_and_split(self, text: str) -> list[str]:
+        """Normalize, split underscores/hyphens/camelCase and return simple words."""
+        if not text:
+            return []
+        s = text.replace("_", " ").replace("-", " ")
+        # split camelCase -> add spaces between lowerUpper boundaries
+        s = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", s)
+        # tokenize by whitespace and punctuation
+        parts = re.findall(r"\w+", s.lower())
+        return parts
+    
+    def tokenize(self, text: str) -> list[str]:
+        """Return normalized keyword lemmas (nouns preferred)."""
+        parts = self._normalize_and_split(text)
+        doc = self._model(" ".join(parts))
+        tokens = []
+        for i, token in enumerate(doc):
+            if not token.is_alpha or token.is_stop:
+                continue
+            lemma = token.lemma_.lower()
+            # prefer nouns by duplicating them once to indicate importance
+            if token.pos_ == "NOUN":
+                tokens.append(lemma)
+            tokens.append(lemma)
+        # preserve order, unique
+        seen = set()
+        result = []
+        for t in tokens:
+            if t not in seen:
+                seen.add(t)
+                result.append(t)
+        return result
 
     def collection(self, name) -> chromadb.api.models.Collection.Collection:
         """Get or create a ChromaDB collection."""
@@ -38,10 +73,36 @@ class Database:
     def store(self, collection: str, annotation: Annotation):
         """Store the text embedding in a ChromaDB collection."""
         unique_id = uuid.uuid4().hex
+        # self.collection(collection).add(
+        #     documents=[annotation.as_text],
+        #     embeddings=[self.as_embedding(annotation.as_text)],
+        #     metadatas=[annotation.as_metadata],
+        #     ids=[unique_id]
+        # )
+        metadata = dict(annotation.as_metadata)
+        # add tokens for exact matching fallback; include name/tags if present
+        # annotation.as_text already contains desc/material/color/tags, but include name split for "Bed_Side_Table"
+        metadata_tokens = self.tokenize(annotation.as_text)
+        if metadata.get("name"):
+            metadata_tokens += self._normalize_and_split(metadata["name"])
+        if metadata.get("tags"):
+            # tags might be list or comma string
+            tags = metadata["tags"] if isinstance(metadata["tags"], list) else str(metadata["tags"]).split(",")
+            for t in tags:
+                metadata_tokens += self._normalize_and_split(t)
+        # keep unique-order tokens
+        seen = set()
+        tokens = []
+        for t in metadata_tokens:
+            if t and t not in seen:
+                seen.add(t)
+                tokens.append(t)
+        metadata["tokens"] = tokens
+
         self.collection(collection).add(
             documents=[annotation.as_text],
             embeddings=[self.as_embedding(annotation.as_text)],
-            metadatas=[annotation.as_metadata],
+            metadatas=[metadata],
             ids=[unique_id]
         )
 
@@ -51,6 +112,71 @@ class Database:
 
     def query(self, collection: str, embedding: TextOrEmbedding, num_results: int = 1):
         """Query the collection for similar embeddings."""
+        # results = self.collection(collection).query(
+        #     query_embeddings=[self.as_embedding(embedding)],
+        #     n_results=num_results
+        # )
+        # return results
+        # If the query is a short/single token string, try exact-token fallback first
+        if isinstance(embedding, str):
+            q = embedding.strip().lower()
+            # single-word queries get exact-token lookup (fast and precise)
+            if q and len(q.split()) == 1:
+                try:
+                    all_docs = self.collection(collection).get()
+                    ids = []
+                    metadatas = []
+                    documents = []
+                    embeddings = []
+
+                    candidates: list[tuple[int, int]] = []  # (score, index)
+                    for i, m in enumerate(all_docs.get("metadatas", [])):
+                        tokens = [t.lower() for t in (m.get("tokens") or [])]
+                        name_raw = (m.get("name") or "").strip()
+                        name = name_raw.lower()
+                        name_parts = self._normalize_and_split(name_raw)
+                        tags = m.get("tags") or []
+                        if isinstance(tags, str):
+                            tags = [t.strip().lower() for t in tags.split(",")]
+                        else:
+                            tags = [str(t).strip().lower() for t in tags]
+
+                        score = 0
+                        # highest: exact name match
+                        if name == q:
+                            score += 200
+                        # name begins with query (e.g. "bed_a", "bed b") -> strong signal
+                        if name_parts and name_parts[0] == q:
+                            # prefer short suffixes (Bed_A/B) over long ones (Bed_Side_Table)
+                            suffix_penalty = max(0, len(name_parts) - 1) * 10
+                            score += 120 - suffix_penalty
+                        # token-level match (from description/tags split/lemmatized tokens)
+                        if q in tokens:
+                            score += 60
+                        # tag match is weaker
+                        if q in tags:
+                            score += 20
+
+                        if score > 0:
+                            candidates.append((score, i))
+
+                    # sort by score desc, stable by index for ties
+                    candidates.sort(key=lambda x: (-x[0], x[1]))
+
+                    for score, i in candidates:
+                        if len(ids) >= num_results:
+                            break
+                        ids.append(all_docs["ids"][i])
+                        metadatas.append(all_docs["metadatas"][i])
+                        documents.append(all_docs["documents"][i])
+                        embeddings.append(all_docs.get("embeddings", [None])[i])
+
+                    if ids:
+                        return {"ids": ids, "metadatas": metadatas, "documents": documents, "embeddings": embeddings}
+                except Exception:
+                    # If exact fallback fails, continue to embedding search
+                    pass
+
         results = self.collection(collection).query(
             query_embeddings=[self.as_embedding(embedding)],
             n_results=num_results
@@ -76,6 +202,10 @@ class Database:
         total_vector: np.ndarray = np.zeros(self._model.vocab.vectors.shape[1])
         total_weight = 0
 
+        # Tunable parameters
+        noun_boost = 2.0          # multiply noun base_weight by this
+        last_token_bonus = 0.7    # extra fractional boost applied to the final token
+
         for i, token in enumerate(tokens):
             if token.pos_ == "NOUN":
                 base_weight = 8
@@ -83,13 +213,22 @@ class Database:
                 base_weight = 5
             else:
                 base_weight = 2
+            
+            # boost nouns
+            if token.pos_ == "NOUN":
+                base_weight *= noun_boost
+
 
             if len(tokens) > 1:
                 position_multiplier = 1 + 0.5 * (i / (len(tokens) - 1))
             else:
                 position_multiplier = 1
+            
+            # extra boost for the last token (makes trailing words more important)
+            end_multiplier = 1.0 + (last_token_bonus if i == (len(tokens) - 1) else 0.0)
 
             final_weight = base_weight * position_multiplier
+            final_weight *= end_multiplier
             total_vector += token.vector * final_weight
             total_weight += final_weight
 
