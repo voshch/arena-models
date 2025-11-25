@@ -20,8 +20,8 @@ def fetch_command(
         help="Do not download annotation files",
         is_flag=True
     ),
-    model_formats: list[str] = typer.Option(
-        ["usdz"],
+    model_formats: list[str] | None = typer.Option(
+        None,
         "--format",
         help="Only download models of specified formats",
     )
