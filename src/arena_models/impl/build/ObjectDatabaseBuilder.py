@@ -147,7 +147,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
 
             with ModelConverter() as model_converter:
                 model_converter.load(str(input_file))
-                model_converter.rectify()
+                # model_converter.rectify()
                 bounding_box = model_converter.bounding_box().round(4)
                 for model_path in model_paths:
                     model_path.parent.mkdir(exist_ok=True)
