@@ -60,7 +60,7 @@ class MaterialDatabaseBuilder(DatabaseBuilder[MaterialAnnotation]):
 
         def store_db(annotation: MaterialAnnotation) -> None:
             self._db.store(
-                AssetType.OBJECT.value,
+                AssetType.MATERIAL.value,
                 annotation
             )
         self._pipeline.append(store_db)
