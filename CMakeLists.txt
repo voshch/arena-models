@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(arena_models)
 
 if(NOT DEFINED EDITABLE)
-    set(EDITABLE ON)
+    set(EDITABLE OFF)
 endif()
 
 find_package(ament_cmake REQUIRED)
@@ -15,9 +15,9 @@ string(STRIP "${PYTHON_VERSION_CONTENT}" PYTHON_VERSION)
 pyenv_venv(PYTHON ${PYTHON_VERSION})
 
 if(EDITABLE)
-    venv_pip_install_editable("${CMAKE_CURRENT_SOURCE_DIR}/src[build]")
+    venv_pip_install_editable("${CMAKE_CURRENT_SOURCE_DIR}/src")
 else()
-    venv_pip_install("${CMAKE_CURRENT_SOURCE_DIR}/src[build]")
+    venv_pip_install("${CMAKE_CURRENT_SOURCE_DIR}/src")
 endif()
 
 venv_install()
