@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import json
 import os
 import typing
@@ -20,10 +21,19 @@ logger = get_logger('build.object')
 
 @attrs.define
 class ObjectAnnotation(Annotation):
+    class Face(str, enum.Enum):
+        POS_X = "+x"
+        NEG_X = "-x"
+        POS_Y = "+y"
+        NEG_Y = "-y"
+        XY = "xy"
+
     bounding_box: BoundingBox = attrs.field(factory=BoundingBox.empty)
     material: list[str] = attrs.field(factory=list, converter=convert_list_str)
     color: list[str] = attrs.field(factory=list, converter=convert_list_str)
     hoi: list[str] = attrs.field(factory=list, converter=convert_list_str)
+    face: Face = attrs.field(default=Face.NEG_Y)
+    note: str = attrs.field(default=None)
 
     @property
     def as_text(self):
@@ -35,6 +45,8 @@ class ObjectAnnotation(Annotation):
         for tag in self.tags:
             result += f"{tag} "
         result += f"{self.desc}"
+        if self.note:
+            result += f" note: {self.note}"
 
         return result
 
@@ -46,6 +58,8 @@ class ObjectAnnotation(Annotation):
             "color": ",".join(self.color),
             "hoi": ",".join(self.hoi),
             "bounding_box": json.dumps(list(self.bounding_box)),
+            "face": self.face.value,
+            "note": self.note,
         }
 
     @classmethod
@@ -58,6 +72,8 @@ class ObjectAnnotation(Annotation):
             material=material.split(",") if (material := metadata.get("material")) else [],
             color=color.split(",") if (color := metadata.get("color")) else [],
             hoi=hoi.split(",") if (hoi := metadata.get("hoi")) else [],
+            face=cls.Face(metadata.get("face") or "-y"),
+            note=metadata.get("note", None),
             bounding_box=BoundingBox(json.loads(bounding_box)) if (bounding_box := metadata.get("bounding_box")) else BoundingBox.empty(),
         )
 
@@ -75,6 +91,8 @@ class ObjectAnnotation(Annotation):
             "primaryProperty": self.hoi[0] if self.hoi else "",
             "secondaryProperties": self.hoi[1:],
             "materials": [[material, material] for material in self.material],
+            "face": self.face.value,
+            "note": self.note,
         }
 
 
