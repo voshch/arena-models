@@ -16,9 +16,11 @@ class UsdBaker(abc.ABC):
         self._process.stdin.write(msg)
         self._process.stdin.flush()
 
-    def readline(self) -> bytes:
+    def readline(self) -> bytes | None:
         if self._process is None or self._process.stdout is None:
             raise RuntimeError("Interactive Python session not started")
+        if self._process.poll() is not None:
+            return None
         return self._process.stdout.readline()
 
     def __init__(self, input_dir: Path, output_dir: Path):
@@ -58,7 +60,7 @@ class UsdBaker(abc.ABC):
                 self.logger.info("USD Baker is ready.")
                 return line[len('ready:'):]
 
-    def command(self, cmd: str) -> str:
+    def command(self, cmd: str) -> str | None:
         self.write(cmd.encode('utf-8') + b'\n')
 
         while (bline := self.readline()) is not None:
@@ -71,8 +73,8 @@ class UsdBaker(abc.ABC):
             if line.startswith('error:'):
                 raise RuntimeError(line[len('error:'):])
 
-        raise RuntimeError("Container output closed unexpectedly")
+        return None
 
     @abc.abstractmethod
-    def convert(self, input_file: str, output_file: str) -> bool:
+    def convert(self, input_file: str, output_file: str, retries: int = 3) -> bool:
         raise NotImplementedError()

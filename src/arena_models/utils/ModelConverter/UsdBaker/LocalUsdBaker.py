@@ -4,6 +4,7 @@ import time
 from . import UsdBaker
 
 import subprocess
+import asyncio
 
 
 class LocalUsdBaker(UsdBaker):
@@ -37,7 +38,7 @@ class LocalUsdBaker(UsdBaker):
         self._isaacsim_path = isaacsim_path.expanduser().resolve()
         self._process = None
 
-    def convert(self, input_file: str, output_file: str) -> bool:
+    def convert(self, input_file: str, output_file: str, retries: int = 3) -> bool:
         input_full_path = self.input_dir / input_file
         if not input_full_path.exists():
             raise FileNotFoundError(f"Input file does not exist: {input_full_path}")
@@ -48,7 +49,16 @@ class LocalUsdBaker(UsdBaker):
         self.logger.info("Converting %s to %s...", input_full_path, output_full_path)
 
         cmd = f"{input_full_path}:{output_full_path}"
+
         output = self.command(cmd)
+
+        if output is None:
+            if retries > 0:
+                self.logger.error("Conversion failed. Process output closed unexpectedly.")
+                self.logger.info("Restarting USD Baker and retrying conversion (attempts left: %d)...", retries)
+                self.start()
+                return self.convert(input_file, output_file, retries - 1)
+            raise RuntimeError("Conversion failed. Process output closed unexpectedly.")
 
         if "error:" in output.lower():
             self.logger.error("Conversion failed: %s", output)

@@ -69,7 +69,7 @@ class DockerUsdBaker(UsdBaker):
 
         self._process: subprocess.Popen | None = None
 
-    def convert(self, input_file: str, output_file: str) -> bool:
+    def convert(self, input_file: str, output_file: str, retries: int = 3) -> bool:
         input_full_path = self.input_dir / input_file
         if not input_full_path.exists():
             raise FileNotFoundError(f"Input file does not exist: {input_full_path}")
@@ -84,6 +84,14 @@ class DockerUsdBaker(UsdBaker):
         # Execute conversion
         cmd = f"{container_input}:{container_output}"
         output = self.command(cmd)
+
+        if output is None:
+            if retries > 0:
+                self.logger.error("Conversion failed. Process output closed unexpectedly.")
+                self.logger.info("Restarting USD Baker and retrying conversion (attempts left: %d)...", retries)
+                self.start()
+                return self.convert(input_file, output_file, retries - 1)
+            raise RuntimeError("Conversion failed. Process output closed unexpectedly.")
 
         if "error:" in output.lower():
             self.logger.error("Conversion failed: %s", output)
