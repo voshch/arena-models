@@ -33,7 +33,7 @@ class ObjectAnnotation(Annotation):
     color: list[str] = attrs.field(factory=list, converter=convert_list_str)
     hoi: list[str] = attrs.field(factory=list, converter=convert_list_str)
     face: Face = attrs.field(default=Face.NEG_Y)
-    note: str = attrs.field(default=None)
+    note: str = attrs.field(default="")
 
     @property
     def as_text(self):
@@ -58,7 +58,6 @@ class ObjectAnnotation(Annotation):
             "color": ",".join(self.color),
             "hoi": ",".join(self.hoi),
             "bounding_box": json.dumps(list(self.bounding_box)),
-            "face": self.face.value,
             "note": self.note,
         }
 
@@ -91,7 +90,6 @@ class ObjectAnnotation(Annotation):
             "primaryProperty": self.hoi[0] if self.hoi else "",
             "secondaryProperties": self.hoi[1:],
             "materials": [[material, material] for material in self.material],
-            "face": self.face.value,
             "note": self.note,
         }
 
@@ -147,7 +145,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             input_file = Path(annotation.path) / main_file
 
             if self._usd_baker is not None and self.is_usd(main_file):
-                baked_usd_path = dest / f"{annotation.name}.temp.fbx"
+                baked_usd_path = dest / f"{annotation.name}.temp.glb"
                 baked_usd_path.parent.mkdir(exist_ok=True)
 
                 self._usd_baker.convert(
@@ -165,8 +163,9 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
 
             with ModelConverter() as model_converter:
                 model_converter.load(str(input_file))
-                # model_converter.rectify()
+                model_converter.rectify()
                 bounding_box = model_converter.bounding_box().round(4)
+                model_converter.render(str(dest / f"{annotation.name}.png"))
                 for model_path in model_paths:
                     model_path.parent.mkdir(exist_ok=True)
                     model_converter.save(str(model_path))
@@ -185,10 +184,11 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             return annotation
 
         except Exception as e:
-            logger.error("Unexpected error processing entity %s: %s", annotation.path, e)
+            logger.error("Unexpected error processing entity %s: %s", annotation.path, repr(e))
             return None
 
         finally:
+            pass
             if baked_usd_path is not None:
                 try:
                     baked_usd_path.unlink()
