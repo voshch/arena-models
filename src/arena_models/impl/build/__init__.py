@@ -3,6 +3,7 @@ from __future__ import annotations
 import abc
 import os
 from pathlib import Path
+import shutil
 import typing
 from collections.abc import Callable, Iterable, Iterator
 
@@ -155,13 +156,21 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                     if self._overwrite >= 0:
                         annotation = self.process_entity(annotation, dest_path)
                         if annotation is None:
-                            os.rmdir(dest_path)
+                            shutil.rmtree(dest_path)
                             failure.update_from(progress, 1)
                             continue
 
+                    annotation.name = annotation.name or target_path.name
                     annotation.path = str(target_path)
                     for fn in self._pipeline:
-                        fn(annotation)
+                        try:
+                            fn(annotation)
+                        except Exception:
+                            logger.exception("Failed to process pipeline function %s for annotation %s", fn, annotation)
+                            shutil.rmtree(dest_path)
+                            failure.update_from(progress, 1)
+                            raise
+                            continue
                     success.update_from(progress, 1)
 
             if self._post:

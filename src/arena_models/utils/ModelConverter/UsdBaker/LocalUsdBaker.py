@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 
 from . import UsdBaker
 
@@ -29,7 +30,10 @@ class LocalUsdBaker(UsdBaker):
         self._isaacsim_path = isaacsim_path.expanduser().resolve()
         self._process = None
         self._process = self._open_subprocess()
+        self.logger.info(f"Started Isaac Sim subprocess with PID: {self._process.pid}. Waiting for it to be ready...")
+        now = time.time()
         self.wait_for_ready()
+        self.logger.info(f"Isaac Sim ready after {time.time() - now:.2f} seconds.")
 
     def convert(self, input_file: str, output_file: str) -> bool:
         input_full_path = self.input_dir / input_file

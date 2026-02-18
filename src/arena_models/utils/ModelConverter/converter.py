@@ -115,6 +115,19 @@ class ModelConverter:
 
         self.transform_coordinates(CoordinateSystem.default())
         bbox = self.bounding_box()
+
+        # Check if model is too large in x or y and scale down if needed
+        size_x = bbox.max_x - bbox.min_x
+        size_y = bbox.max_y - bbox.min_y
+        if size_x > 5 or size_y > 5:
+            bpy.ops.object.select_all(action='SELECT')
+            try:
+                bpy.ops.transform.resize(value=(0.01, 0.01, 0.01))
+            finally:
+                bpy.ops.object.select_all(action='DESELECT')
+            # Recalculate bounding box after scaling
+            bbox = self.bounding_box()
+
         translation = mathutils.Vector((
             0.0,
             0.0,
@@ -139,11 +152,80 @@ class ModelConverter:
         max_corner = mathutils.Vector(map(max, zip(*coords)))
         return BoundingBox(((min_corner.x, max_corner.x), (min_corner.y, max_corner.y), (min_corner.z, max_corner.z)))
 
+    def render(self, output_path: str, *, resolution: tuple[int, int] = (512, 512), samples: int = 32) -> None:
+        """Render the current scene to a thumbnail image.
+
+        Args:
+            output_path: Path where the rendered image will be saved
+            resolution: Tuple of (width, height) for the output image. Default is (512, 512)
+            samples: Number of samples for rendering quality. Default is 32
+        """
+        scene = bpy.context.scene
+
+        # Configure render settings
+        scene.render.engine = 'CYCLES'
+        scene.cycles.samples = samples
+        scene.render.resolution_x = resolution[0]
+        scene.render.resolution_y = resolution[1]
+        scene.render.resolution_percentage = 100
+        scene.render.film_transparent = True
+        scene.render.image_settings.file_format = 'PNG'
+        scene.render.filepath = output_path
+
+        # Get bounding box to position camera
+        bbox = self.bounding_box()
+
+        # Calculate model center and size
+        center = mathutils.Vector((
+            (bbox.min_x + bbox.max_x) / 2,
+            (bbox.min_y + bbox.max_y) / 2,
+            (bbox.min_z + bbox.max_z) / 2,
+        ))
+        size = max(bbox.max_x - bbox.min_x, bbox.max_y - bbox.min_y, bbox.max_z - bbox.min_z)
+
+        # Setup camera
+        camera_data = bpy.data.cameras.new(name='RenderCamera')
+        camera_object = bpy.data.objects.new('RenderCamera', camera_data)
+        scene.collection.objects.link(camera_object)
+        scene.camera = camera_object
+
+        # Position camera at an angle to show the model nicely
+        camera_distance = size * 2.5
+        camera_object.location = center + mathutils.Vector((camera_distance * 0.7, -camera_distance * 0.7, camera_distance * 0.5))
+
+        # Point camera at model center
+        direction = center - camera_object.location
+        rot_quat = direction.to_track_quat('-Z', 'Y')
+        camera_object.rotation_euler = rot_quat.to_euler()
+
+        # Setup lighting
+        # Sun light for general illumination
+        sun_data = bpy.data.lights.new(name='SunLight', type='SUN')
+        sun_data.energy = 2.0
+        sun_object = bpy.data.objects.new('SunLight', sun_data)
+        scene.collection.objects.link(sun_object)
+        sun_object.location = center + mathutils.Vector((size, size, size * 2))
+        sun_object.rotation_euler = (0.785, 0, 0.785)  # 45 degrees
+
+        # Area light for fill lighting
+        area_data = bpy.data.lights.new(name='FillLight', type='AREA')
+        area_data.energy = 100.0
+        area_data.size = size
+        area_object = bpy.data.objects.new('FillLight', area_data)
+        scene.collection.objects.link(area_object)
+        area_object.location = center + mathutils.Vector((-size, -size, size))
+        area_direction = center - area_object.location
+        area_rot_quat = area_direction.to_track_quat('-Z', 'Y')
+        area_object.rotation_euler = area_rot_quat.to_euler()
+
+        # Render
+        bpy.ops.render.render(write_still=True)
+
     def save(self, path: str, *, ext: ModelFormat | None = None) -> None:
         ext = ModelFormat(os.path.splitext(path)[-1].lower().strip("."))
         if ext in self.__exts:
             ext_cls = self.__exts[ext]
-            self.transform_coordinates(ext_cls.coordinates())
+            # self.transform_coordinates(ext_cls.coordinates())
             ext_cls.save(path)
         else:
             raise ValueError(f"Unsupported file extension: {ext}")

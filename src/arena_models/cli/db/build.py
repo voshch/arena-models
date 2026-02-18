@@ -73,7 +73,13 @@ def build_command(
             builder = DatabaseBuilder.Builder(t)(input_path=input_path, output_path=output_path, overwrite=overwrite)
             for extra in options:
                 builder.enable(*extra.split('='))
-            builder.build()
+            try:
+                builder.build()
+            except Exception as e:
+                logger.error(f"Failed to build {t} database: {e}")
+                import traceback
+                traceback.print_exc()
+                raise
 
     logger.info(f"Database build completed in {global_progress.elapsed}s")
 

@@ -165,7 +165,8 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
                 model_converter.load(str(input_file))
                 model_converter.rectify()
                 bounding_box = model_converter.bounding_box().round(4)
-                model_converter.render(str(dest / f"{annotation.name}.png"))
+                model_converter.render(str(dest / f"{annotation.name}.png"), resolution=(1920, 1080))
+                model_converter.render(str(dest / f"{annotation.name}_thumb.png"), resolution=(512, 512))
                 for model_path in model_paths:
                     model_path.parent.mkdir(exist_ok=True)
                     model_converter.save(str(model_path))
