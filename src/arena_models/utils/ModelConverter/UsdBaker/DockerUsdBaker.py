@@ -46,6 +46,10 @@ class DockerUsdBaker(UsdBaker):
             stderr=subprocess.PIPE,
         )
 
+    def start(self):
+        self._process = self.__open_subprocess()
+        self.wait_for_ready()
+
     def __init__(
         self,
         input_dir: Path,
@@ -64,8 +68,6 @@ class DockerUsdBaker(UsdBaker):
         }
 
         self._process: subprocess.Popen | None = None
-        self._process = self.__open_subprocess()
-        self.wait_for_ready()
 
     def convert(self, input_file: str, output_file: str) -> bool:
         input_full_path = self.input_dir / input_file

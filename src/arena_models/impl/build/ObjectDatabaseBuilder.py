@@ -246,6 +246,8 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
                 output_dir=Path(self.input_path),
             )
 
+        self._pre.append(self._usd_baker.start)
+
         def cleanup_baker():
             if self._usd_baker is not None:
                 self._usd_baker.cleanup()

@@ -99,6 +99,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         self.output_path = output_path
         self._overwrite = overwrite
 
+        self._pre: list[Callable] = []
         self._pipeline: list[Callable[[AnnotationT], typing.Any]] = []
         self._post: list[Callable] = []
 
@@ -124,12 +125,33 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         )
 
         status_bar.update(stage='Discovery')
-        queue = list(self.discover())
+
+        skipped_count = 0
+
+        def skip_existing(annotation: AnnotationT) -> bool:
+            dest_path = self._dest_path(annotation)
+
+            if (dest_path / ANNOTATION_NAME).exists() and not self._overwrite:
+                logger.info("Skipping existing entity at %s", annotation.path)
+                nonlocal skipped_count
+                skipped_count += 1
+                return False
+            return True
+
+        queue = list(filter(skip_existing, self.discover()))
 
         if not queue:
             logger.info("Skipped %s build: No entities found.", self._type.name)
             status_bar.update(stage='Done (skipped)')
         else:
+            if self._pre:
+                status_bar.update(stage='Pre-processing')
+                progress = manager.counter(total=len(self._pre), desc="Pre-processing", unit="steps", format='{desc}{desc_pad}{count:d} {unit}{unit_pad}{elapsed}]{fill}', leave=False)
+                with progress:
+                    logger.info("Running pre-processing...")
+                    for fn in progress(self._pre):
+                        fn()
+
             status_bar.update(stage='Processing')
             progress = manager.counter(total=len(queue), desc="Entities", unit="entities", leave=False)
 
@@ -137,18 +159,15 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                 success = progress.add_subcounter('green')
                 failure = progress.add_subcounter('red')
                 skipped = progress.add_subcounter('blue')
+                skipped.update(skipped_count)
+                del skipped_count
 
                 for annotation in queue:
                     progress.update()
                     status_bar.update(stage=f'Processing {annotation.path}')
 
-                    target_path = Path(annotation.path).relative_to(self.input_path)
-                    dest_path = self.output_path / target_path
-
-                    if (dest_path / ANNOTATION_NAME).exists() and not self._overwrite:
-                        logger.info("Skipping existing entity at %s", annotation.path)
-                        skipped.update_from(progress, 1)
-                        continue
+                    target_path = self._target_path(annotation)
+                    dest_path = self._dest_path(annotation)
 
                     logger.info("Processing entity at %s", annotation.path)
                     os.makedirs(dest_path, exist_ok=True)
@@ -213,6 +232,12 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
     @abc.abstractmethod
     def process_entity(self, annotation: AnnotationT, dest: Path) -> AnnotationT | None:
         ...
+
+    def _target_path(self, annotation: AnnotationT) -> Path:
+        return Path(annotation.path).relative_to(self.input_path)
+
+    def _dest_path(self, annotation: AnnotationT) -> Path:
+        return self.output_path / self._target_path(annotation)
 
 
 @DatabaseBuilder.register(AssetType.MATERIAL)

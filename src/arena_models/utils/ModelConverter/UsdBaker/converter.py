@@ -175,8 +175,6 @@ async def convert_asset(input_path, output_path):
 if __name__ == "__main__":
     app = omni.kit.app.get_app()
     loop = asyncio.get_event_loop()
-    for _ in range(10):
-        app.update()
     print('ready: Converter CLI (Isaac Sim 5.x). Type "exit" to quit.')
     while True:
         inp = input('')

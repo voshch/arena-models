@@ -26,6 +26,9 @@ class UsdBaker(abc.ABC):
         self.output_dir: Path = Path(output_dir).resolve()
         self.logger = logging.get_logger(self.__class__.__name__)
 
+    def start(self):
+        ...
+
     def cleanup(self):
         if self._process:
             self._process.terminate()
