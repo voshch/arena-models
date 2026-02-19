@@ -77,7 +77,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
     _annotation_cls: typing.ClassVar[typing.Type[Annotation]]
 
     @classmethod
-    def read_annotation_file(cls, dir_path: Path) -> AnnotationT | None:
+    def read_annotation_file(cls, dir_path: Path) -> AnnotationT | Exception:
         try:
             with open(dir_path / ANNOTATION_NAME, "r") as yaml_file:
                 return typing.cast(
@@ -91,8 +91,8 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                         cls._annotation_cls
                     ),
                 )
-        except Exception:
-            return None
+        except Exception as e:
+            return e
 
     def __init__(self, input_path: Path, output_path: Path, overwrite: int = 0, **kwargs):
         self.input_path = input_path
@@ -159,7 +159,8 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                 success = progress.add_subcounter('green')
                 failure = progress.add_subcounter('red')
                 skipped = progress.add_subcounter('blue')
-                skipped.update(skipped_count)
+                progress.update(skipped_count)
+                skipped.update_from(progress, skipped_count)
                 del skipped_count
 
                 for annotation in queue:
@@ -226,7 +227,10 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
             if ANNOTATION_NAME in files:
                 # don't recurse into subdirs
                 dirs.clear()
-                if (annotation := self.read_annotation_file(Path(root))) is not None:
+                annotation = self.read_annotation_file(Path(root))
+                if isinstance(annotation, Exception):
+                    logger.warning("Failed to read annotation file in %s: %s", root, annotation)
+                elif annotation is not None:
                     yield annotation
 
     @abc.abstractmethod

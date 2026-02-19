@@ -1,6 +1,7 @@
 import abc
 import subprocess
 from pathlib import Path
+import select
 
 from arena_models.utils import logging
 
@@ -19,9 +20,25 @@ class UsdBaker(abc.ABC):
     def readline(self) -> bytes | None:
         if self._process is None or self._process.stdout is None:
             raise RuntimeError("Interactive Python session not started")
-        if self._process.poll() is not None:
+
+        try:
+            stdout = self._process.stdout
+            stdout_fd = stdout.fileno()
+            while True:
+                if self._process.poll() is not None:
+                    return None
+
+                ready, _, _ = select.select([stdout_fd], [], [], 0.1)
+                if not ready:
+                    continue
+
+                line = stdout.readline()
+                if line:
+                    return line
+                if self._process.poll() is not None:
+                    return None
+        except (BrokenPipeError, OSError):
             return None
-        return self._process.stdout.readline()
 
     def __init__(self, input_dir: Path, output_dir: Path):
         self.input_dir: Path = Path(input_dir).resolve()
@@ -67,7 +84,7 @@ class UsdBaker(abc.ABC):
             if not bline:
                 continue
             line = bline.decode('utf-8').rstrip()
-            self.logger.debug("%s", line)
+            self.logger.info("%s", line)
             if line.startswith('success:'):
                 return line[len('success:'):]
             if line.startswith('error:'):

@@ -4,7 +4,6 @@ import time
 from . import UsdBaker
 
 import subprocess
-import asyncio
 
 
 class LocalUsdBaker(UsdBaker):
@@ -13,12 +12,13 @@ class LocalUsdBaker(UsdBaker):
     def _open_subprocess(self) -> subprocess.Popen:
         return subprocess.Popen(
             [
-                str(self._isaacsim_path),
+                "LocalUsdBaker",
                 str(self.converter_script()),
             ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            executable=str(self._isaacsim_path),
         )
 
     def start(self):

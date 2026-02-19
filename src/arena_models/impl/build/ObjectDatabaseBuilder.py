@@ -3,6 +3,7 @@ from __future__ import annotations
 import enum
 import json
 import os
+import shutil
 import typing
 from pathlib import Path
 
@@ -72,7 +73,7 @@ class ObjectAnnotation(Annotation):
             color=color.split(",") if (color := metadata.get("color")) else [],
             hoi=hoi.split(",") if (hoi := metadata.get("hoi")) else [],
             face=cls.Face(metadata.get("face") or "-y"),
-            note=metadata.get("note", None),
+            note=metadata.get("note", ""),
             bounding_box=BoundingBox(json.loads(bounding_box)) if (bounding_box := metadata.get("bounding_box")) else BoundingBox.empty(),
         )
 
@@ -101,7 +102,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self._formats: set[ModelFormat] = {ModelFormat.USDZ}
+        self._formats: set[ModelFormat] = {ModelFormat.USDZ, ModelFormat.FBX}
         self._usd_baker: typing.Optional[UsdBaker] = None
 
         def store_db(annotation: ObjectAnnotation) -> None:
@@ -145,7 +146,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             input_file = Path(annotation.path) / main_file
 
             if self._usd_baker is not None and self.is_usd(main_file):
-                baked_usd_path = dest / f"{annotation.name}.temp.glb"
+                baked_usd_path = dest / "build" / f"{annotation.name}.fbx"
                 baked_usd_path.parent.mkdir(exist_ok=True)
 
                 self._usd_baker.convert(
@@ -193,6 +194,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             if baked_usd_path is not None:
                 try:
                     baked_usd_path.unlink()
+                    shutil.rmtree(baked_usd_path.parent)
                     logger.debug("Removed temporary baked file %s", baked_usd_path)
                 except Exception as e:
                     logger.warning("Failed to remove temporary baked file %s: %s", baked_usd_path, e)

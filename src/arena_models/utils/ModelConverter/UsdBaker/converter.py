@@ -3,6 +3,15 @@
 import asyncio
 import os
 import shutil
+import zipfile
+import sys
+
+try:
+    # Ensure each print flushes promptly for IPC readers.
+    sys.stdout.reconfigure(line_buffering=True)
+    sys.stderr.reconfigure(line_buffering=True)
+except Exception:
+    pass
 
 
 # fmt: off
@@ -28,11 +37,7 @@ from omni.kit.usd.collect import Collector
 # fmt: on
 
 
-def sanitize_broken_ue4_materials(stage):
-    """
-    Forces the GLB exporter to respect Roughness by setting explicit constants.
-    This fixes the 'Mirror Bed' issue in external viewers.
-    """
+def sanitize_materials(stage):
     new_shader_paths = []
 
     def _clamp01(value):
@@ -91,19 +96,15 @@ def sanitize_broken_ue4_materials(stage):
             new_shader.SetSourceAsset("OmniPBR.mdl", "mdl")
             new_shader.SetSourceAssetSubIdentifier("OmniPBR", "mdl")
 
-            # Albedo & Normal
             if albedo_val:
                 new_shader.CreateInput("diffuse_texture", Sdf.ValueTypeNames.Asset).Set(albedo_val)
             if normal_val:
                 new_shader.CreateInput("normalmap_texture", Sdf.ValueTypeNames.Asset).Set(normal_val)
 
             if rma_val:
-                # KEY FIX: Don't provide texture inputs for roughness/metallic
-                # Only set constants, forcing the exporter to bake flat values
                 new_shader.CreateInput("reflection_roughness_constant", Sdf.ValueTypeNames.Float).Set(roughness_const)
                 new_shader.CreateInput("metallic_constant", Sdf.ValueTypeNames.Float).Set(metallic_const)
 
-                # Still use AO channel if present (Red channel in RMA)
                 new_shader.CreateInput("ao_texture", Sdf.ValueTypeNames.Asset).Set(rma_val)
 
             mdl_output.ConnectToSource(new_shader.ConnectableAPI(), "surface")
@@ -122,12 +123,14 @@ async def convert_asset(input_path, output_path):
     tmp_dir = tempfile.mkdtemp(prefix=f"usdbaker_{base_name}_")
 
     try:
-        # USDZ files fail with collector - open directly instead
-        if input_path.lower().endswith('.usdz'):
-            context.open_stage(input_path)
-            stage = context.get_stage()
-            tmp_usd_path = os.path.join(tmp_dir, f"{base_name}.usd")
-            stage.Export(tmp_usd_path)
+        if input_path.lower().endswith(".usdz"):
+            with zipfile.ZipFile(input_path, 'r') as z:
+                z.extractall(tmp_dir)
+                candidates = [f for f in z.namelist() if f.lower().endswith(('.usd', '.usda', '.usdc'))]
+                if candidates:
+                    tmp_usd_path = os.path.join(tmp_dir, candidates[0])
+                else:
+                    tmp_usd_path = input_path
         else:
             collector = Collector(
                 usd_path=input_path,
@@ -142,8 +145,7 @@ async def convert_asset(input_path, output_path):
         context.open_stage(tmp_usd_path)
         stage = context.get_stage()
 
-        # Repair the materials before distilling
-        sanitize_broken_ue4_materials(stage)
+        sanitize_materials(stage)
 
         for prim in stage.Traverse():
             if UsdShade.Material(prim):
@@ -153,21 +155,31 @@ async def convert_asset(input_path, output_path):
         stage.Export(tmp_usd_path)
 
         converter_manager = get_instance()
+        fbx_options = AssetConverterContext()
+        fbx_options.embed_textures = True
+        fbx_options.keep_all_materials = True
+        fbx_options.export_hidden_props = True
+        fbx_options.export_preview_surface = True
+        fbx_options.use_meter_per_unit = True
+        fbx_options.merge_all_meshes = False
+        fbx_options.ignore_camera = True
+        fbx_options.ignore_light = True
 
-        glb_options = AssetConverterContext()
-        glb_options.embed_textures = True
-        glb_options.export_preview_surface = True
-        glb_options.use_meter_per_unit = True
-        glb_options.fmerge_all_meshes = False
+        print(f"=== Converting to FBX: {output_path} ===")
+        print(f"  Embed textures: {fbx_options.embed_textures}")
+        print(f"  Export preview surface: {fbx_options.export_preview_surface}")
 
-        glb_task = converter_manager.create_converter_task(
-            tmp_usd_path, output_path, None, glb_options
+        fbx_task = converter_manager.create_converter_task(
+            tmp_usd_path, output_path, None, fbx_options
         )
 
-        success = await glb_task.wait_until_finished()
+        success = await fbx_task.wait_until_finished()
         if not success:
-            raise RuntimeError(f"Failed to export glb: {glb_task.get_error_message()}")
+            error_msg = fbx_task.get_error_message()
+            print(f"FBX export error: {error_msg}")
+            raise RuntimeError(f"Failed to export fbx: {error_msg}")
 
+        print("=== FBX export successful ===")
         return True
     finally:
         shutil.rmtree(tmp_dir)

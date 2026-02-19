@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import io
 import os
 import typing
@@ -231,34 +232,60 @@ class ModelConverter:
             raise ValueError(f"Unsupported file extension: {ext}")
 
 
-ModelConverter.register(ModelFormat.USD, ModelFormat.USDA, ModelFormat.USDC, ModelFormat.USDZ)(_ModelConverterExt.inline(
-    CoordinateSystem('X+', 'Y+', 'Z+'),
-    bpy.ops.wm.usd_import,
-    bpy.ops.wm.usd_export)
+ModelConverter.register(ModelFormat.USD, ModelFormat.USDA, ModelFormat.USDC, ModelFormat.USDZ)(
+    _ModelConverterExt.inline(
+        CoordinateSystem('X+', 'Y+', 'Z+'),
+        bpy.ops.wm.usd_import,
+        functools.partial(
+            bpy.ops.wm.usd_export,
+            export_materials=True,
+            export_normals=True,
+            export_uvmaps=True,
+            export_animation=False,
+            selected_objects_only=False,
+            export_textures_mode='NEW',
+            overwrite_textures=True,
+            export_lights=False,
+            export_cameras=False,
+        )
+    )
 )
 
-ModelConverter.register(ModelFormat.OBJ)(_ModelConverterExt.inline(
-    CoordinateSystem.default(),
-    bpy.ops.wm.obj_import,
-    bpy.ops.wm.obj_export)
+ModelConverter.register(ModelFormat.OBJ)(
+    _ModelConverterExt.inline(
+        CoordinateSystem.default(),
+        bpy.ops.wm.obj_import,
+        bpy.ops.wm.obj_export
+    )
 )
 
-ModelConverter.register(ModelFormat.FBX)(_ModelConverterExt.inline(
-    CoordinateSystem.default(),
-    bpy.ops.import_scene.fbx,
-    bpy.ops.export_scene.fbx)
+ModelConverter.register(ModelFormat.FBX)(
+    _ModelConverterExt.inline(
+        CoordinateSystem.default(),
+        bpy.ops.import_scene.fbx,
+        functools.partial(
+            bpy.ops.export_scene.fbx,
+            object_types={'ARMATURE', 'EMPTY', 'MESH', 'OTHER'},
+            embed_textures=True,
+            path_mode='COPY',
+        )
+    )
 )
 
-ModelConverter.register(ModelFormat.DAE)(_ModelConverterExt.inline(
-    CoordinateSystem.default(),
-    bpy.ops.wm.collada_import,
-    bpy.ops.wm.collada_export)
+ModelConverter.register(ModelFormat.DAE)(
+    _ModelConverterExt.inline(
+        CoordinateSystem.default(),
+        bpy.ops.wm.collada_import,
+        bpy.ops.wm.collada_export
+    )
 )
 
-ModelConverter.register(ModelFormat.GLB, ModelFormat.GLTF)(_ModelConverterExt.inline(
-    CoordinateSystem.default(),
-    bpy.ops.import_scene.gltf,
-    bpy.ops.export_scene.gltf)
+ModelConverter.register(ModelFormat.GLB, ModelFormat.GLTF)(
+    _ModelConverterExt.inline(
+        CoordinateSystem.default(),
+        bpy.ops.import_scene.gltf,
+        bpy.ops.export_scene.gltf
+    )
 )
 
 

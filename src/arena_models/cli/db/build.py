@@ -81,7 +81,7 @@ def build_command(
                 traceback.print_exc()
                 raise
 
-    logger.info(f"Database build completed in {global_progress.elapsed}s")
+    logger.info(f"Database build completed in {global_progress.elapsed:.1f}s")
 
 
 def add_to_cmd(db_cmd):
