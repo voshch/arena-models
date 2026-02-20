@@ -220,9 +220,11 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         if base_path is None:
             base_path = self._DISCOVER_PATH
 
-        for root, dirs, files in os.walk(self.input_path / base_path):
+        for root, dirs, files in os.walk(self.input_path / base_path, ):
             if not filter_(root):
                 continue
+            dirs.sort()
+            files.sort()
             logger.info("Scanning directory: %s", root)
             if ANNOTATION_NAME in files:
                 # don't recurse into subdirs

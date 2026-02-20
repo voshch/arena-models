@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import enum
 import json
+import math
 import os
 import shutil
 import typing
@@ -28,6 +29,16 @@ class ObjectAnnotation(Annotation):
         POS_Y = "+y"
         NEG_Y = "-y"
         XY = "xy"
+
+        @property
+        def angle(self) -> float:
+            return {
+                ObjectAnnotation.Face.NEG_X: 0.0,
+                ObjectAnnotation.Face.NEG_Y: +90.0,
+                ObjectAnnotation.Face.POS_X: -180.0,
+                ObjectAnnotation.Face.XY: -135.0,
+                ObjectAnnotation.Face.POS_Y: -90.0,
+            }[self]
 
     bounding_box: BoundingBox = attrs.field(factory=BoundingBox.empty)
     material: list[str] = attrs.field(factory=list, converter=convert_list_str)
@@ -112,6 +123,8 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             )
         self._pipeline.append(store_db)
 
+        self._previews_enabled = False
+
     @classmethod
     def find_mainfile(cls, annotation: ObjectAnnotation) -> str | None:
         from arena_models.utils.ModelConverter.converter import ModelConverter
@@ -166,8 +179,11 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
                 model_converter.load(str(input_file))
                 model_converter.rectify()
                 bounding_box = model_converter.bounding_box().round(4)
-                model_converter.render(str(dest / f"{annotation.name}.png"), resolution=(1920, 1080))
-                model_converter.render(str(dest / f"{annotation.name}_thumb.png"), resolution=(512, 512))
+
+                if self._previews_enabled:
+                    # model_converter.render_perspective(str(dest / f"{annotation.name}.png"), resolution=None, theta=annotation.face.angle + 30)
+                    model_converter.render_perspective(str(dest / f"{annotation.name}_thumb.png"), resolution=(512, 512), theta=math.radians(annotation.face.angle + 30))
+                    model_converter.render_topdown(str(dest / f"{annotation.name}_topdown.png"), resolution=(512, 512))
                 for model_path in model_paths:
                     model_path.parent.mkdir(exist_ok=True)
                     model_converter.save(str(model_path))
@@ -254,3 +270,8 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             if self._usd_baker is not None:
                 self._usd_baker.cleanup()
         self._post.append(cleanup_baker)
+
+    @enable.register('previews')
+    def previews(self):
+        logger.info("Enabling preview generation option.")
+        self._previews_enabled = True
