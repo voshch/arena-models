@@ -410,11 +410,12 @@ def sdf_export(filepath: str):
         f.write(f"""<?xml version="1.0" ?>
 <sdf version="1.7">
   <model name="{base_path.stem}">
+    <static>true</static>
     <link name="link">
       <visual name="visual">
         <geometry>
           <mesh>
-            <uri>model://{base_path.stem}.dae</uri>
+            <uri>{base_path.stem}.dae</uri>
           </mesh>
         </geometry>
       </visual>
