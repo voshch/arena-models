@@ -62,7 +62,7 @@ def fetch_database(bucket: str, bucket_path: str, destination: str, relative_pat
             blob for blob in blobs_list
             if not blob.name.endswith('/')
             and (annotations or not os.path.basename(blob.name) == ANNOTATION_NAME)
-            and (model_formats is None or any(blob.name.endswith(f".{fmt}") for fmt in model_formats))
+            and (model_formats is None or any(any(part.endswith(f".{fmt}") for part in blob.name.split('/')) for fmt in model_formats))
         ]
         total_files = len(file_blobs)
         total_size = sum(blob.size or 0 for blob in file_blobs)
