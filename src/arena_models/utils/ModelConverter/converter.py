@@ -1,4 +1,5 @@
 from __future__ import annotations
+from pathlib import Path
 
 import contextlib
 import functools
@@ -397,6 +398,39 @@ ModelConverter.register(ModelFormat.DAE)(
         bpy.ops.wm.collada_export
     )
 )
+
+
+def sdf_export(filepath: str):
+    base_path = Path(filepath)
+    dae_path = base_path / f'{base_path.stem}.dae'
+    bpy.ops.wm.collada_export(filepath=str(dae_path))
+
+    sdf_path = base_path / f'{base_path.stem}.sdf'
+    with open(sdf_path, 'w') as f:
+        f.write(f"""<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="{base_path.stem}">
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://{base_path.stem}.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>""")
+
+
+ModelConverter.register(ModelFormat.SDF)(
+    _ModelConverterExt.inline(
+        CoordinateSystem.default(),
+        lambda filepath: NotImplementedError("SDF import is not implemented yet."),
+        sdf_export
+    )
+)
+
 
 ModelConverter.register(ModelFormat.GLB, ModelFormat.GLTF)(
     _ModelConverterExt.inline(
