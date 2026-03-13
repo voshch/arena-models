@@ -44,7 +44,7 @@ def build_command(
     # Get output path from context
     output_path = Path(ctx.obj.get('database_path')) if ctx.obj else None
     assert output_path is not None
-
+    
     # Validate asset type
     if asset_type:
         try:
