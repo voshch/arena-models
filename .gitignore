@@ -1,7 +1,0 @@
-#python
-__pycache__
-*.pyc
-*.egg-info
-/src/build/
-
-.vscode/

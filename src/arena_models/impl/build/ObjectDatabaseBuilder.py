@@ -69,6 +69,7 @@ class ObjectAnnotation(Annotation):
             "material": ",".join(self.material),
             "color": ",".join(self.color),
             "hoi": ",".join(self.hoi),
+            "face": self.face.angle,
             "bounding_box": json.dumps(list(self.bounding_box)),
             "note": self.note,
         }
@@ -103,6 +104,21 @@ class ObjectAnnotation(Annotation):
             "secondaryProperties": self.hoi[1:],
             "materials": [[material, material] for material in self.material],
             "note": self.note,
+        }
+    
+    @property
+    def as_gpt_meta(self) -> dict:
+        return {
+            "name": self.name,
+            "desc": self.desc,
+            "face": self.face.angle,
+            "bounding_box": {
+                "x": self.bounding_box.max_x - self.bounding_box.min_x,
+                "y": self.bounding_box.max_y - self.bounding_box.min_y,
+                "z": self.bounding_box.max_z - self.bounding_box.min_z,
+            },
+            "note": self.note,
+
         }
 
 
