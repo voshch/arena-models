@@ -9,7 +9,7 @@ from collections.abc import Callable, Iterable, Iterator
 
 import yaml
 
-from arena_models.impl import ANNOTATION_NAME, DATABASE_NAME, Annotation, AssetType, converter
+from arena_models.impl import ANNOTATION_NAME, DATABASE_NAME, Annotation, AssetType, converter, serialization_asset_context
 from arena_models.utils.Database import Database
 from arena_models.utils.logging import get_logger, get_manager
 
@@ -109,7 +109,8 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
             annotation_path = self.output_path / annotation.path / ANNOTATION_NAME
             os.makedirs(annotation_path.parent, exist_ok=True)
             with open(annotation_path, "w") as f:
-                yaml.safe_dump(converter.unstructure(annotation), f)
+                with serialization_asset_context(str(annotation.path)):
+                    yaml.safe_dump(converter.unstructure(annotation), f)
         self._pipeline.append(save_annotation)
 
     enable: OptionRegistry

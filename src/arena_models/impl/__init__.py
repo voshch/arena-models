@@ -1,4 +1,6 @@
 """Implementation modules for arena_models CLI commands."""
+import contextlib
+import contextvars
 import enum
 import typing
 
@@ -12,15 +14,31 @@ logger = get_logger('arena_models.impl')
 
 converter = cattrs.preconf.pyyaml.make_converter(prefer_attrib_converters=True)
 
+_active_serialization_asset: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "active_serialization_asset",
+    default=None,
+)
+
+
+@contextlib.contextmanager
+def serialization_asset_context(asset: str):
+    token = _active_serialization_asset.set(asset)
+    try:
+        yield
+    finally:
+        _active_serialization_asset.reset(token)
+
+
 converter.register_structure_hook(BoundingBox, lambda d, t: d if isinstance(d, BoundingBox) else BoundingBox(d))
 
 
 def _unstructure_bounding_box(box: BoundingBox) -> list:
     if (volume := box.volume) < 1e-9:
+        asset = _active_serialization_asset.get()
         if volume < 0:
-            logger.warning("Serializing Negative-volume (%d) BoundingBox: %s", volume, box)
+            logger.warning("Serializing Negative-volume (%d) BoundingBox for %s: %s", volume, asset or "<unknown-asset>", box)
         else:
-            logger.warning("Serializing Zero-volume (%d) BoundingBox: %s", volume, box)
+            logger.warning("Serializing Zero-volume (%d) BoundingBox for %s: %s", volume, asset or "<unknown-asset>", box)
     return list(box)
 
 
