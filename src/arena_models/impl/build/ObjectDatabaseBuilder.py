@@ -69,9 +69,45 @@ class ObjectAnnotation(Annotation):
             "material": ",".join(self.material),
             "color": ",".join(self.color),
             "hoi": ",".join(self.hoi),
+            # Store enum value for stable round-tripping; from_metadata also supports legacy numeric angles.
+            "face": self.face.value,
             "bounding_box": json.dumps(list(self.bounding_box)),
             "note": self.note,
         }
+
+    @classmethod
+    def _parse_face(cls, value: typing.Any) -> "ObjectAnnotation.Face":
+        if value is None or value == "":
+            return cls.Face.NEG_Y
+
+        if isinstance(value, cls.Face):
+            return value
+
+        # Preferred format: enum value strings like "-y", "+x", "xy"
+        if isinstance(value, str):
+            try:
+                return cls.Face(value)
+            except ValueError:
+                pass
+
+            # Backward-compatible: some databases stored numeric angles as strings
+            try:
+                value = float(value)
+            except ValueError:
+                return cls.Face.NEG_Y
+
+        # Backward-compatible: numeric angle values (legacy)
+        if isinstance(value, (int, float)):
+            angle_to_face = {
+                0.0: cls.Face.NEG_X,
+                90.0: cls.Face.NEG_Y,
+                -180.0: cls.Face.POS_X,
+                -135.0: cls.Face.XY,
+                -90.0: cls.Face.POS_Y,
+            }
+            return angle_to_face.get(float(value), cls.Face.NEG_Y)
+
+        return cls.Face.NEG_Y
 
     @classmethod
     def from_metadata(cls, metadata: dict):
@@ -83,7 +119,7 @@ class ObjectAnnotation(Annotation):
             material=material.split(",") if (material := metadata.get("material")) else [],
             color=color.split(",") if (color := metadata.get("color")) else [],
             hoi=hoi.split(",") if (hoi := metadata.get("hoi")) else [],
-            face=cls.Face(metadata.get("face") or "-y"),
+            face=cls._parse_face(metadata.get("face")),
             note=metadata.get("note", ""),
             bounding_box=BoundingBox(json.loads(bounding_box)) if (bounding_box := metadata.get("bounding_box")) else BoundingBox.empty(),
         )
@@ -103,6 +139,21 @@ class ObjectAnnotation(Annotation):
             "secondaryProperties": self.hoi[1:],
             "materials": [[material, material] for material in self.material],
             "note": self.note,
+        }
+    
+    @property
+    def as_gpt_meta(self) -> dict:
+        return {
+            "name": self.name,
+            "desc": self.desc,
+            "face": self.face.angle,
+            "bounding_box": {
+                "x": self.bounding_box.max_x - self.bounding_box.min_x,
+                "y": self.bounding_box.max_y - self.bounding_box.min_y,
+                "z": self.bounding_box.max_z - self.bounding_box.min_z,
+            },
+            "note": self.note,
+
         }
 
 

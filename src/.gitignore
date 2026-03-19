@@ -1,0 +1,10 @@
+log.txt
+progress.csv
+.DS_Store
+.idea/
+.env
+*.pyc
+virtualenv
+.venv
+*.pkl
+*.pt

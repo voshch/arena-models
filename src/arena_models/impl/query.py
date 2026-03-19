@@ -7,9 +7,11 @@ from arena_models.impl.build import DatabaseBuilder
 
 
 def query_database(database_path: str, asset_type: AssetType, query_target: str) -> Annotation:
+    print(f"Querying database at {database_path} for {asset_type.value} '{query_target}'")
+    
     db = Database(os.path.join(database_path, DATABASE_NAME))
     result = db.query(asset_type.value, query_target, 5)
-
+    print(f"Query result: {result}")
     data = result['metadatas']
     if not data or not data[0]:
         raise ValueError("No results found in the database.")
