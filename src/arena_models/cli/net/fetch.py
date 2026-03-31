@@ -7,7 +7,7 @@ from arena_models.cli.utils import safe_echo
 
 def fetch_command(
     ctx: typer.Context,
-    relative_path: str = typer.Argument("", help="Path inside the bucket to download"),
+    relative_paths: list[str] = typer.Argument(None, help="Paths inside the bucket to download"),
     output_dir: str = typer.Option(
         os.getcwd(),
         "--output",
@@ -26,14 +26,17 @@ def fetch_command(
         help="Only download models of specified formats",
     )
 ):
-    """Fetch specific files from a path within the bucket."""
+    """Fetch specific files from paths within the bucket."""
     source = ctx.obj['source']
 
-    safe_echo(f"Fetching '{relative_path}' from bucket: {source}", ctx)
+    if not relative_paths:
+        relative_paths = [""]
+
+    safe_echo(f"Fetching {len(relative_paths)} path(s) from bucket: {source}", ctx)
     safe_echo(f"Output directory: {output_dir}", ctx)
 
     from arena_models.impl.fetch import fetch_database
-    fetch_database(bucket=source, bucket_path=relative_path, destination=output_dir, relative_path=relative_path, annotations=not no_annotation, model_formats=model_formats)
+    fetch_database(bucket=source, bucket_paths=relative_paths, destination=output_dir, annotations=not no_annotation, model_formats=model_formats)
 
     safe_echo("Fetch completed successfully!", ctx)
 
