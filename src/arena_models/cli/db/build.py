@@ -42,8 +42,11 @@ def build_command(
     """Build a database from source model files."""
 
     # Get output path from context
-    output_path = Path(ctx.obj.get('database_path')) if ctx.obj else None
-    assert output_path is not None
+    database_path = ctx.obj.get('database_path') if ctx.obj else None
+    if database_path is None:
+        logger.fatal("No database path configured. Set it via the parent command's --database option.")
+        raise typer.Exit(1)
+    output_path = Path(database_path)
     
     # Validate asset type
     if asset_type:
