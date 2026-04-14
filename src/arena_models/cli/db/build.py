@@ -3,7 +3,7 @@ from pathlib import Path
 import typer
 
 from arena_models.impl import AssetType
-from arena_models.impl.build import DatabaseBuilder
+from arena_models.impl.build import DatabaseBuilder, OverwriteMode
 from arena_models.utils.logging import get_logger, get_manager
 
 logger = get_logger('cli.db.build')
@@ -33,10 +33,14 @@ def build_command(
         "-o",
         help="Options for the build process",
     ),
-    overwrite: int = typer.Option(
-        0,
+    overwrite: OverwriteMode = typer.Option(
+        OverwriteMode.SKIP,
         "--overwrite",
-        help="Overwrite behavior: 0 = skip existing, 1 = overwrite existing, -1 = assume built, only use annotations.",
+        help=(
+            "Overwrite behavior: 'skip' keeps existing entries, "
+            "'overwrite' rebuilds them, "
+            "'annotations' assumes files are built and only updates annotations."
+        ),
     ),
 ):
     """Build a database from source model files."""

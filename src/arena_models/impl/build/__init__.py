@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import abc
 import os
+from enum import Enum
 from pathlib import Path
 import shutil
 import typing
@@ -15,6 +16,24 @@ from arena_models.utils.logging import get_logger, get_manager
 
 logger = get_logger('build')
 manager = get_manager()
+
+
+class OverwriteMode(str, Enum):
+    SKIP = "skip"
+    OVERWRITE = "overwrite"
+    ANNOTATIONS_ONLY = "annotations"
+
+    @classmethod
+    def _missing_(cls, value):
+        """
+        Legacy integer API shim. Accepts 0 (SKIP), 1 (OVERWRITE), -1 (ANNOTATIONS_ONLY).
+        """
+        legacy = {
+            "0": cls.SKIP,
+            "1": cls.OVERWRITE,
+            "-1": cls.ANNOTATIONS_ONLY,
+        }
+        return legacy.get(str(value))
 
 
 class OptionRegistry:
@@ -94,7 +113,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         except Exception as e:
             return e
 
-    def __init__(self, input_path: Path, output_path: Path, overwrite: int = 0, **kwargs):
+    def __init__(self, input_path: Path, output_path: Path, overwrite: OverwriteMode = OverwriteMode.SKIP, **kwargs):
         self.input_path = input_path
         self.output_path = output_path
         self._overwrite = overwrite
@@ -132,7 +151,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         def skip_existing(annotation: AnnotationT) -> bool:
             dest_path = self._dest_path(annotation)
 
-            if (dest_path / ANNOTATION_NAME).exists() and not self._overwrite:
+            if (dest_path / ANNOTATION_NAME).exists() and self._overwrite == OverwriteMode.SKIP:
                 logger.info("Skipping existing entity at %s", annotation.path)
                 nonlocal skipped_count
                 skipped_count += 1
@@ -174,7 +193,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                     logger.info("Processing entity at %s", annotation.path)
                     os.makedirs(dest_path, exist_ok=True)
 
-                    if self._overwrite >= 0:
+                    if self._overwrite != OverwriteMode.ANNOTATIONS_ONLY:
                         annotation = self.process_entity(annotation, dest_path)
                         if annotation is None:
                             shutil.rmtree(dest_path)
