@@ -14,12 +14,7 @@ TextOrEmbedding = typing.Text | typing.List[float]
 
 
 class Database:
-    def __init__(self, path: Path, model: typing.Optional[str] = None):
-        if model is None:
-            model = "all-MiniLM-L6-v2"
-        if model != "all-MiniLM-L6-v2":
-            raise ValueError("Only all-MiniLM-L6-v2 is supported.")
-
+    def __init__(self, path: Path):
         self._client = chromadb.PersistentClient(path=str(path))
         self._embedding_function = embedding_functions.DefaultEmbeddingFunction()
 
