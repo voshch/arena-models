@@ -44,7 +44,7 @@ def build_command(
     # Get output path from context
     database_path = ctx.obj.get('database_path') if ctx.obj else None
     if database_path is None:
-        logger.fatal("No database path configured. Set it via the parent command's --database option.")
+        logger.error("No database path configured. Set it via the parent command's --database option.")
         raise typer.Exit(1)
     output_path = Path(database_path)
     
@@ -54,7 +54,7 @@ def build_command(
             asset_type_enum = [AssetType[t.upper()] for t in asset_type]
         except KeyError:
             valid_types = [e.name for e in AssetType]
-            logger.fatal(f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}")
+            logger.error(f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}")
             raise typer.Exit(1)
     else:
         asset_type_enum = list(DatabaseBuilder.get_registered())
