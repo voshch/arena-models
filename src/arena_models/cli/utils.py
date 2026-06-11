@@ -1,6 +1,5 @@
 """Utility functions for CLI operations."""
 
-
 import typer
 
 

@@ -1,4 +1,3 @@
-
 import typer
 
 from arena_models.cli.utils import safe_echo
