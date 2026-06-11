@@ -57,10 +57,11 @@ def test_face_angle_is_back_azimuth():
 def test_as_text():
     text = make_annotation().as_text
     for part in (
+        "Office Chair",
         "plastic",
         "black",
         "office",
         "ergonomic office chair",
-        "note: wheels included",
+        "wheels included",
     ):
         assert part in text

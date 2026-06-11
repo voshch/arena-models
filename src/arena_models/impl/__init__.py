@@ -3,6 +3,7 @@
 import contextlib
 import contextvars
 import enum
+import re
 import typing
 
 import attrs
@@ -82,6 +83,13 @@ class Annotation:
 
     @property
     def as_text(self) -> str: ...
+
+    @property
+    def name_text(self) -> str:
+        """Name normalized for embedding: words split, trailing instance counters dropped."""
+        text = re.sub(r"[_\-]+", " ", self.name)
+        text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", text)
+        return re.sub(r"(?:\s+\d+)+$", "", text)
 
     @property
     def as_metadata(self) -> dict:

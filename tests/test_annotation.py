@@ -13,12 +13,22 @@ def test_metadata_roundtrip():
     assert restored == annotation
 
 
-def test_as_text_splits_name():
+def test_name_text_splits_and_strips_counter():
+    annotation = MaterialAnnotation(name="OakWood_01", path="materials/oak")
+    assert annotation.name_text == "Oak Wood"
+
+
+def test_name_text_keeps_meaningful_digits():
+    assert MaterialAnnotation(name="Table_200cm", path="m/t").name_text == "Table 200cm"
+    assert MaterialAnnotation(name="01", path="m/01").name_text == "01"
+
+
+def test_as_text_includes_name_and_fields():
     annotation = MaterialAnnotation(
         name="OakWood_01", path="materials/oak", tags=["floor"], color=["brown"]
     )
     text = annotation.as_text
-    assert "Oak Wood 01" in text
+    assert "Oak Wood" in text
     assert "brown" in text
     assert "floor" in text
 

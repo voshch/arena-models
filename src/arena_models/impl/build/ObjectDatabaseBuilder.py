@@ -49,18 +49,8 @@ class ObjectAnnotation(Annotation):
 
     @property
     def as_text(self):
-        result = ""
-        for material in self.material:
-            result += f"{material} "
-        for color in self.color:
-            result += f"{color} "
-        for tag in self.tags:
-            result += f"{tag} "
-        result += f"{self.desc}"
-        if self.note:
-            result += f" note: {self.note}"
-
-        return result
+        sections = [self.name_text, " ".join(self.material), " ".join(self.color), " ".join(self.tags), self.desc, self.note]
+        return ". ".join(section for section in sections if section)
 
     @property
     def as_metadata(self):
