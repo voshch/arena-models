@@ -31,9 +31,9 @@ class Database:
 
         self.collection(collection).upsert(documents=[annotation.as_text], metadatas=[metadata], ids=[unique_id])
 
-    def list_all(self, collection: str) -> chromadb.api.types.GetResult:
+    def list_all(self, collection: str, where: dict | None = None) -> chromadb.api.types.GetResult:
         """List all paths in the collection."""
-        return self.collection(collection).get()
+        return self.collection(collection).get(where=where)
 
     def query(self, collection: str, embedding: TextOrEmbedding, num_results: int = 1, where: dict | None = None) -> chromadb.api.types.QueryResult:
         """Query the collection for similar embeddings."""

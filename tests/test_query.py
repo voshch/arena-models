@@ -1,7 +1,10 @@
+import math
+
 import pytest
 
 from arena_models.impl import AssetType
-from arena_models.impl.query import query_database
+from arena_models.impl.build.MaterialDatabaseBuilder import MaterialAnnotation
+from arena_models.impl.query import _lexical_rank, query_database
 
 
 def test_top_n_ranked(database_path):
@@ -23,6 +26,37 @@ def test_default_returns_single(database_path):
 def test_empty_database_raises(tmp_path):
     with pytest.raises(ValueError):
         query_database(str(tmp_path), AssetType.MATERIAL, "anything")
+
+
+def test_lexical_rank_exact_name_first():
+    corpus = [
+        MaterialAnnotation(name="SoftLeather", path="m/soft", tags=["leather"]),
+        MaterialAnnotation(name="HardLeather", path="m/hard", tags=["leather"]),
+        MaterialAnnotation(name="OakWood", path="m/oak", tags=["wood"]),
+    ]
+    ranked = _lexical_rank("HardLeather", corpus)
+    assert ranked[0].path == "m/hard"
+    assert all(annotation.path != "m/oak" for annotation in ranked)
+
+
+def test_lexical_rank_matches_split_name_and_tags():
+    corpus = [
+        MaterialAnnotation(name="OakWood_01", path="m/oak"),
+        MaterialAnnotation(name="SteelPlate", path="m/steel", tags=["wood"]),
+    ]
+    ranked = _lexical_rank("oak wood", corpus)
+    assert ranked[0].path == "m/oak"
+
+
+def test_lexical_rank_no_overlap_is_empty():
+    corpus = [MaterialAnnotation(name="OakWood", path="m/oak")]
+    assert _lexical_rank("ceramic tile", corpus) == []
+
+
+def test_exact_name_query_ranks_first(database_path):
+    results = query_database(str(database_path), AssetType.MATERIAL, "RedBrick", n=1)
+    assert results[0][0].path == "materials/brick"
+    assert results[0][1] != math.inf
 
 
 def test_where_filter(database_path):
