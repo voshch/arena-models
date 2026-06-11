@@ -15,7 +15,6 @@ from arena_models.utils.Database import Database
 from arena_models.utils.logging import get_logger, get_manager
 
 logger = get_logger('build')
-manager = get_manager()
 
 
 class OverwriteMode(str, Enum):
@@ -136,6 +135,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
 
     def build(self):
         logger.info("Starting database build...")
+        manager = get_manager()
 
         status_bar = manager.status_bar(
             status_format='Building {build_type} database from {input_path}: {stage}{fill}',
