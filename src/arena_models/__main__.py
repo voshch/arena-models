@@ -16,7 +16,13 @@ add_cmd(app)
 @app.command()
 def version():
     """Show version information."""
-    typer.echo("Arena Models v0.1.0")
+    import importlib.metadata
+
+    try:
+        package_version = importlib.metadata.version("arena_models")
+    except importlib.metadata.PackageNotFoundError:
+        package_version = "unknown"
+    typer.echo(f"Arena Models v{package_version}")
     typer.echo("Build, query, and manage 3D model databases")
 
 
