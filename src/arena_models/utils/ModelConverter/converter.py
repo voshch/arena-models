@@ -247,7 +247,7 @@ class ModelConverter:
             res_y = max(int(round(min_short_side * (size_y / max(size_x, 1e-6)))), min_short_side)
             return (res_x, res_y)
 
-    def render_perspective(self, output_path: str, *, resolution: tuple[int, int] | None = None, theta: float = 0, elevation: float = 45) -> None:
+    def render_perspective(self, output_path: str, *, resolution: tuple[int, int] | None = None, theta: float = 0, elevation: float = math.pi / 4) -> None:
         """Render the current scene to a perspective image.
         """
         scene = bpy.context.scene
