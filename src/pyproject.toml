@@ -38,3 +38,31 @@ Repository = "https://github.com/arena-models/arena-models"
 where = ["."]
 include = ["arena_models*"]
 
+[tool.ruff]
+target-version = "py311"
+line-length = 320
+src = ["arena_models"]
+extend-exclude = [
+    "build",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "ANN", "PYI"]
+ignore = ["E501", "E402", "F841", "E731", "PYI051", "E741", "UP035"]
+
+[tool.ruff.lint.per-file-ignores]
+"arena_models/cli/**/*.py" = ["B008"]
+"arena_models/__main__.py" = ["B008"]
+
+[tool.ruff.lint.flake8-annotations]
+suppress-none-returning = true
+mypy-init-return = true
+allow-star-arg-any = true
+
+[tool.ruff.format]
+quote-style = "preserve"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
