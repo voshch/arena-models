@@ -164,7 +164,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self._formats: set[ModelFormat] = {ModelFormat.USDZ, ModelFormat.FBX}
+        self._formats: set[ModelFormat] = {ModelFormat.USDZ, ModelFormat.FBX, ModelFormat.OBJ}
         self._usd_baker: typing.Optional[UsdBaker] = None
 
         def store_db(annotation: ObjectAnnotation) -> None:

@@ -354,13 +354,17 @@ ModelConverter.register(ModelFormat.USD, ModelFormat.USDA, ModelFormat.USDC, Mod
     )
 )
 
-ModelConverter.register(ModelFormat.OBJ)(
-    _ModelConverterExt.inline(
-        CoordinateSystem.default(),
-        bpy.ops.wm.obj_import,
-        bpy.ops.wm.obj_export
+def obj_export(filepath: str):
+    base_path = Path(filepath)
+    base_path.mkdir(parents=True, exist_ok=True)
+    bpy.ops.wm.obj_export(
+        filepath=str(base_path / f"{base_path.stem}.obj"),
+        export_materials=True,
+        path_mode="COPY",
     )
-)
+
+
+ModelConverter.register(ModelFormat.OBJ)(_ModelConverterExt.inline(CoordinateSystem.default(), bpy.ops.wm.obj_import, obj_export))
 
 
 def fbx_import(filepath: str):
