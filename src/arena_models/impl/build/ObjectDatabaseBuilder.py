@@ -312,7 +312,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             )
             self._usd_baker = DockerUsdBaker(
                 input_dir=Path(self.input_path),
-                output_dir=Path(self.input_path),
+                output_dir=Path(self.output_path),
             )
 
         self._pre.append(self._usd_baker.start)
