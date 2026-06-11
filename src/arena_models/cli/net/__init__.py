@@ -28,7 +28,6 @@ def add_to_cmd(cmd: typer.Typer):
             if source == "default":
                 source = "arena-models-prod-public"
             ctx.obj["source"] = source
-            # Inherit silent flag from parent context
             if ctx.parent and ctx.parent.obj:
                 ctx.obj["silent"] = ctx.parent.obj.get("silent", False)
 

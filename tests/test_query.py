@@ -5,7 +5,9 @@ from arena_models.impl.query import query_database
 
 
 def test_top_n_ranked(database_path):
-    results = query_database(str(database_path), AssetType.MATERIAL, "wooden floor", n=2)
+    results = query_database(
+        str(database_path), AssetType.MATERIAL, "wooden floor", n=2
+    )
     assert len(results) == 2
     assert results[0][0].path == "materials/oak"
     scores = [score for _, score in results]

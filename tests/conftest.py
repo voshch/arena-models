@@ -5,9 +5,18 @@ from arena_models.impl.build.MaterialDatabaseBuilder import MaterialAnnotation
 from arena_models.utils.Database import Database
 
 MATERIALS = [
-    MaterialAnnotation(name="OakWood", path="materials/oak", desc="light brown oak wood planks", tags=["wood"]),
-    MaterialAnnotation(name="RedBrick", path="materials/brick", desc="red clay brick wall"),
-    MaterialAnnotation(name="SteelPlate", path="materials/steel", desc="brushed steel metal plate"),
+    MaterialAnnotation(
+        name="OakWood",
+        path="materials/oak",
+        desc="light brown oak wood planks",
+        tags=["wood"],
+    ),
+    MaterialAnnotation(
+        name="RedBrick", path="materials/brick", desc="red clay brick wall"
+    ),
+    MaterialAnnotation(
+        name="SteelPlate", path="materials/steel", desc="brushed steel metal plate"
+    ),
 ]
 
 

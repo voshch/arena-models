@@ -16,13 +16,11 @@ def list_cmd(
     ),
 ):
     """Search for models in the database using natural language."""
-    # Get database path from parent context
     database_path = ctx.obj.get("database_path") if ctx.obj else None
     if not database_path:
         safe_echo("Error: Database path not found in context", ctx)
         raise typer.Exit(1)
 
-    # Validate asset type
     try:
         asset_type_enum = AssetType[asset_type.upper()]
     except KeyError:

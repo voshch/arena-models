@@ -104,11 +104,9 @@ def fetch_database(
         b = Bucket(bucket)
         os.makedirs(destination, exist_ok=True)
 
-        # List all prefixes concurrently
         logger.info("Scanning %d path(s) for files...", len(bucket_paths))
         all_blobs_by_path = b.listdirs(bucket_paths)
 
-        # Flatten and deduplicate by blob name
         seen = set()
         file_blobs = []
         for path, blobs in all_blobs_by_path.items():
@@ -163,14 +161,12 @@ def fetch_database(
                 blob_name = blob["name"]
                 blob_size = int(blob.get("size", 0))
 
-                # Compute local path: strip the bucket prefix, place under destination/path
                 prefix = path.strip("/")
                 if prefix:
                     prefix += "/"
                 relative_blob_path = blob_name[len(prefix) :] if prefix and blob_name.startswith(prefix) else blob_name
                 local_file_path = os.path.join(destination, prefix, relative_blob_path.lstrip("/"))
 
-                # Skip if file already exists and has the same size
                 if os.path.exists(local_file_path) and os.path.getsize(local_file_path) == blob_size:
                     logger.info(
                         "Skipping '%s' - already exists with correct size",

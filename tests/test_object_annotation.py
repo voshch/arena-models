@@ -40,5 +40,11 @@ def test_parse_face_legacy_angles():
 
 def test_as_text():
     text = make_annotation().as_text
-    for part in ("plastic", "black", "office", "ergonomic office chair", "note: wheels included"):
+    for part in (
+        "plastic",
+        "black",
+        "office",
+        "ergonomic office chair",
+        "note: wheels included",
+    ):
         assert part in text

@@ -14,7 +14,9 @@ def test_metadata_roundtrip():
 
 
 def test_as_text_splits_name():
-    annotation = MaterialAnnotation(name="OakWood_01", path="materials/oak", tags=["floor"], color=["brown"])
+    annotation = MaterialAnnotation(
+        name="OakWood_01", path="materials/oak", tags=["floor"], color=["brown"]
+    )
     text = annotation.as_text
     assert "Oak Wood 01" in text
     assert "brown" in text

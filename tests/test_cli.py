@@ -17,13 +17,28 @@ def test_invalid_log_level():
 
 
 def test_db_query_outputs_path(database_path):
-    result = runner.invoke(app, ["-s", "db", str(database_path), "query", "material", "wooden floor"])
+    result = runner.invoke(
+        app, ["-s", "db", str(database_path), "query", "material", "wooden floor"]
+    )
     assert result.exit_code == 0
     assert result.output.strip() == str(database_path / "materials/oak")
 
 
 def test_db_query_scores(database_path):
-    result = runner.invoke(app, ["-s", "db", str(database_path), "query", "material", "wooden floor", "-n", "2", "--scores"])
+    result = runner.invoke(
+        app,
+        [
+            "-s",
+            "db",
+            str(database_path),
+            "query",
+            "material",
+            "wooden floor",
+            "-n",
+            "2",
+            "--scores",
+        ],
+    )
     assert result.exit_code == 0
     lines = result.output.strip().splitlines()
     assert len(lines) == 2

@@ -41,14 +41,12 @@ def build_command(
 ):
     """Build a database from source model files."""
 
-    # Get output path from context
     database_path = ctx.obj.get("database_path") if ctx.obj else None
     if database_path is None:
         logger.error("No database path configured. Set it via the parent command's --database option.")
         raise typer.Exit(1)
     output_path = Path(database_path)
 
-    # Validate asset type
     if asset_type:
         try:
             asset_type_enum = [AssetType[t.upper()] for t in asset_type]
@@ -72,7 +70,6 @@ def build_command(
         for t in global_progress(asset_type_enum):
             logger.info(f"Building {t} database from {input_path} to {output_path}")
 
-            # Build the database
             builder = DatabaseBuilder.Builder(t)(input_path=input_path, output_path=output_path, overwrite=overwrite)
             for extra in options:
                 builder.enable(*extra.split("="))

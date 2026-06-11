@@ -12,4 +12,7 @@ def test_object_url_params():
 
 
 def test_object_url_encodes_object():
-    assert Bucket("bkt")._object_url("dir/file.yaml", fields="name") == f"{API}/dir%2Ffile.yaml?fields=name"
+    assert (
+        Bucket("bkt")._object_url("dir/file.yaml", fields="name")
+        == f"{API}/dir%2Ffile.yaml?fields=name"
+    )

@@ -5,8 +5,13 @@ from arena_models.utils.Database import Database
 
 def test_store_upserts_by_path(tmp_path):
     db = Database(tmp_path / DATABASE_NAME)
-    db.store("material", MaterialAnnotation(name="OakWood", path="materials/oak", desc="oak"))
-    db.store("material", MaterialAnnotation(name="OakWood", path="materials/oak", desc="updated oak"))
+    db.store(
+        "material", MaterialAnnotation(name="OakWood", path="materials/oak", desc="oak")
+    )
+    db.store(
+        "material",
+        MaterialAnnotation(name="OakWood", path="materials/oak", desc="updated oak"),
+    )
 
     result = db.list_all("material")
     assert len(result["ids"]) == 1
@@ -16,7 +21,11 @@ def test_store_upserts_by_path(tmp_path):
 def test_list_all(database_path):
     db = Database(database_path / DATABASE_NAME)
     result = db.list_all("material")
-    assert sorted(result["ids"]) == ["materials/brick", "materials/oak", "materials/steel"]
+    assert sorted(result["ids"]) == [
+        "materials/brick",
+        "materials/oak",
+        "materials/steel",
+    ]
 
 
 def test_query_returns_requested_count(database_path):

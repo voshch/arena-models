@@ -69,7 +69,6 @@ class ObjectAnnotation(Annotation):
             "material": ",".join(self.material),
             "color": ",".join(self.color),
             "hoi": ",".join(self.hoi),
-            # Store enum value for stable round-tripping; from_metadata also supports legacy numeric angles.
             "face": self.face.value,
             "bounding_box": json.dumps(list(self.bounding_box)),
             "note": self.note,
