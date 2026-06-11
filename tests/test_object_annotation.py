@@ -1,3 +1,5 @@
+import math
+
 from arena_models.impl.build.ObjectDatabaseBuilder import ObjectAnnotation
 from arena_models.utils.geom import BoundingBox
 
@@ -36,6 +38,20 @@ def test_parse_face_legacy_angles():
     for face in ObjectAnnotation.Face:
         assert ObjectAnnotation._parse_face(face.angle) is face
         assert ObjectAnnotation._parse_face(str(face.angle)) is face
+
+
+def test_face_angle_is_back_azimuth():
+    fronts = {
+        ObjectAnnotation.Face.POS_X: (1.0, 0.0),
+        ObjectAnnotation.Face.NEG_X: (-1.0, 0.0),
+        ObjectAnnotation.Face.POS_Y: (0.0, 1.0),
+        ObjectAnnotation.Face.NEG_Y: (0.0, -1.0),
+        ObjectAnnotation.Face.XY: (math.sqrt(0.5), math.sqrt(0.5)),
+    }
+    for face, (x, y) in fronts.items():
+        theta = math.radians(face.angle)
+        assert math.isclose(-math.cos(theta), x, abs_tol=1e-9), face
+        assert math.isclose(-math.sin(theta), y, abs_tol=1e-9), face
 
 
 def test_as_text():

@@ -275,7 +275,7 @@ class ModelConverter:
         theta: float = 0,
         elevation: float = math.pi / 4,
     ) -> None:
-        """Render the current scene to a perspective image."""
+        """Render the current scene to a perspective image, viewing the face at azimuth theta."""
         scene = bpy.context.scene
 
         bbox = self.bounding_box()
@@ -305,7 +305,7 @@ class ModelConverter:
             camera_distance = (size / 2.0) / math.tan(fov / 2.0) * 1.3
             camera_object.location = center + mathutils.Vector(
                 (
-                    camera_distance * math.cos(theta) * math.sin(elevation),
+                    -camera_distance * math.cos(theta) * math.sin(elevation),
                     -camera_distance * math.sin(theta) * math.sin(elevation),
                     camera_distance * math.cos(elevation),
                 )
