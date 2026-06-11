@@ -1,5 +1,6 @@
 import json
 import os
+import typing
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -12,9 +13,11 @@ from arena_models.utils.logging import format_file_size, get_logger, get_manager
 class Bucket:
     _API = "https://storage.googleapis.com/storage/v1/b/{bucket}/o"
     _DOWNLOAD = "https://storage.googleapis.com/download/storage/v1/b/{bucket}/o/{obj}?alt=media"
+    _UPLOAD = "https://storage.googleapis.com/upload/storage/v1/b/{bucket}/o"
 
-    def __init__(self, bucket: str):
+    def __init__(self, bucket: str, token: str | None = None):
         self.name = bucket
+        self.token = token
         self._api = self._API.format(bucket=bucket)
 
     def _object_url(self, obj: str, **params: str) -> str:
@@ -24,9 +27,18 @@ class Bucket:
             return f"{self._api}/{encoded}?{query}" if query else f"{self._api}/{encoded}"
         return f"{self._api}?{query}" if query else self._api
 
+    def _upload_url(self, obj: str) -> str:
+        query = urllib.parse.urlencode({"uploadType": "media", "name": obj})
+        return f"{self._UPLOAD.format(bucket=self.name)}?{query}"
+
+    def _request(self, url: str, **kwargs: typing.Any) -> urllib.request.Request:
+        req = urllib.request.Request(url, **kwargs)
+        if self.token:
+            req.add_header("Authorization", f"Bearer {self.token}")
+        return req
+
     def listdir(self, prefix: str) -> list[dict]:
         """List all objects under a prefix using the GCS JSON API."""
-        opener = urllib.request.build_opener()
         results = []
         prefix = prefix.strip("/")
         if prefix:
@@ -35,7 +47,7 @@ class Bucket:
         url = self._object_url("", prefix=prefix)
 
         while url:
-            resp = opener.open(url)
+            resp = urllib.request.urlopen(self._request(url))
             data = json.loads(resp.read())
             results.extend(data.get("items", []))
 
@@ -56,8 +68,7 @@ class Bucket:
             asset = os.path.join(asset, ANNOTATION_NAME)
         url = self._object_url(asset, fields="name")
         try:
-            req = urllib.request.Request(url, method="HEAD")
-            urllib.request.urlopen(req)
+            urllib.request.urlopen(self._request(url, method="HEAD"))
             return True
         except urllib.error.HTTPError as e:
             if e.code == 404:
@@ -74,12 +85,27 @@ class Bucket:
         """Stream a single blob to a local file. Returns bytes downloaded."""
         url = self._DOWNLOAD.format(bucket=self.name, obj=urllib.parse.quote(blob_name, safe=""))
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
-        opener = urllib.request.build_opener()
         size = 0
-        with opener.open(url) as resp, open(local_path, "wb") as f:
+        with urllib.request.urlopen(self._request(url)) as resp, open(local_path, "wb") as f:
             while chunk := resp.read(1 << 20):
                 f.write(chunk)
                 size += len(chunk)
+        return size
+
+    def upload(self, local_path: str, blob_name: str) -> int:
+        """Stream a local file to a blob. Returns bytes uploaded."""
+        size = os.path.getsize(local_path)
+        with open(local_path, "rb") as f:
+            req = self._request(
+                self._upload_url(blob_name),
+                data=f,
+                method="POST",
+                headers={
+                    "Content-Type": "application/octet-stream",
+                    "Content-Length": str(size),
+                },
+            )
+            urllib.request.urlopen(req)
         return size
 
 

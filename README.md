@@ -48,6 +48,14 @@ Build options are passed with `-o key=value`:
 
 `--overwrite` controls re-building: `skip` (default) keeps existing entries, `overwrite` rebuilds them, `annotations` only refreshes annotations.
 
+### Upload a built database
+
+```sh
+arena-models net my-bucket author ./models -d Common
+```
+
+Files already present in the bucket with the same size are skipped. Uploading requires write access to the bucket: a token is taken from `--token`, the `GCS_ACCESS_TOKEN` environment variable, or `gcloud auth print-access-token`, in that order.
+
 ### Query
 
 ```sh
