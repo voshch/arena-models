@@ -27,12 +27,12 @@ class Database:
         )
 
     def store(self, collection: str, annotation: Annotation):
-        """Store the text embedding in a ChromaDB collection."""
-        unique_id = uuid.uuid4().hex
+        """Store the text embedding in a ChromaDB collection, keyed by annotation path."""
+        unique_id = annotation.path or uuid.uuid4().hex
 
         metadata = dict(annotation.as_metadata)
 
-        self.collection(collection).add(
+        self.collection(collection).upsert(
             documents=[annotation.as_text],
             metadatas=[metadata],
             ids=[unique_id]
