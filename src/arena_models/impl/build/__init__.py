@@ -209,9 +209,9 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                             logger.exception("Failed to process pipeline function %s for annotation %s", fn, annotation)
                             shutil.rmtree(dest_path)
                             failure.update_from(progress, 1)
-                            raise
-                            continue
-                    success.update_from(progress, 1)
+                            break
+                    else:
+                        success.update_from(progress, 1)
 
             if self._post:
                 status_bar.update(stage='Post-processing')
