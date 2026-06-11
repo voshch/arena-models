@@ -15,6 +15,8 @@ def query_command(
         help=f"Type of asset to query. Options: {', '.join([e.name.lower() for e in AssetType])}",
     ),
     query_text: str = typer.Argument(..., help="Text description to search for"),
+    count: int = typer.Option(1, "--count", "-n", min=1, help="Number of results to return"),
+    scores: bool = typer.Option(False, "--scores", help="Append the distance score to each result"),
 ):
     """Search for models in the database using natural language."""
     # Get database path from parent context
@@ -41,8 +43,12 @@ def query_command(
 
     from arena_models.impl.query import query_database
 
-    result = query_database(database_path=database_path, asset_type=asset_type_enum, query_target=query_text)
-    typer.echo(os.path.join(database_path, result.path))
+    results = query_database(database_path=database_path, asset_type=asset_type_enum, query_target=query_text, n=count)
+    for annotation, score in results:
+        line = os.path.join(database_path, annotation.path)
+        if scores:
+            line += f"\t{score}"
+        typer.echo(line)
 
 
 def add_to_cmd(db_cmd: typer.Typer):
