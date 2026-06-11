@@ -3,7 +3,7 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from arena_models.impl import ANNOTATION_NAME
 from arena_models.utils.logging import format_file_size, get_logger, get_manager
@@ -71,15 +71,16 @@ class Bucket:
             return [(a, f.result()) for a, f in futures]
 
     def download(self, blob_name: str, local_path: str) -> int:
-        """Download a single blob to a local file. Returns bytes downloaded."""
+        """Stream a single blob to a local file. Returns bytes downloaded."""
         url = self._DOWNLOAD.format(bucket=self.name, obj=urllib.parse.quote(blob_name, safe=""))
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
         opener = urllib.request.build_opener()
-        with opener.open(url) as resp:
-            data = resp.read()
-            with open(local_path, "wb") as f:
-                f.write(data)
-        return len(data)
+        size = 0
+        with opener.open(url) as resp, open(local_path, "wb") as f:
+            while chunk := resp.read(1 << 20):
+                f.write(chunk)
+                size += len(chunk)
+        return size
 
 
 def fetch_database(
@@ -156,12 +157,11 @@ def fetch_database(
                 },
             )
 
+            pending = []
+
             for path, blob in file_blobs:
                 blob_name = blob["name"]
                 blob_size = int(blob.get("size", 0))
-                size_str = format_file_size(blob_size)
-
-                status_bar.update(current_file=f"{blob_name} ({size_str})")
 
                 # Compute local path: strip the bucket prefix, place under destination/path
                 prefix = path.strip("/")
@@ -169,49 +169,59 @@ def fetch_database(
                     prefix += "/"
                 relative_blob_path = blob_name[len(prefix) :] if prefix and blob_name.startswith(prefix) else blob_name
                 local_file_path = os.path.join(destination, prefix, relative_blob_path.lstrip("/"))
-                os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
 
                 # Skip if file already exists and has the same size
-                if os.path.exists(local_file_path):
-                    local_file_size = os.path.getsize(local_file_path)
-                    if local_file_size == blob_size:
-                        logger.info(
-                            "Skipping '%s' - already exists with correct size",
-                            blob_name,
-                        )
-                        downloaded_count += 1
-                        skipped_size += blob_size
+                if os.path.exists(local_file_path) and os.path.getsize(local_file_path) == blob_size:
+                    logger.info(
+                        "Skipping '%s' - already exists with correct size",
+                        blob_name,
+                    )
+                    downloaded_count += 1
+                    skipped_size += blob_size
 
-                        new_total = total_size - skipped_size
-                        data_progress.total = new_total
+                    new_total = total_size - skipped_size
+                    data_progress.total = new_total
+
+                    elapsed_time = data_progress.elapsed
+                    current_rate = downloaded_size / elapsed_time if elapsed_time > 0 else 0
+
+                    data_progress.desc = f"[{downloaded_count:>{len(str(total_files))}d}/{total_files}]"
+                    data_progress.update(
+                        0,
+                        count_formatted=format_file_size(downloaded_size),
+                        total_formatted=format_file_size(new_total),
+                        rate_formatted=format_file_size(current_rate),
+                    )
+                    continue
+
+                pending.append((blob_name, blob_size, local_file_path))
+
+            with ThreadPoolExecutor(max_workers=20) as pool:
+                futures = {pool.submit(b.download, blob_name, local_file_path): (blob_name, blob_size) for blob_name, blob_size, local_file_path in pending}
+                try:
+                    for future in as_completed(futures):
+                        blob_name, blob_size = futures[future]
+                        future.result()
+
+                        downloaded_count += 1
+                        downloaded_size += blob_size
+
+                        status_bar.update(current_file=f"{blob_name} ({format_file_size(blob_size)})")
 
                         elapsed_time = data_progress.elapsed
                         current_rate = downloaded_size / elapsed_time if elapsed_time > 0 else 0
 
                         data_progress.desc = f"[{downloaded_count:>{len(str(total_files))}d}/{total_files}]"
                         data_progress.update(
-                            0,
+                            blob_size,
                             count_formatted=format_file_size(downloaded_size),
-                            total_formatted=format_file_size(new_total),
+                            total_formatted=format_file_size(total_size - skipped_size),
                             rate_formatted=format_file_size(current_rate),
                         )
-                        continue
-
-                b.download(blob_name, local_file_path)
-
-                downloaded_count += 1
-                downloaded_size += blob_size
-
-                elapsed_time = data_progress.elapsed
-                current_rate = downloaded_size / elapsed_time if elapsed_time > 0 else 0
-
-                data_progress.desc = f"[{downloaded_count:>{len(str(total_files))}d}/{total_files}]"
-                data_progress.update(
-                    blob_size,
-                    count_formatted=format_file_size(downloaded_size),
-                    total_formatted=format_file_size(total_size - skipped_size),
-                    rate_formatted=format_file_size(current_rate),
-                )
+                except Exception:
+                    for f in futures:
+                        f.cancel()
+                    raise
 
             status_bar.update(current_file="Complete!")
 
