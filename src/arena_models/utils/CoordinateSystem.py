@@ -23,11 +23,12 @@ class AxisMap:
         return cls.__map[axis]
 
     @classmethod
-    def axis(cls, vector: tuple[int, int, int]) -> Axis:
+    def axis(cls, vector: typing.Iterable[float]) -> Axis:
+        key = tuple(int(round(component)) for component in vector)
         for axis, vec in cls.__map.items():
-            if vec == vector:
+            if vec == key:
                 return axis
-        raise ValueError(f"Vector {vector} is not a valid axis representation.")
+        raise ValueError(f"Vector {key} is not a valid axis representation.")
 
 
 class CoordinateSystem:
