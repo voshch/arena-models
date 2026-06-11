@@ -56,7 +56,16 @@ def test_db_query_filter(database_path):
 def test_db_query_invalid_filter(database_path):
     result = runner.invoke(
         app,
-        ["-s", "db", str(database_path), "query", "object", "chair", "--filter", "height!!1"],
+        [
+            "-s",
+            "db",
+            str(database_path),
+            "query",
+            "object",
+            "chair",
+            "--filter",
+            "height!!1",
+        ],
     )
     assert result.exit_code != 0
 

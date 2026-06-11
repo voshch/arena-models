@@ -47,10 +47,13 @@ def make_database(tmp_path, files):
 
 
 def test_files_land_under_destination(bucket, tmp_path):
-    make_database(tmp_path, {
-        "a/annotation.yaml": b"a: 1",
-        "a/model.obj": b"obj-data",
-    })
+    make_database(
+        tmp_path,
+        {
+            "a/annotation.yaml": b"a: 1",
+            "a/model.obj": b"obj-data",
+        },
+    )
     author_database("bkt", str(tmp_path), "assets")
     assert bucket.blobs == {
         "assets/a/annotation.yaml": b"a: 1",
