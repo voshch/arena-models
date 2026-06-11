@@ -12,11 +12,14 @@ import bpy
 import mathutils
 
 from arena_models.utils.geom import BoundingBox
+from arena_models.utils.logging import get_logger
 
 from ..CoordinateSystem import CoordinateSystem
 from ..io_utils import capture_all_output
 
 from . import ModelFormat
+
+logger = get_logger("ModelConverter")
 
 
 class _ModelConverterExt(typing.Protocol):
@@ -222,12 +225,18 @@ class ModelConverter:
 
         # Configure GPU rendering with CUDA
         prefs = bpy.context.preferences.addons["cycles"].preferences
-        prefs.compute_device_type = 'CUDA'
-        for device in prefs.devices:
-            device.use = True
-
-        scene.cycles.compute_device_type = 'CUDA'
-        scene.cycles.compute_device = 0
+        try:
+            prefs.compute_device_type = "CUDA"
+            prefs.get_devices()
+            if not any(device.type == "CUDA" for device in prefs.devices):
+                raise RuntimeError("No CUDA devices found")
+            for device in prefs.devices:
+                device.use = True
+            scene.cycles.device = "GPU"
+        except Exception as e:
+            logger.warning("CUDA unavailable (%s), rendering on CPU", e)
+            prefs.compute_device_type = "NONE"
+            scene.cycles.device = "CPU"
 
         bpy.ops.render.render(write_still=True)
 
