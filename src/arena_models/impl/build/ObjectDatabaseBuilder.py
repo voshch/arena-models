@@ -123,7 +123,7 @@ class ObjectAnnotation(Annotation):
             hoi=hoi.split(",") if (hoi := metadata.get("hoi")) else [],
             face=cls._parse_face(metadata.get("face")),
             note=metadata.get("note", ""),
-            bounding_box=BoundingBox(json.loads(bounding_box))
+            bounding_box=BoundingBox(map(tuple, json.loads(bounding_box)))
             if (bounding_box := metadata.get("bounding_box"))
             else BoundingBox.empty(),
         )
