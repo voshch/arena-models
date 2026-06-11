@@ -162,7 +162,7 @@ def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annot
                 if prefix:
                     prefix += '/'
                 relative_blob_path = blob_name[len(prefix):] if prefix and blob_name.startswith(prefix) else blob_name
-                local_file_path = os.path.join(destination, path, relative_blob_path) if path else os.path.join(destination, relative_blob_path)
+                local_file_path = os.path.join(destination, prefix, relative_blob_path.lstrip('/'))
                 os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
 
                 # Skip if file already exists and has the same size
