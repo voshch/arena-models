@@ -43,7 +43,7 @@ class DockerUsdBaker(UsdBaker):
             ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
         )
 
     def start(self):
