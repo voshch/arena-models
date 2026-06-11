@@ -14,12 +14,10 @@ add_cmd(app)
 
 
 @app.command()
-def version(ctx: typer.Context):
+def version():
     """Show version information."""
-    from .cli.utils import safe_echo
-
-    safe_echo("Arena Models v0.1.0", ctx)
-    safe_echo("Build, query, and manage 3D model databases", ctx)
+    typer.echo("Arena Models v0.1.0")
+    typer.echo("Build, query, and manage 3D model databases")
 
 
 @app.callback()
@@ -42,7 +40,7 @@ def main(
     # Validate log level
     valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
     if log_level.upper() not in valid_levels:
-        typer.echo(f"Invalid log level '{log_level}'. Valid options: {', '.join(valid_levels)}")
+        typer.echo(f"Invalid log level '{log_level}'. Valid options: {', '.join(valid_levels)}", err=True)
         raise typer.Exit(1)
 
     # Initialize global logger and manager
