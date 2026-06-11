@@ -9,11 +9,11 @@ from . import DATABASE_NAME, Annotation, AssetType
 logger = get_logger("query")
 
 
-def query_database(database_path: str, asset_type: AssetType, query_target: str, n: int = 1) -> list[tuple[Annotation, float]]:
+def query_database(database_path: str, asset_type: AssetType, query_target: str, n: int = 1, where: dict | None = None) -> list[tuple[Annotation, float]]:
     logger.info("Querying database at %s for %s '%s'", database_path, asset_type.value, query_target)
 
     db = Database(os.path.join(database_path, DATABASE_NAME))
-    result = db.query(asset_type.value, query_target, n)
+    result = db.query(asset_type.value, query_target, n, where=where)
     logger.debug("Query result: %s", result)
 
     metadatas = result["metadatas"]

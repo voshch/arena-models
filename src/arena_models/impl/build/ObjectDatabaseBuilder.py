@@ -61,6 +61,10 @@ class ObjectAnnotation(Annotation):
             "hoi": ",".join(self.hoi),
             "face": self.face.value,
             "bounding_box": json.dumps(list(self.bounding_box)),
+            "width": self.bounding_box.max_x - self.bounding_box.min_x,
+            "depth": self.bounding_box.max_y - self.bounding_box.min_y,
+            "height": self.bounding_box.max_z - self.bounding_box.min_z,
+            "volume": self.bounding_box.volume,
             "note": self.note,
         }
 

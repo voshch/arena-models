@@ -65,6 +65,9 @@ arena-models db ./models query material "light brown wood"
 # top 5 matches with distance scores
 arena-models db ./models query object "office chair" -n 5 --scores
 
+# constrain by size (width/depth/height/volume in meters, repeatable)
+arena-models db ./models query object "office chair" --filter "height<1.0" --filter "volume>0.05"
+
 # list everything of a type
 arena-models db ./models list material
 ```

@@ -1,5 +1,7 @@
 import math
 
+import pytest
+
 from arena_models.impl.build.ObjectDatabaseBuilder import ObjectAnnotation
 from arena_models.utils.geom import BoundingBox
 
@@ -24,6 +26,14 @@ def test_metadata_roundtrip():
     restored = ObjectAnnotation.from_metadata(annotation.as_metadata)
     assert restored == annotation
     assert restored.as_metadata == annotation.as_metadata
+
+
+def test_metadata_extents():
+    metadata = make_annotation().as_metadata
+    assert metadata["width"] == 1.0
+    assert metadata["depth"] == pytest.approx(0.8)
+    assert metadata["height"] == 1.2
+    assert metadata["volume"] == pytest.approx(0.96)
 
 
 def test_parse_face():

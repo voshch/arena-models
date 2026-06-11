@@ -23,3 +23,14 @@ def test_default_returns_single(database_path):
 def test_empty_database_raises(tmp_path):
     with pytest.raises(ValueError):
         query_database(str(tmp_path), AssetType.MATERIAL, "anything")
+
+
+def test_where_filter(database_path):
+    results = query_database(
+        str(database_path),
+        AssetType.OBJECT,
+        "chair to sit on",
+        n=2,
+        where={"height": {"$lt": 1.0}},
+    )
+    assert [annotation.path for annotation, _ in results] == ["objects/chair"]

@@ -35,13 +35,13 @@ class Database:
         """List all paths in the collection."""
         return self.collection(collection).get()
 
-    def query(self, collection: str, embedding: TextOrEmbedding, num_results: int = 1) -> chromadb.api.types.QueryResult:
+    def query(self, collection: str, embedding: TextOrEmbedding, num_results: int = 1, where: dict | None = None) -> chromadb.api.types.QueryResult:
         """Query the collection for similar embeddings."""
 
         if isinstance(embedding, str):
-            return self.collection(collection).query(query_texts=[embedding], n_results=num_results)
+            return self.collection(collection).query(query_texts=[embedding], n_results=num_results, where=where)
 
-        return self.collection(collection).query(query_embeddings=[embedding], n_results=num_results)
+        return self.collection(collection).query(query_embeddings=[embedding], n_results=num_results, where=where)
 
     def _to_embedding(self, value: TextOrEmbedding) -> list[float]:
         if isinstance(value, str):
