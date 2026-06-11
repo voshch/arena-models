@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 
 import attrs
@@ -20,12 +21,11 @@ class MaterialAnnotation(Annotation):
 
     @property
     def as_text(self):
-        result = ''
-        for color in self.color:
-            result += f"{color} "
-        result += f"{self.desc}"
+        name = re.sub(r"[_\-]+", " ", self.name)
+        name = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", name)
 
-        return result
+        parts = [name, *self.color, *self.tags, self.desc]
+        return " ".join(part for part in parts if part)
 
     @property
     def as_metadata(self):
