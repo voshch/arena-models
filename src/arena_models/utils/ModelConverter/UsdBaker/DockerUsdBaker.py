@@ -21,23 +21,22 @@ def line_reader(stream: Iterable[bytes]) -> Generator[bytes, None, None]:
 
 
 class DockerUsdBaker(UsdBaker):
-
     def __open_subprocess(self) -> subprocess.Popen:
         volumes = self._volumes.copy()
-        volumes[str(self.converter_script())] = '/converter.py:ro'
+        volumes[str(self.converter_script())] = "/converter.py:ro"
         return subprocess.Popen(
             [
                 "docker",
                 "run",
                 "--rm",
                 "-i",
-                "-e", "ACCEPT_EULA=Y",
-                *itertools.chain.from_iterable(
-                    ("-v", f"{host_path}:{container_path}")
-                    for host_path, container_path in volumes.items()
-                ),
-                "--gpus", "all",
-                "--entrypoint", "/isaac-sim/python.sh",
+                "-e",
+                "ACCEPT_EULA=Y",
+                *itertools.chain.from_iterable(("-v", f"{host_path}:{container_path}") for host_path, container_path in volumes.items()),
+                "--gpus",
+                "all",
+                "--entrypoint",
+                "/isaac-sim/python.sh",
                 self._image,
                 "/converter.py",
             ],
@@ -88,7 +87,10 @@ class DockerUsdBaker(UsdBaker):
         if output is None:
             if retries > 0:
                 self.logger.error("Conversion failed. Process output closed unexpectedly.")
-                self.logger.info("Restarting USD Baker and retrying conversion (attempts left: %d)...", retries)
+                self.logger.info(
+                    "Restarting USD Baker and retrying conversion (attempts left: %d)...",
+                    retries,
+                )
                 self.start()
                 return self.convert(input_file, output_file, retries - 1)
             raise RuntimeError("Conversion failed. Process output closed unexpectedly.")

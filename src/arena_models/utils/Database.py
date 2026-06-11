@@ -18,7 +18,6 @@ class Database:
         self._client = chromadb.PersistentClient(path=str(path))
         self._embedding_function = embedding_functions.DefaultEmbeddingFunction()
 
-    
     def collection(self, name) -> chromadb.api.models.Collection.Collection:
         """Get or create a ChromaDB collection."""
         return self._client.get_or_create_collection(
@@ -32,11 +31,7 @@ class Database:
 
         metadata = dict(annotation.as_metadata)
 
-        self.collection(collection).upsert(
-            documents=[annotation.as_text],
-            metadatas=[metadata],
-            ids=[unique_id]
-        )
+        self.collection(collection).upsert(documents=[annotation.as_text], metadatas=[metadata], ids=[unique_id])
 
     def list_all(self, collection: str):
         """List all paths in the collection."""
@@ -46,15 +41,9 @@ class Database:
         """Query the collection for similar embeddings."""
 
         if isinstance(embedding, str):
-            return self.collection(collection).query(
-                query_texts=[embedding],
-                n_results=num_results
-            )
+            return self.collection(collection).query(query_texts=[embedding], n_results=num_results)
 
-        return self.collection(collection).query(
-            query_embeddings=[embedding],
-            n_results=num_results
-        )
+        return self.collection(collection).query(query_embeddings=[embedding], n_results=num_results)
 
     def _to_embedding(self, value: TextOrEmbedding) -> list[float]:
         if isinstance(value, str):

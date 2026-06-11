@@ -45,8 +45,7 @@ class UsdBaker(abc.ABC):
         self.output_dir: Path = Path(output_dir).resolve()
         self.logger = logging.get_logger(self.__class__.__name__)
 
-    def start(self):
-        ...
+    def start(self): ...
 
     def cleanup(self):
         if self._process:
@@ -71,24 +70,24 @@ class UsdBaker(abc.ABC):
             bline = self.readline()
             if not bline:
                 continue
-            line = bline.decode('utf-8').rstrip()
+            line = bline.decode("utf-8").rstrip()
             self.logger.debug("%s", line)
-            if line.startswith('ready:'):
+            if line.startswith("ready:"):
                 self.logger.info("USD Baker is ready.")
-                return line[len('ready:'):]
+                return line[len("ready:") :]
 
     def command(self, cmd: str) -> str | None:
-        self.write(cmd.encode('utf-8') + b'\n')
+        self.write(cmd.encode("utf-8") + b"\n")
 
         while (bline := self.readline()) is not None:
             if not bline:
                 continue
-            line = bline.decode('utf-8').rstrip()
+            line = bline.decode("utf-8").rstrip()
             self.logger.info("%s", line)
-            if line.startswith('success:'):
-                return line[len('success:'):]
-            if line.startswith('error:'):
-                raise RuntimeError(line[len('error:'):])
+            if line.startswith("success:"):
+                return line[len("success:") :]
+            if line.startswith("error:"):
+                raise RuntimeError(line[len("error:") :])
 
         return None
 

@@ -25,12 +25,12 @@ def add_to_cmd(cmd):
         """Network operations with specified source."""
         if ctx:
             ctx.ensure_object(dict)
-            if source == 'default':
+            if source == "default":
                 source = "arena-models-prod-public"
-            ctx.obj['source'] = source
+            ctx.obj["source"] = source
             # Inherit silent flag from parent context
             if ctx.parent and ctx.parent.obj:
-                ctx.obj['silent'] = ctx.parent.obj.get('silent', False)
+                ctx.obj["silent"] = ctx.parent.obj.get("silent", False)
 
     add_fetch_cmd(net_app)
     add_exists_cmd(net_app)

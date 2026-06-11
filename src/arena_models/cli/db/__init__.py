@@ -25,10 +25,10 @@ def add_to_cmd(cmd):
         """Database operations with specified database path."""
         if ctx:
             ctx.ensure_object(dict)
-            ctx.obj['database_path'] = database_path
+            ctx.obj["database_path"] = database_path
             # Inherit silent flag from parent context
             if ctx.parent and ctx.parent.obj:
-                ctx.obj['silent'] = ctx.parent.obj.get('silent', False)
+                ctx.obj["silent"] = ctx.parent.obj.get("silent", False)
 
     add_build(db_app)
     add_query(db_app)

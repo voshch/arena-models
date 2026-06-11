@@ -6,7 +6,7 @@ app = typer.Typer(
     help="Arena Models - Build, query, and manage 3D model databases",
     rich_markup_mode="rich",
     no_args_is_help=True,
-    add_completion=False
+    add_completion=False,
 )
 
 add_cmd(app)
@@ -16,6 +16,7 @@ add_cmd(app)
 def version(ctx: typer.Context):
     """Show version information."""
     from .cli.utils import safe_echo
+
     safe_echo("Arena Models v0.1.0", ctx)
     safe_echo("Build, query, and manage 3D model databases", ctx)
 
@@ -23,16 +24,13 @@ def version(ctx: typer.Context):
 @app.callback()
 def main(
     ctx: typer.Context,
-    silent: bool = typer.Option(
-        False,
-        "-s", "--silent",
-        help="Suppress all output messages"
-    ),
+    silent: bool = typer.Option(False, "-s", "--silent", help="Suppress all output messages"),
     log_level: str = typer.Option(
         "WARNING",
-        "-l", "--log-level",
+        "-l",
+        "--log-level",
         help="Set logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
-        case_sensitive=False
+        case_sensitive=False,
     ),
 ):
     """
@@ -48,12 +46,13 @@ def main(
 
     # Initialize global logger and manager
     from .utils.logging import initialize
+
     initialize(silent=silent, log_level=log_level)
 
     # Store flags in context for subcommands (for backward compatibility)
     ctx.ensure_object(dict)
-    ctx.obj['silent'] = silent
-    ctx.obj['log_level'] = log_level
+    ctx.obj["silent"] = silent
+    ctx.obj["log_level"] = log_level
 
 
 if __name__ == "__main__":

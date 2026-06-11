@@ -76,7 +76,12 @@ def sanitize_materials(stage):
             roughness_const = _clamp01(
                 _get_scalar_input(
                     old_shader,
-                    ["Roughness", "roughness", "RoughnessFactor", "reflection_roughness_constant"],
+                    [
+                        "Roughness",
+                        "roughness",
+                        "RoughnessFactor",
+                        "reflection_roughness_constant",
+                    ],
                 )
             )
             metallic_const = _clamp01(
@@ -117,6 +122,7 @@ def sanitize_materials(stage):
 
 async def convert_asset(input_path, output_path):
     import tempfile
+
     context = omni.usd.get_context()
 
     base_name = os.path.splitext(os.path.basename(input_path))[0]
@@ -124,9 +130,9 @@ async def convert_asset(input_path, output_path):
 
     try:
         if input_path.lower().endswith(".usdz"):
-            with zipfile.ZipFile(input_path, 'r') as z:
+            with zipfile.ZipFile(input_path, "r") as z:
                 z.extractall(tmp_dir)
-                candidates = [f for f in z.namelist() if f.lower().endswith(('.usd', '.usda', '.usdc'))]
+                candidates = [f for f in z.namelist() if f.lower().endswith((".usd", ".usda", ".usdc"))]
                 if candidates:
                     tmp_usd_path = os.path.join(tmp_dir, candidates[0])
                 else:
@@ -169,9 +175,7 @@ async def convert_asset(input_path, output_path):
         print(f"  Embed textures: {fbx_options.embed_textures}")
         print(f"  Export preview surface: {fbx_options.export_preview_surface}")
 
-        fbx_task = converter_manager.create_converter_task(
-            tmp_usd_path, output_path, None, fbx_options
-        )
+        fbx_task = converter_manager.create_converter_task(tmp_usd_path, output_path, None, fbx_options)
 
         success = await fbx_task.wait_until_finished()
         if not success:
@@ -184,15 +188,16 @@ async def convert_asset(input_path, output_path):
     finally:
         shutil.rmtree(tmp_dir)
 
+
 if __name__ == "__main__":
     app = omni.kit.app.get_app()
     loop = asyncio.get_event_loop()
     print('ready: Converter CLI (Isaac Sim 5.x). Type "exit" to quit.')
     while True:
-        inp = input('')
-        if inp.strip().lower() == 'exit':
+        inp = input("")
+        if inp.strip().lower() == "exit":
             break
-        args = inp.strip().split(':')
+        args = inp.strip().split(":")
         if len(args) != 2:
             print("error: usage <input_file>:<output_file>")
             continue
@@ -201,10 +206,11 @@ if __name__ == "__main__":
             while not task.done():
                 app.update()
                 loop.run_until_complete(asyncio.sleep(0))
-            if (exc := task.exception()):
+            if exc := task.exception():
                 raise exc
             print(f"success: {task.result()}")
         except Exception as e:
             import traceback
+
             traceback.print_exc()
             print(f"error: {repr(e)}")

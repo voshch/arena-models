@@ -1,4 +1,5 @@
 """Implementation modules for arena_models CLI commands."""
+
 import contextlib
 import contextvars
 import enum
@@ -10,7 +11,7 @@ import cattrs.preconf.pyyaml
 from arena_models.utils.geom import BoundingBox
 from arena_models.utils.logging import get_logger
 
-logger = get_logger('arena_models.impl')
+logger = get_logger("arena_models.impl")
 
 converter = cattrs.preconf.pyyaml.make_converter(prefer_attrib_converters=True)
 
@@ -36,9 +37,19 @@ def _unstructure_bounding_box(box: BoundingBox) -> list:
     if (volume := box.volume) < 1e-9:
         asset = _active_serialization_asset.get()
         if volume < 0:
-            logger.warning("Serializing Negative-volume (%d) BoundingBox for %s: %s", volume, asset or "<unknown-asset>", box)
+            logger.warning(
+                "Serializing Negative-volume (%d) BoundingBox for %s: %s",
+                volume,
+                asset or "<unknown-asset>",
+                box,
+            )
         else:
-            logger.warning("Serializing Zero-volume (%d) BoundingBox for %s: %s", volume, asset or "<unknown-asset>", box)
+            logger.warning(
+                "Serializing Zero-volume (%d) BoundingBox for %s: %s",
+                volume,
+                asset or "<unknown-asset>",
+                box,
+            )
     return list(box)
 
 
@@ -50,8 +61,8 @@ class AssetType(enum.Enum):
     MATERIAL = "material"
 
 
-DATABASE_NAME = '.db'
-ANNOTATION_NAME = 'annotation.yaml'
+DATABASE_NAME = ".db"
+ANNOTATION_NAME = "annotation.yaml"
 
 
 def convert_list_str(value: typing.Any) -> list[str]:
@@ -64,15 +75,13 @@ def convert_list_str(value: typing.Any) -> list[str]:
 
 @attrs.define
 class Annotation:
-
     name: str
     path: str
     desc: str = ""
     tags: list[str] = attrs.field(factory=list, converter=convert_list_str)
 
     @property
-    def as_text(self) -> str:
-        ...
+    def as_text(self) -> str: ...
 
     @property
     def as_metadata(self) -> dict:
@@ -86,8 +95,8 @@ class Annotation:
     @classmethod
     def from_metadata(cls, metadata: dict) -> typing.Self:
         return cls(
-            name=metadata['name'],
-            path=metadata['path'],
-            desc=metadata.get('desc', ""),
-            tags=metadata.get('tags', [])
+            name=metadata["name"],
+            path=metadata["path"],
+            desc=metadata.get("desc", ""),
+            tags=metadata.get("tags", []),
         )

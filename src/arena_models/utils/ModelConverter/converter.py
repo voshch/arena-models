@@ -24,16 +24,13 @@ logger = get_logger("ModelConverter")
 
 class _ModelConverterExt(typing.Protocol):
     @classmethod
-    def coordinates(cls) -> CoordinateSystem:
-        ...
+    def coordinates(cls) -> CoordinateSystem: ...
 
     @classmethod
-    def load(cls, path: str) -> None:
-        ...
+    def load(cls, path: str) -> None: ...
 
     @classmethod
-    def save(cls, path: str) -> None:
-        ...
+    def save(cls, path: str) -> None: ...
 
     @classmethod
     def inline(cls, coordinates: CoordinateSystem, load: typing.Callable, save: typing.Callable) -> typing.Type[_ModelConverterExt]:
@@ -76,6 +73,7 @@ class ModelConverter:
         def decorator(subcls: typing.Type[_ModelConverterExt]):
             for e in ext:
                 cls.__exts[e.lower()] = subcls
+
         return decorator
 
     @classmethod
@@ -84,14 +82,14 @@ class ModelConverter:
 
     def transform_coordinates(self, coords: CoordinateSystem) -> None:
         x, y, z = self._coordinates.get_transformation_to(coords)
-        bpy.ops.object.select_all(action='SELECT')
+        bpy.ops.object.select_all(action="SELECT")
         try:
-            bpy.ops.transform.rotate(value=x, orient_axis='X')
-            bpy.ops.transform.rotate(value=y, orient_axis='Y')
-            bpy.ops.transform.rotate(value=z, orient_axis='Z')
+            bpy.ops.transform.rotate(value=x, orient_axis="X")
+            bpy.ops.transform.rotate(value=y, orient_axis="Y")
+            bpy.ops.transform.rotate(value=z, orient_axis="Z")
             self._coordinates = coords
         finally:
-            bpy.ops.object.select_all(action='DESELECT')
+            bpy.ops.object.select_all(action="DESELECT")
 
     def __init__(self, *, reset: bool = True):
         self._reset: bool = reset
@@ -117,8 +115,7 @@ class ModelConverter:
             raise ValueError(f"Unsupported file extension: {ext}")
 
     def rectify(self):
-        """Rectify the model's orientation and position (make it upright and floor-touching).
-        """
+        """Rectify the model's orientation and position (make it upright and floor-touching)."""
 
         self.transform_coordinates(CoordinateSystem.default())
         bbox = self.bounding_box()
@@ -127,29 +124,31 @@ class ModelConverter:
         size_x = bbox.max_x - bbox.min_x
         size_y = bbox.max_y - bbox.min_y
         if size_x > 5 or size_y > 5:
-            bpy.ops.object.select_all(action='SELECT')
+            bpy.ops.object.select_all(action="SELECT")
             try:
                 bpy.ops.transform.resize(value=(0.01, 0.01, 0.01))
             finally:
-                bpy.ops.object.select_all(action='DESELECT')
+                bpy.ops.object.select_all(action="DESELECT")
             # Recalculate bounding box after scaling
             bbox = self.bounding_box()
 
-        translation = mathutils.Vector((
-            0.0,
-            0.0,
-            -bbox.min_z,
-        ))
-        bpy.ops.object.select_all(action='SELECT')
+        translation = mathutils.Vector(
+            (
+                0.0,
+                0.0,
+                -bbox.min_z,
+            )
+        )
+        bpy.ops.object.select_all(action="SELECT")
         try:
             bpy.ops.transform.translate(value=translation)
         finally:
-            bpy.ops.object.select_all(action='DESELECT')
+            bpy.ops.object.select_all(action="DESELECT")
 
     def bounding_box(self) -> BoundingBox:
         coords = []
         for obj in bpy.context.scene.objects:
-            if obj.type == 'MESH':
+            if obj.type == "MESH":
                 for corner in obj.bound_box:
                     world_corner = obj.matrix_world @ mathutils.Vector(corner)
                     coords.append(world_corner)
@@ -157,7 +156,13 @@ class ModelConverter:
             return BoundingBox.empty()
         min_corner = mathutils.Vector(map(min, zip(*coords)))
         max_corner = mathutils.Vector(map(max, zip(*coords)))
-        return BoundingBox(((min_corner.x, max_corner.x), (min_corner.y, max_corner.y), (min_corner.z, max_corner.z)))
+        return BoundingBox(
+            (
+                (min_corner.x, max_corner.x),
+                (min_corner.y, max_corner.y),
+                (min_corner.z, max_corner.z),
+            )
+        )
 
     @contextlib.contextmanager
     def camera_lighting_context(self):
@@ -177,27 +182,27 @@ class ModelConverter:
 
         try:
             # Setup camera
-            camera_data = bpy.data.cameras.new(name='RenderCamera')
+            camera_data = bpy.data.cameras.new(name="RenderCamera")
             created_data.append(camera_data)
-            camera_object = bpy.data.objects.new('RenderCamera', camera_data)
+            camera_object = bpy.data.objects.new("RenderCamera", camera_data)
             created_objects.append(camera_object)
             scene.collection.objects.link(camera_object)
             scene.camera = camera_object
 
             # Key light - main sunlight angled toward the object
-            sun_data = bpy.data.lights.new(name='RenderSun', type='SUN')
+            sun_data = bpy.data.lights.new(name="RenderSun", type="SUN")
             created_data.append(sun_data)
             sun_data.energy = 6.0
-            sun_object = bpy.data.objects.new('RenderSun', sun_data)
+            sun_object = bpy.data.objects.new("RenderSun", sun_data)
             created_objects.append(sun_object)
             scene.collection.objects.link(sun_object)
 
             # Fill light - soft light from opposite side for shadow fill
-            fill_data = bpy.data.lights.new(name='RenderFill', type='AREA')
+            fill_data = bpy.data.lights.new(name="RenderFill", type="AREA")
             created_data.append(fill_data)
             fill_data.energy = 2.0
             fill_data.size = 5.0
-            fill_object = bpy.data.objects.new('RenderFill', fill_data)
+            fill_object = bpy.data.objects.new("RenderFill", fill_data)
             created_objects.append(fill_object)
             scene.collection.objects.link(fill_object)
 
@@ -216,11 +221,11 @@ class ModelConverter:
 
     def _render(self, output_path: str):
         scene = bpy.context.scene
-        scene.render.engine = 'CYCLES'
+        scene.render.engine = "CYCLES"
         scene.cycles.samples = 32
         scene.render.resolution_percentage = 100
         scene.render.film_transparent = True
-        scene.render.image_settings.file_format = 'PNG'
+        scene.render.image_settings.file_format = "PNG"
         scene.render.filepath = output_path
 
         # Configure GPU rendering with CUDA
@@ -249,24 +254,38 @@ class ModelConverter:
             return (min_short_side, min_short_side)
         elif size_x >= size_y:
             res_y = min_short_side
-            res_x = max(int(round(min_short_side * (size_x / max(size_y, 1e-6)))), min_short_side)
+            res_x = max(
+                int(round(min_short_side * (size_x / max(size_y, 1e-6)))),
+                min_short_side,
+            )
             return (res_x, res_y)
         else:
             res_x = min_short_side
-            res_y = max(int(round(min_short_side * (size_y / max(size_x, 1e-6)))), min_short_side)
+            res_y = max(
+                int(round(min_short_side * (size_y / max(size_x, 1e-6)))),
+                min_short_side,
+            )
             return (res_x, res_y)
 
-    def render_perspective(self, output_path: str, *, resolution: tuple[int, int] | None = None, theta: float = 0, elevation: float = math.pi / 4) -> None:
-        """Render the current scene to a perspective image.
-        """
+    def render_perspective(
+        self,
+        output_path: str,
+        *,
+        resolution: tuple[int, int] | None = None,
+        theta: float = 0,
+        elevation: float = math.pi / 4,
+    ) -> None:
+        """Render the current scene to a perspective image."""
         scene = bpy.context.scene
 
         bbox = self.bounding_box()
-        center = mathutils.Vector((
-            (bbox.min_x + bbox.max_x) / 2,
-            (bbox.min_y + bbox.max_y) / 2,
-            (bbox.min_z + bbox.max_z) / 2,
-        ))
+        center = mathutils.Vector(
+            (
+                (bbox.min_x + bbox.max_x) / 2,
+                (bbox.min_y + bbox.max_y) / 2,
+                (bbox.min_z + bbox.max_z) / 2,
+            )
+        )
 
         if resolution is None:
             resolution = self._infer_resolution(bbox)
@@ -275,19 +294,29 @@ class ModelConverter:
 
         with self.camera_lighting_context() as (camera_object, sun_object, fill_object):
             camera_data = camera_object.data
-            camera_data.type = 'PERSP'
+            camera_data.type = "PERSP"
 
-            size = max(bbox.max_x - bbox.min_x, bbox.max_y - bbox.min_y, bbox.max_z - bbox.min_z)
+            size = max(
+                bbox.max_x - bbox.min_x,
+                bbox.max_y - bbox.min_y,
+                bbox.max_z - bbox.min_z,
+            )
             fov = camera_object.data.angle
             camera_distance = (size / 2.0) / math.tan(fov / 2.0) * 1.3
-            camera_object.location = center + mathutils.Vector((camera_distance * math.cos(theta) * math.sin(elevation), -camera_distance * math.sin(theta) * math.sin(elevation), camera_distance * math.cos(elevation)))
-            camera_object.rotation_euler = (center - camera_object.location).to_track_quat('-Z', 'Y').to_euler()
+            camera_object.location = center + mathutils.Vector(
+                (
+                    camera_distance * math.cos(theta) * math.sin(elevation),
+                    -camera_distance * math.sin(theta) * math.sin(elevation),
+                    camera_distance * math.cos(elevation),
+                )
+            )
+            camera_object.rotation_euler = (center - camera_object.location).to_track_quat("-Z", "Y").to_euler()
 
             sun_object.location = camera_object.location + mathutils.Vector((0.0, 0.0, 1.0))
-            sun_object.rotation_euler = (center - sun_object.location).to_track_quat('-Z', 'Y').to_euler()
+            sun_object.rotation_euler = (center - sun_object.location).to_track_quat("-Z", "Y").to_euler()
 
             fill_object.location = camera_object.location + mathutils.Vector((0.0, 0.0, -1.0))
-            fill_object.rotation_euler = (center - fill_object.location).to_track_quat('-Z', 'Y').to_euler()
+            fill_object.rotation_euler = (center - fill_object.location).to_track_quat("-Z", "Y").to_euler()
 
             self._render(output_path)
 
@@ -311,25 +340,27 @@ class ModelConverter:
         size_y = bbox.max_y - bbox.min_y
         ortho_scale = max(size_x, size_y)
 
-        center = mathutils.Vector((
-            (bbox.min_x + bbox.max_x) / 2,
-            (bbox.min_y + bbox.max_y) / 2,
-            (bbox.min_z + bbox.max_z) / 2,
-        ))
+        center = mathutils.Vector(
+            (
+                (bbox.min_x + bbox.max_x) / 2,
+                (bbox.min_y + bbox.max_y) / 2,
+                (bbox.min_z + bbox.max_z) / 2,
+            )
+        )
 
         camera_height = max(bbox.max_z - bbox.min_z, 1.0) * 2.0
 
         with self.camera_lighting_context() as (camera_object, sun_object, fill_object):
-            camera_object.data.type = 'ORTHO'
+            camera_object.data.type = "ORTHO"
             camera_object.location = center + mathutils.Vector((0.0, 0.0, camera_height))
             camera_object.rotation_euler = (0.0, 0.0, 0.0)
             camera_object.data.ortho_scale = max(ortho_scale, 1e-6)
 
             sun_object.location = camera_object.location + mathutils.Vector((0.0, 0.0, 1.0))
-            sun_object.rotation_euler = (center - sun_object.location).to_track_quat('-Z', 'Y').to_euler()
+            sun_object.rotation_euler = (center - sun_object.location).to_track_quat("-Z", "Y").to_euler()
 
             fill_object.location = camera_object.location + mathutils.Vector((0.0, 0.0, -1.0))
-            fill_object.rotation_euler = (center - fill_object.location).to_track_quat('-Z', 'Y').to_euler()
+            fill_object.rotation_euler = (center - fill_object.location).to_track_quat("-Z", "Y").to_euler()
 
             self._render(output_path)
 
@@ -345,7 +376,7 @@ class ModelConverter:
 
 ModelConverter.register(ModelFormat.USD, ModelFormat.USDA, ModelFormat.USDC, ModelFormat.USDZ)(
     _ModelConverterExt.inline(
-        CoordinateSystem('X+', 'Y+', 'Z+'),
+        CoordinateSystem("X+", "Y+", "Z+"),
         bpy.ops.wm.usd_import,
         functools.partial(
             bpy.ops.wm.usd_export,
@@ -354,14 +385,15 @@ ModelConverter.register(ModelFormat.USD, ModelFormat.USDA, ModelFormat.USDC, Mod
             export_uvmaps=True,
             export_animation=False,
             selected_objects_only=False,
-            export_textures_mode='NEW',
+            export_textures_mode="NEW",
             overwrite_textures=True,
             export_lights=False,
             export_cameras=False,
             export_mesh_colors=False,
-        )
+        ),
     )
 )
+
 
 def obj_export(filepath: str):
     base_path = Path(filepath)
@@ -381,7 +413,7 @@ def fbx_import(filepath: str):
     # FBX importer limitation for BSDF: Only changes Metallic to 0.0 if it's unlinked and exactly 1.0.
     for mat in bpy.data.materials:
         if mat.use_nodes and mat.node_tree:
-            principled = next((n for n in mat.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+            principled = next((n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
 
             if principled:
                 metallic_socket = principled.inputs.get("Metallic")
@@ -397,29 +429,23 @@ ModelConverter.register(ModelFormat.FBX)(
         fbx_import,
         functools.partial(
             bpy.ops.export_scene.fbx,
-            object_types={'ARMATURE', 'EMPTY', 'MESH', 'OTHER'},
+            object_types={"ARMATURE", "EMPTY", "MESH", "OTHER"},
             embed_textures=True,
-            path_mode='COPY',
-        )
+            path_mode="COPY",
+        ),
     )
 )
 
-ModelConverter.register(ModelFormat.DAE)(
-    _ModelConverterExt.inline(
-        CoordinateSystem.default(),
-        bpy.ops.wm.collada_import,
-        bpy.ops.wm.collada_export
-    )
-)
+ModelConverter.register(ModelFormat.DAE)(_ModelConverterExt.inline(CoordinateSystem.default(), bpy.ops.wm.collada_import, bpy.ops.wm.collada_export))
 
 
 def sdf_export(filepath: str):
     base_path = Path(filepath)
-    dae_path = base_path / f'{base_path.stem}.dae'
+    dae_path = base_path / f"{base_path.stem}.dae"
     bpy.ops.wm.collada_export(filepath=str(dae_path))
 
-    sdf_path = base_path / f'{base_path.stem}.sdf'
-    with open(sdf_path, 'w') as f:
+    sdf_path = base_path / f"{base_path.stem}.sdf"
+    with open(sdf_path, "w") as f:
         f.write(f"""<?xml version="1.0" ?>
 <sdf version="1.7">
   <model name="{base_path.stem}">
@@ -441,18 +467,12 @@ ModelConverter.register(ModelFormat.SDF)(
     _ModelConverterExt.inline(
         CoordinateSystem.default(),
         lambda filepath: NotImplementedError("SDF import is not implemented yet."),
-        sdf_export
+        sdf_export,
     )
 )
 
 
-ModelConverter.register(ModelFormat.GLB, ModelFormat.GLTF)(
-    _ModelConverterExt.inline(
-        CoordinateSystem.default(),
-        bpy.ops.import_scene.gltf,
-        bpy.ops.export_scene.gltf
-    )
-)
+ModelConverter.register(ModelFormat.GLB, ModelFormat.GLTF)(_ModelConverterExt.inline(CoordinateSystem.default(), bpy.ops.import_scene.gltf, bpy.ops.export_scene.gltf))
 
 
-__all__ = ['ModelConverter']
+__all__ = ["ModelConverter"]

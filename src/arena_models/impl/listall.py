@@ -12,4 +12,4 @@ def list_database(database_path: str, asset_type: AssetType) -> list[Annotation]
 
     annotation_t = DatabaseBuilder.Builder(asset_type)._annotation_cls
 
-    return [annotation_t.from_metadata(dict(item)) for item in result['metadatas'] if item]
+    return [annotation_t.from_metadata(dict(item)) for item in result["metadatas"] if item]

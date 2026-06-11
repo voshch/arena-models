@@ -4,11 +4,7 @@ import sys
 
 import enlighten
 
-logging.basicConfig(
-    level=logging.WARNING,
-    format='%(message)s',
-    stream=sys.stdout
-)
+logging.basicConfig(level=logging.WARNING, format="%(message)s", stream=sys.stdout)
 _logger = logging.getLogger()
 _manager = enlighten.get_manager(enabled=True)
 
@@ -31,9 +27,9 @@ def initialize(silent: bool = False, log_level: str = "WARNING"):
         numeric_level = getattr(logging, log_level.upper(), logging.WARNING)
         logging.basicConfig(
             level=numeric_level,
-            format='%(message)s',
+            format="%(message)s",
             stream=sys.stdout,
-            force=True  # Force reconfiguration
+            force=True,  # Force reconfiguration
         )
 
     _logger = logging.getLogger()

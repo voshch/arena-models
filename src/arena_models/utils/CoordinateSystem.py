@@ -5,14 +5,17 @@ import typing
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-Axis = typing.Literal['X+', 'X-', 'Y+', 'Y-', 'Z+', 'Z-']
+Axis = typing.Literal["X+", "X-", "Y+", "Y-", "Z+", "Z-"]
 
 
 class AxisMap:
     __map: dict[Axis, tuple[int, int, int]] = {
-        'X+': (1, 0, 0), 'X-': (-1, 0, 0),
-        'Y+': (0, 1, 0), 'Y-': (0, -1, 0),
-        'Z+': (0, 0, 1), 'Z-': (0, 0, -1),
+        "X+": (1, 0, 0),
+        "X-": (-1, 0, 0),
+        "Y+": (0, 1, 0),
+        "Y-": (0, -1, 0),
+        "Z+": (0, 0, 1),
+        "Z-": (0, 0, -1),
     }
 
     @classmethod
@@ -40,7 +43,7 @@ class CoordinateSystem:
         """
         Returns Blender's default world coordinate system (X-right, Z-up, Y-back).
         """
-        return cls('X+', 'Z+', 'Y-')
+        return cls("X+", "Z+", "Y-")
 
     def __init__(self, right: Axis, up: Axis, front: Axis):
         try:
@@ -54,9 +57,7 @@ class CoordinateSystem:
 
         # Validate that the system is right-handed and orthogonal
         if not np.isclose(np.linalg.det(rotation_matrix), 1.0):
-            raise ValueError(
-                f"Axes {(right, up, front)} do not form a valid right-handed coordinate system."
-            )
+            raise ValueError(f"Axes {(right, up, front)} do not form a valid right-handed coordinate system.")
 
         self._rotation = R.from_matrix(rotation_matrix)
 
@@ -72,16 +73,14 @@ class CoordinateSystem:
         @return: A tuple of radians rotations (x, y, z).
         """
         transform_rot = target_system.rotation * self.rotation.inv()
-        angles_rad = transform_rot.as_euler('xyz')
+        angles_rad = transform_rot.as_euler("xyz")
         return tuple(angles_rad)
 
     def __repr__(self) -> str:
         """
         Provides a string representation of the CoordinateSystem.
         """
-        return f"CoordinateSystem({AxisMap.axis(self.rotation.as_matrix()[:, 0])}, " \
-               f"{AxisMap.axis(self.rotation.as_matrix()[:, 1])}, " \
-               f"{AxisMap.axis(self.rotation.as_matrix()[:, 2])})"
+        return f"CoordinateSystem({AxisMap.axis(self.rotation.as_matrix()[:, 0])}, {AxisMap.axis(self.rotation.as_matrix()[:, 1])}, {AxisMap.axis(self.rotation.as_matrix()[:, 2])})"
 
 
-__all__ = ['CoordinateSystem']
+__all__ = ["CoordinateSystem"]

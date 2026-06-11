@@ -5,7 +5,7 @@ import sys
 import threading
 
 # The pty module is only available on POSIX-compliant systems (Linux, macOS).
-if os.name == 'posix':
+if os.name == "posix":
     import pty
 else:
     pty = None
@@ -28,7 +28,7 @@ def _fd_reader(read_fd, buffer):
                 # An empty byte string means the write-end was closed.
                 break
             # Decode and write to the provided in-memory buffer.
-            buffer.write(data.decode('utf-8', errors='replace'))
+            buffer.write(data.decode("utf-8", errors="replace"))
         except (OSError, ValueError):
             # This can happen if the fd or buffer is closed unexpectedly.
             break
@@ -50,9 +50,7 @@ def capture_all_output(stdout: io.IOBase | None = None, stderr: io.IOBase | None
         (io.IOBase, io.IOBase): A tuple with the stdout and stderr buffers.
     """
     if pty is None:
-        raise NotImplementedError(
-            "The pty-based output capturer is only available on Linux or macOS."
-        )
+        raise NotImplementedError("The pty-based output capturer is only available on Linux or macOS.")
 
     if stdout is None:
         stdout = io.StringIO()

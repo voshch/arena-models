@@ -55,7 +55,10 @@ class LocalUsdBaker(UsdBaker):
         if output is None:
             if retries > 0:
                 self.logger.error("Conversion failed. Process output closed unexpectedly.")
-                self.logger.info("Restarting USD Baker and retrying conversion (attempts left: %d)...", retries)
+                self.logger.info(
+                    "Restarting USD Baker and retrying conversion (attempts left: %d)...",
+                    retries,
+                )
                 self.start()
                 return self.convert(input_file, output_file, retries - 1)
             raise RuntimeError("Conversion failed. Process output closed unexpectedly.")

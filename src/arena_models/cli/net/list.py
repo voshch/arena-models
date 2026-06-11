@@ -10,7 +10,7 @@ def list_command(
     prefix: str = typer.Argument("", help="Prefix to list assets under"),
 ):
     """List available assets under a prefix in the bucket."""
-    source = ctx.obj['source']
+    source = ctx.obj["source"]
 
     safe_echo(f"Listing assets in bucket: {source} under prefix: {prefix or '(root)'}", ctx)
 
@@ -36,5 +36,5 @@ def add_to_cmd(cmd):
     cmd.command("list")(list_command)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     typer.run(list_command)

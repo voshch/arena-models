@@ -18,7 +18,7 @@ from arena_models.utils.ModelConverter.UsdBaker import UsdBaker
 
 from . import DatabaseBuilder, OptionRegistry
 
-logger = get_logger('build.object')
+logger = get_logger("build.object")
 
 
 @attrs.define
@@ -49,7 +49,7 @@ class ObjectAnnotation(Annotation):
 
     @property
     def as_text(self):
-        result = ''
+        result = ""
         for material in self.material:
             result += f"{material} "
         for color in self.color:
@@ -116,12 +116,16 @@ class ObjectAnnotation(Annotation):
             path=metadata.get("path", ""),
             desc=metadata.get("desc", ""),
             tags=tags.split(",") if (tags := metadata.get("tags")) else [],
-            material=material.split(",") if (material := metadata.get("material")) else [],
+            material=material.split(",")
+            if (material := metadata.get("material"))
+            else [],
             color=color.split(",") if (color := metadata.get("color")) else [],
             hoi=hoi.split(",") if (hoi := metadata.get("hoi")) else [],
             face=cls._parse_face(metadata.get("face")),
             note=metadata.get("note", ""),
-            bounding_box=BoundingBox(json.loads(bounding_box)) if (bounding_box := metadata.get("bounding_box")) else BoundingBox.empty(),
+            bounding_box=BoundingBox(json.loads(bounding_box))
+            if (bounding_box := metadata.get("bounding_box"))
+            else BoundingBox.empty(),
         )
 
     @property
@@ -140,7 +144,7 @@ class ObjectAnnotation(Annotation):
             "materials": [[material, material] for material in self.material],
             "note": self.note,
         }
-    
+
     @property
     def as_gpt_meta(self) -> dict:
         return {
@@ -153,25 +157,26 @@ class ObjectAnnotation(Annotation):
                 "z": self.bounding_box.max_z - self.bounding_box.min_z,
             },
             "note": self.note,
-
         }
 
 
 class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
     _annotation_cls = ObjectAnnotation
-    _DISCOVER_PATH = 'Object'
+    _DISCOVER_PATH = "Object"
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self._formats: set[ModelFormat] = {ModelFormat.USDZ, ModelFormat.FBX, ModelFormat.OBJ}
+        self._formats: set[ModelFormat] = {
+            ModelFormat.USDZ,
+            ModelFormat.FBX,
+            ModelFormat.OBJ,
+        }
         self._usd_baker: typing.Optional[UsdBaker] = None
 
         def store_db(annotation: ObjectAnnotation) -> None:
-            self._db.store(
-                AssetType.OBJECT.value,
-                annotation
-            )
+            self._db.store(AssetType.OBJECT.value, annotation)
+
         self._pipeline.append(store_db)
 
         self._previews_enabled = False
@@ -189,13 +194,22 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
                 for walk in os.walk(annotation.path)
                 for f in walk[2]
                 if f.endswith(ModelConverter.exts())
-            ), None
+            ),
+            None,
         )
 
     @classmethod
     def is_usd(cls, filename: str) -> bool:
-        usd_extensions = {ModelFormat.USD, ModelFormat.USDA, ModelFormat.USDC, ModelFormat.USDZ}
-        return any(os.path.splitext(filename.lower())[-1].lstrip(".") == ext.value for ext in usd_extensions)
+        usd_extensions = {
+            ModelFormat.USD,
+            ModelFormat.USDA,
+            ModelFormat.USDC,
+            ModelFormat.USDZ,
+        }
+        return any(
+            os.path.splitext(filename.lower())[-1].lstrip(".") == ext.value
+            for ext in usd_extensions
+        )
 
     def process_entity(self, annotation, dest):
         from arena_models.utils.ModelConverter.converter import ModelConverter
@@ -215,15 +229,13 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
 
                 self._usd_baker.convert(
                     str(input_file.relative_to(self.input_path)),
-                    str(baked_usd_path.relative_to(self.output_path))
+                    str(baked_usd_path.relative_to(self.output_path)),
                 )
                 logger.info("Baked USD model %s to %s", input_file, baked_usd_path)
                 input_file = baked_usd_path
 
             model_paths = (
-                dest /
-                f"{annotation.name}.{ext.value}"
-                for ext in self._formats
+                dest / f"{annotation.name}.{ext.value}" for ext in self._formats
             )
 
             with ModelConverter() as model_converter:
@@ -233,8 +245,15 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
 
                 if self._previews_enabled:
                     # model_converter.render_perspective(str(dest / f"{annotation.name}.png"), resolution=None, theta=annotation.face.angle + 30)
-                    model_converter.render_perspective(str(dest / f"{annotation.name}_thumb.png"), resolution=(512, 512), theta=math.radians(annotation.face.angle + 30))
-                    model_converter.render_topdown(str(dest / f"{annotation.name}_topdown.png"), resolution=(512, 512))
+                    model_converter.render_perspective(
+                        str(dest / f"{annotation.name}_thumb.png"),
+                        resolution=(512, 512),
+                        theta=math.radians(annotation.face.angle + 30),
+                    )
+                    model_converter.render_topdown(
+                        str(dest / f"{annotation.name}_topdown.png"),
+                        resolution=(512, 512),
+                    )
                 for model_path in model_paths:
                     model_path.parent.mkdir(exist_ok=True)
                     model_converter.save(str(model_path))
@@ -253,7 +272,9 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             return annotation
 
         except Exception as e:
-            logger.error("Unexpected error processing entity %s: %s", annotation.path, repr(e))
+            logger.error(
+                "Unexpected error processing entity %s: %s", annotation.path, repr(e)
+            )
             return None
 
         finally:
@@ -264,42 +285,52 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
                     shutil.rmtree(baked_usd_path.parent)
                     logger.debug("Removed temporary baked file %s", baked_usd_path)
                 except Exception as e:
-                    logger.warning("Failed to remove temporary baked file %s: %s", baked_usd_path, e)
+                    logger.warning(
+                        "Failed to remove temporary baked file %s: %s",
+                        baked_usd_path,
+                        e,
+                    )
 
     enable = OptionRegistry()
 
-    @enable.register('formats')
+    @enable.register("formats")
     def sdf(self, formats: str | None = None):
         self._formats.clear()
         if formats is None:
-            formats = '*'
-        if formats == '*':
+            formats = "*"
+        if formats == "*":
             self._formats = set(ModelFormat.__members__.values())
             return
-        for fmt in formats.split(','):
+        for fmt in formats.split(","):
             try:
                 self._formats.add(ModelFormat(fmt.lower()))
                 logger.info("Enabling %s export option.", fmt)
             except ValueError:
                 logger.error("Unknown model format specified: %s", fmt)
 
-    @enable.register('procthor')
+    @enable.register("procthor")
     def procthor(self):
         logger.info("Enabling Procthor export option.")
         self._procthor = {}
-        self._pipeline.append(lambda annotation: self._procthor.update({annotation.path.replace(os.sep, "_"): annotation.as_procthor}))
+        self._pipeline.append(
+            lambda annotation: self._procthor.update(
+                {annotation.path.replace(os.sep, "_"): annotation.as_procthor}
+            )
+        )
 
         def export():
             with open(os.path.join(self.output_path, "asset-database.json"), "w") as f:
                 json.dump(self._procthor, f, indent=4)
+
         self._post.append(export)
 
-    @enable.register('bake-mdl')
+    @enable.register("bake-mdl")
     def bake_mdl(self, isaacsim_path: str | None = None):
         if isaacsim_path is not None:
             from arena_models.utils.ModelConverter.UsdBaker.LocalUsdBaker import (
                 LocalUsdBaker,
             )
+
             self._usd_baker = LocalUsdBaker(
                 input_dir=self.input_path,
                 output_dir=self.output_path,
@@ -310,6 +341,7 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
             from arena_models.utils.ModelConverter.UsdBaker.DockerUsdBaker import (
                 DockerUsdBaker,
             )
+
             self._usd_baker = DockerUsdBaker(
                 input_dir=Path(self.input_path),
                 output_dir=Path(self.output_path),
@@ -320,9 +352,10 @@ class ObjectDatabaseBuilder(DatabaseBuilder[ObjectAnnotation]):
         def cleanup_baker():
             if self._usd_baker is not None:
                 self._usd_baker.cleanup()
+
         self._post.append(cleanup_baker)
 
-    @enable.register('previews')
+    @enable.register("previews")
     def previews(self):
         logger.info("Enabling preview generation option.")
         self._previews_enabled = True

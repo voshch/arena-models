@@ -10,11 +10,18 @@ from collections.abc import Callable, Iterable, Iterator
 
 import yaml
 
-from arena_models.impl import ANNOTATION_NAME, DATABASE_NAME, Annotation, AssetType, converter, serialization_asset_context
+from arena_models.impl import (
+    ANNOTATION_NAME,
+    DATABASE_NAME,
+    Annotation,
+    AssetType,
+    converter,
+    serialization_asset_context,
+)
 from arena_models.utils.Database import Database
 from arena_models.utils.logging import get_logger, get_manager
 
-logger = get_logger('build')
+logger = get_logger("build")
 
 
 class OverwriteMode(str, Enum):
@@ -43,6 +50,7 @@ class OptionRegistry:
         def decorator(func):
             self._registry[name] = func
             return func
+
         return decorator
 
     def __get__(self, instance, _):
@@ -54,7 +62,9 @@ class OptionRegistry:
             def __call__(self, name, *args, **kwargs):
                 if name in self._registry:
                     func = self._registry[name]
-                    return func.__get__(self._instance, type(self._instance)).__call__(*args, **kwargs)
+                    return func.__get__(self._instance, type(self._instance)).__call__(
+                        *args, **kwargs
+                    )
 
         return BoundRegistry(self._registry, instance)
 
@@ -63,13 +73,22 @@ AnnotationT = typing.TypeVar("AnnotationT", bound=Annotation)
 
 
 class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
-    __registry: typing.ClassVar[dict[AssetType, typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]]] = {}
+    __registry: typing.ClassVar[
+        dict[AssetType, typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]]
+    ] = {}
     _type: typing.ClassVar[AssetType]
 
     @classmethod
-    def register(cls, type_: AssetType, /) -> typing.Callable[[typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]], None]:
-        def wrapper(builder_cls: typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]) -> None:
+    def register(
+        cls, type_: AssetType, /
+    ) -> typing.Callable[
+        [typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]], None
+    ]:
+        def wrapper(
+            builder_cls: typing.Callable[[AssetType], typing.Type[DatabaseBuilder]],
+        ) -> None:
             cls.__registry[type_] = builder_cls
+
         return wrapper
 
     @classmethod
@@ -103,16 +122,22 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                     converter.structure(
                         {
                             **yaml.safe_load(yaml_file),
-                            'name': dir_path.name,
-                            'path': dir_path,
+                            "name": dir_path.name,
+                            "path": dir_path,
                         },
-                        cls._annotation_cls
+                        cls._annotation_cls,
                     ),
                 )
         except Exception as e:
             return e
 
-    def __init__(self, input_path: Path, output_path: Path, overwrite: OverwriteMode = OverwriteMode.SKIP, **kwargs):
+    def __init__(
+        self,
+        input_path: Path,
+        output_path: Path,
+        overwrite: OverwriteMode = OverwriteMode.SKIP,
+        **kwargs,
+    ):
         self.input_path = input_path
         self.output_path = output_path
         self._overwrite = overwrite
@@ -129,6 +154,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
             with open(annotation_path, "w") as f:
                 with serialization_asset_context(str(annotation.path)):
                     yaml.safe_dump(converter.unstructure(annotation), f)
+
         self._pipeline.append(save_annotation)
 
     enable: OptionRegistry
@@ -138,20 +164,22 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         manager = get_manager()
 
         status_bar = manager.status_bar(
-            status_format='Building {build_type} database from {input_path}: {stage}{fill}',
+            status_format="Building {build_type} database from {input_path}: {stage}{fill}",
             input_path=str(self.input_path),
             build_type=self._type.name,
-            stage='Initializing',
+            stage="Initializing",
         )
 
-        status_bar.update(stage='Discovery')
+        status_bar.update(stage="Discovery")
 
         skipped_count = 0
 
         def skip_existing(annotation: AnnotationT) -> bool:
             dest_path = self._dest_path(annotation)
 
-            if (dest_path / ANNOTATION_NAME).exists() and self._overwrite == OverwriteMode.SKIP:
+            if (
+                dest_path / ANNOTATION_NAME
+            ).exists() and self._overwrite == OverwriteMode.SKIP:
                 logger.info("Skipping existing entity at %s", annotation.path)
                 nonlocal skipped_count
                 skipped_count += 1
@@ -162,30 +190,38 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
 
         if not queue:
             logger.info("Skipped %s build: No entities found.", self._type.name)
-            status_bar.update(stage='Done (skipped)')
+            status_bar.update(stage="Done (skipped)")
         else:
             if self._pre:
-                status_bar.update(stage='Pre-processing')
-                progress = manager.counter(total=len(self._pre), desc="Pre-processing", unit="steps", format='{desc}{desc_pad}{count:d} {unit}{unit_pad}{elapsed}]{fill}', leave=False)
+                status_bar.update(stage="Pre-processing")
+                progress = manager.counter(
+                    total=len(self._pre),
+                    desc="Pre-processing",
+                    unit="steps",
+                    format="{desc}{desc_pad}{count:d} {unit}{unit_pad}{elapsed}]{fill}",
+                    leave=False,
+                )
                 with progress:
                     logger.info("Running pre-processing...")
                     for fn in progress(self._pre):
                         fn()
 
-            status_bar.update(stage='Processing')
-            progress = manager.counter(total=len(queue), desc="Entities", unit="entities", leave=False)
+            status_bar.update(stage="Processing")
+            progress = manager.counter(
+                total=len(queue), desc="Entities", unit="entities", leave=False
+            )
 
             with progress:
-                success = progress.add_subcounter('green')
-                failure = progress.add_subcounter('red')
-                skipped = progress.add_subcounter('blue')
+                success = progress.add_subcounter("green")
+                failure = progress.add_subcounter("red")
+                skipped = progress.add_subcounter("blue")
                 progress.update(skipped_count)
                 skipped.update_from(progress, skipped_count)
                 del skipped_count
 
                 for annotation in queue:
                     progress.update()
-                    status_bar.update(stage=f'Processing {annotation.path}')
+                    status_bar.update(stage=f"Processing {annotation.path}")
 
                     target_path = self._target_path(annotation)
                     dest_path = self._dest_path(annotation)
@@ -206,7 +242,11 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                         try:
                             fn(annotation)
                         except Exception:
-                            logger.exception("Failed to process pipeline function %s for annotation %s", fn, annotation)
+                            logger.exception(
+                                "Failed to process pipeline function %s for annotation %s",
+                                fn,
+                                annotation,
+                            )
                             shutil.rmtree(dest_path)
                             failure.update_from(progress, 1)
                             break
@@ -214,33 +254,50 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                         success.update_from(progress, 1)
 
             if self._post:
-                status_bar.update(stage='Post-processing')
-                progress = manager.counter(total=len(self._post), desc="Post-processing", unit="steps", format='{desc}{desc_pad}{count:d} {unit}{unit_pad}{elapsed}]{fill}', leave=False)
+                status_bar.update(stage="Post-processing")
+                progress = manager.counter(
+                    total=len(self._post),
+                    desc="Post-processing",
+                    unit="steps",
+                    format="{desc}{desc_pad}{count:d} {unit}{unit_pad}{elapsed}]{fill}",
+                    leave=False,
+                )
                 with progress:
                     logger.info("Running export...")
                     for fn in progress(self._post):
                         fn()
 
             # actually looked these up by hand, LLMs won't replace me just yet
-            status_bar.update(stage=f'Done ✓{success.count} ✗{failure.count} ➤{skipped.count}')
+            status_bar.update(
+                stage=f"Done ✓{success.count} ✗{failure.count} ➤{skipped.count}"
+            )
 
         status_bar.close()
         logger.info("Database build complete.")
 
-    _DISCOVER_PATH: typing.ClassVar[str] = ''
+    _DISCOVER_PATH: typing.ClassVar[str] = ""
 
-    def discover(self, *, base_path: str | None = None, filter_: typing.Callable[[str], bool] | None = None) -> Iterator[AnnotationT]:
+    def discover(
+        self,
+        *,
+        base_path: str | None = None,
+        filter_: typing.Callable[[str], bool] | None = None,
+    ) -> Iterator[AnnotationT]:
 
         if filter_ is None:
+
             def filter__(path):
                 del path
                 return True
+
             filter_ = filter__
 
         if base_path is None:
             base_path = self._DISCOVER_PATH
 
-        for root, dirs, files in os.walk(self.input_path / base_path, ):
+        for root, dirs, files in os.walk(
+            self.input_path / base_path,
+        ):
             if not filter_(root):
                 continue
             dirs.sort()
@@ -251,13 +308,16 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                 dirs.clear()
                 annotation = self.read_annotation_file(Path(root))
                 if isinstance(annotation, Exception):
-                    logger.warning("Failed to read annotation file in %s: %s", root, annotation)
+                    logger.warning(
+                        "Failed to read annotation file in %s: %s", root, annotation
+                    )
                 elif annotation is not None:
                     yield annotation
 
     @abc.abstractmethod
-    def process_entity(self, annotation: AnnotationT, dest: Path) -> AnnotationT | None:
-        ...
+    def process_entity(
+        self, annotation: AnnotationT, dest: Path
+    ) -> AnnotationT | None: ...
 
     def _target_path(self, annotation: AnnotationT) -> Path:
         return Path(annotation.path).relative_to(self.input_path)
@@ -269,10 +329,12 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
 @DatabaseBuilder.register(AssetType.MATERIAL)
 def lazy_material(type_: AssetType) -> typing.Type[DatabaseBuilder]:
     from .MaterialDatabaseBuilder import MaterialDatabaseBuilder
+
     return MaterialDatabaseBuilder
 
 
 @DatabaseBuilder.register(AssetType.OBJECT)
 def lazy_object(type_: AssetType) -> typing.Type[DatabaseBuilder]:
     from .ObjectDatabaseBuilder import ObjectDatabaseBuilder
+
     return ObjectDatabaseBuilder

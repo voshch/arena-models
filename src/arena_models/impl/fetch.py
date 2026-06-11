@@ -18,7 +18,7 @@ class Bucket:
         self._api = self._API.format(bucket=bucket)
 
     def _object_url(self, obj: str, **params: str) -> str:
-        encoded = urllib.parse.quote(obj, safe='')
+        encoded = urllib.parse.quote(obj, safe="")
         query = urllib.parse.urlencode(params)
         if obj:
             return f"{self._api}/{encoded}?{query}" if query else f"{self._api}/{encoded}"
@@ -28,9 +28,9 @@ class Bucket:
         """List all objects under a prefix using the GCS JSON API."""
         opener = urllib.request.build_opener()
         results = []
-        prefix = prefix.strip('/')
+        prefix = prefix.strip("/")
         if prefix:
-            prefix += '/'
+            prefix += "/"
 
         url = self._object_url("", prefix=prefix)
 
@@ -56,7 +56,7 @@ class Bucket:
             asset = os.path.join(asset, ANNOTATION_NAME)
         url = self._object_url(asset, fields="name")
         try:
-            req = urllib.request.Request(url, method='HEAD')
+            req = urllib.request.Request(url, method="HEAD")
             urllib.request.urlopen(req)
             return True
         except urllib.error.HTTPError as e:
@@ -72,17 +72,23 @@ class Bucket:
 
     def download(self, blob_name: str, local_path: str) -> int:
         """Download a single blob to a local file. Returns bytes downloaded."""
-        url = self._DOWNLOAD.format(bucket=self.name, obj=urllib.parse.quote(blob_name, safe=''))
+        url = self._DOWNLOAD.format(bucket=self.name, obj=urllib.parse.quote(blob_name, safe=""))
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
         opener = urllib.request.build_opener()
         with opener.open(url) as resp:
             data = resp.read()
-            with open(local_path, 'wb') as f:
+            with open(local_path, "wb") as f:
                 f.write(data)
         return len(data)
 
 
-def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annotations: bool = True, model_formats: list[str] | None = None) -> None:
+def fetch_database(
+    bucket: str,
+    bucket_paths: list[str],
+    destination: str,
+    annotations: bool = True,
+    model_formats: list[str] | None = None,
+) -> None:
     """Download files from multiple paths in a Google Cloud Storage bucket.
 
     Args:
@@ -92,7 +98,7 @@ def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annot
         annotations: Whether to download annotation files (default: True)
         model_formats: List of model formats to download (e.g., ['usdz']). If None, download all formats
     """
-    logger = get_logger('fetch')
+    logger = get_logger("fetch")
     try:
         b = Bucket(bucket)
         os.makedirs(destination, exist_ok=True)
@@ -107,12 +113,12 @@ def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annot
         for path, blobs in all_blobs_by_path.items():
             for blob in blobs:
                 name = blob["name"]
-                if name in seen or name.endswith('/'):
+                if name in seen or name.endswith("/"):
                     continue
                 if not annotations and os.path.basename(name) == ANNOTATION_NAME:
                     continue
                 if model_formats is not None:
-                    if not any(any(part.endswith(f".{fmt.lower()}") for part in name.lower().split('/')) for fmt in model_formats):
+                    if not any(any(part.endswith(f".{fmt.lower()}") for part in name.lower().split("/")) for fmt in model_formats):
                         continue
                 seen.add(name)
                 file_blobs.append((path, blob))
@@ -132,22 +138,22 @@ def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annot
 
         with get_manager() as manager:
             status_bar = manager.status_bar(
-                status_format='Downloading: {current_file}{fill}',
-                current_file='Initializing...',
-                color='cyan'
+                status_format="Downloading: {current_file}{fill}",
+                current_file="Initializing...",
+                color="cyan",
             )
 
             data_progress = manager.counter(
                 total=total_size,
                 desc=f"[{1:>{len(str(total_files))}d}/{total_files}]",
                 color="blue",
-                counter_format='{desc}{desc_pad}{count_formatted}/{total_formatted} [{elapsed}, {rate_formatted}/s]{fill}',
-                bar_format='{desc}{desc_pad}{percentage:3.0f}%|{bar}| {count_formatted}/{total_formatted} [{elapsed}<{eta}, {rate_formatted}/s]',
+                counter_format="{desc}{desc_pad}{count_formatted}/{total_formatted} [{elapsed}, {rate_formatted}/s]{fill}",
+                bar_format="{desc}{desc_pad}{percentage:3.0f}%|{bar}| {count_formatted}/{total_formatted} [{elapsed}<{eta}, {rate_formatted}/s]",
                 fields={
-                    'count_formatted': format_file_size(0),
-                    'total_formatted': format_file_size(total_size),
-                    'rate_formatted': format_file_size(0)
-                }
+                    "count_formatted": format_file_size(0),
+                    "total_formatted": format_file_size(total_size),
+                    "rate_formatted": format_file_size(0),
+                },
             )
 
             for path, blob in file_blobs:
@@ -158,18 +164,21 @@ def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annot
                 status_bar.update(current_file=f"{blob_name} ({size_str})")
 
                 # Compute local path: strip the bucket prefix, place under destination/path
-                prefix = path.strip('/')
+                prefix = path.strip("/")
                 if prefix:
-                    prefix += '/'
-                relative_blob_path = blob_name[len(prefix):] if prefix and blob_name.startswith(prefix) else blob_name
-                local_file_path = os.path.join(destination, prefix, relative_blob_path.lstrip('/'))
+                    prefix += "/"
+                relative_blob_path = blob_name[len(prefix) :] if prefix and blob_name.startswith(prefix) else blob_name
+                local_file_path = os.path.join(destination, prefix, relative_blob_path.lstrip("/"))
                 os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
 
                 # Skip if file already exists and has the same size
                 if os.path.exists(local_file_path):
                     local_file_size = os.path.getsize(local_file_path)
                     if local_file_size == blob_size:
-                        logger.info("Skipping '%s' - already exists with correct size", blob_name)
+                        logger.info(
+                            "Skipping '%s' - already exists with correct size",
+                            blob_name,
+                        )
                         downloaded_count += 1
                         skipped_size += blob_size
 
@@ -184,7 +193,7 @@ def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annot
                             0,
                             count_formatted=format_file_size(downloaded_size),
                             total_formatted=format_file_size(new_total),
-                            rate_formatted=format_file_size(current_rate)
+                            rate_formatted=format_file_size(current_rate),
                         )
                         continue
 
@@ -201,16 +210,16 @@ def fetch_database(bucket: str, bucket_paths: list[str], destination: str, annot
                     blob_size,
                     count_formatted=format_file_size(downloaded_size),
                     total_formatted=format_file_size(total_size - skipped_size),
-                    rate_formatted=format_file_size(current_rate)
+                    rate_formatted=format_file_size(current_rate),
                 )
 
-            status_bar.update(current_file='Complete!')
+            status_bar.update(current_file="Complete!")
 
         logger.info(
             "Downloaded %d files (%s) successfully to: %s",
             downloaded_count,
             format_file_size(downloaded_size),
-            destination
+            destination,
         )
 
     except Exception as e:

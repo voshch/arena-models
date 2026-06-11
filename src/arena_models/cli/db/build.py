@@ -6,7 +6,7 @@ from arena_models.impl import AssetType
 from arena_models.impl.build import DatabaseBuilder, OverwriteMode
 from arena_models.utils.logging import get_logger, get_manager
 
-logger = get_logger('cli.db.build')
+logger = get_logger("cli.db.build")
 
 
 def build_command(
@@ -36,22 +36,18 @@ def build_command(
     overwrite: OverwriteMode = typer.Option(
         OverwriteMode.SKIP,
         "--overwrite",
-        help=(
-            "Overwrite behavior: 'skip' keeps existing entries, "
-            "'overwrite' rebuilds them, "
-            "'annotations' assumes files are built and only updates annotations."
-        ),
+        help=("Overwrite behavior: 'skip' keeps existing entries, 'overwrite' rebuilds them, 'annotations' assumes files are built and only updates annotations."),
     ),
 ):
     """Build a database from source model files."""
 
     # Get output path from context
-    database_path = ctx.obj.get('database_path') if ctx.obj else None
+    database_path = ctx.obj.get("database_path") if ctx.obj else None
     if database_path is None:
         logger.error("No database path configured. Set it via the parent command's --database option.")
         raise typer.Exit(1)
     output_path = Path(database_path)
-    
+
     # Validate asset type
     if asset_type:
         try:
@@ -69,7 +65,7 @@ def build_command(
     global_progress = manager.counter(
         total=len(asset_type_enum),
         desc="Databases",
-        bar_format='{desc}{desc_pad}{count:{len_total}d}/{total:d} [{elapsed}]',
+        bar_format="{desc}{desc_pad}{count:{len_total}d}/{total:d} [{elapsed}]",
         autorefresh=True,
     )
     with global_progress:
@@ -79,12 +75,13 @@ def build_command(
             # Build the database
             builder = DatabaseBuilder.Builder(t)(input_path=input_path, output_path=output_path, overwrite=overwrite)
             for extra in options:
-                builder.enable(*extra.split('='))
+                builder.enable(*extra.split("="))
             try:
                 builder.build()
             except Exception as e:
                 logger.error(f"Failed to build {t} database: {e}")
                 import traceback
+
                 traceback.print_exc()
                 raise
 
@@ -95,10 +92,10 @@ def add_to_cmd(db_cmd):
     options = [""]
     for builder, option in DatabaseBuilder.get_all_options().items():
         options.append(f"{builder.name}: {', '.join(option)}")
-    merged_options = '\n\t'.join(options)
+    merged_options = "\n\t".join(options)
     expanded_help = f"{build_command.__doc__}\n\nAvailable options: {merged_options}\n"
     db_cmd.command("build", help=expanded_help)(build_command)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     typer.run(build_command)
