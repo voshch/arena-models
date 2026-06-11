@@ -11,7 +11,7 @@ from arena_models.utils.logging import get_logger
 
 from . import DatabaseBuilder, OptionRegistry
 
-logger = get_logger('build.object')
+logger = get_logger('build.material')
 
 
 @attrs.define
