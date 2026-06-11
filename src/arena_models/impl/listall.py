@@ -1,9 +1,9 @@
 import os
 
+from arena_models.impl.build import DatabaseBuilder
 from arena_models.utils.Database import Database
 
 from . import DATABASE_NAME, Annotation, AssetType
-from arena_models.impl.build import DatabaseBuilder
 
 
 def list_database(database_path: str, asset_type: AssetType) -> list[Annotation]:

@@ -2,12 +2,12 @@
 
 import typer
 
-from .fetch import add_to_cmd as add_fetch_cmd
 from .exists import add_to_cmd as add_exists_cmd
+from .fetch import add_to_cmd as add_fetch_cmd
 from .list import add_to_cmd as add_list_cmd
 
 
-def add_to_cmd(cmd):
+def add_to_cmd(cmd: typer.Typer):
     """Add network command group to the main CLI."""
 
     net_app = typer.Typer(

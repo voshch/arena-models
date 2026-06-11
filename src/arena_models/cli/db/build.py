@@ -55,7 +55,7 @@ def build_command(
         except KeyError:
             valid_types = [e.name for e in AssetType]
             logger.error(f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from None
     else:
         asset_type_enum = list(DatabaseBuilder.get_registered())
 
@@ -88,7 +88,7 @@ def build_command(
     logger.info(f"Database build completed in {global_progress.elapsed:.1f}s")
 
 
-def add_to_cmd(db_cmd):
+def add_to_cmd(db_cmd: typer.Typer):
     options = [""]
     for builder, option in DatabaseBuilder.get_all_options().items():
         options.append(f"{builder.name}: {', '.join(option)}")

@@ -1,7 +1,9 @@
 """Query command for database operations."""
 
 import os
+
 import typer
+
 from ...impl import AssetType
 from ..utils import safe_echo
 
@@ -30,7 +32,7 @@ def query_command(
             f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}",
             ctx,
         )
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     safe_echo(
         f"Searching for {asset_type_enum.name} '{query_text}' in database {database_path}",
@@ -43,7 +45,7 @@ def query_command(
     typer.echo(os.path.join(database_path, result.path))
 
 
-def add_to_cmd(db_cmd):
+def add_to_cmd(db_cmd: typer.Typer):
     db_cmd.command("query")(query_command)
 
 

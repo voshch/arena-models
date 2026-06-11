@@ -1,9 +1,8 @@
-from pathlib import Path
+import subprocess
 import time
+from pathlib import Path
 
 from . import UsdBaker
-
-import subprocess
 
 
 class LocalUsdBaker(UsdBaker):

@@ -62,7 +62,7 @@ class CoordinateSystem:
         self._rotation = R.from_matrix(rotation_matrix)
 
     @property
-    def rotation(self):
+    def rotation(self) -> R:
         return self._rotation
 
     def get_transformation_to(self, target_system: CoordinateSystem) -> tuple[float, float, float]:

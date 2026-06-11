@@ -11,7 +11,7 @@ else:
     pty = None
 
 
-def _fd_reader(read_fd, buffer):
+def _fd_reader(read_fd: int, buffer: io.IOBase):
     """
     Reads data from a file descriptor (like a pipe or PTY) in a loop and
     writes it to a buffer. This is intended to be run in a separate thread.

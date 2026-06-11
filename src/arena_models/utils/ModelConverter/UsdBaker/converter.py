@@ -3,8 +3,8 @@
 import asyncio
 import os
 import shutil
-import zipfile
 import sys
+import zipfile
 
 try:
     # Ensure each print flushes promptly for IPC readers.
@@ -23,6 +23,7 @@ if __name__ == "__main__":
     )
 
 import omni.kit.app
+
 # Enable the required extensions for 5.x
 ext_manager = omni.kit.app.get_app().get_extension_manager()
 ext_manager.set_extension_enabled_immediate("omni.kit.asset_converter", True)
@@ -30,22 +31,23 @@ ext_manager.set_extension_enabled_immediate("omni.mdl.distill_and_bake", True)
 ext_manager.set_extension_enabled_immediate("omni.kit.usd.collect", True)
 
 import omni.usd
-from pxr import Usd, UsdShade, UsdUtils, UsdGeom, Sdf
 from omni.kit.asset_converter import AssetConverterContext, get_instance
-from omni.mdl.distill_and_bake import MdlDistillAndBake
 from omni.kit.usd.collect import Collector
+from omni.mdl.distill_and_bake import MdlDistillAndBake
+from pxr import Sdf, Usd, UsdShade
+
 # fmt: on
 
 
-def sanitize_materials(stage):
+def sanitize_materials(stage: Usd.Stage) -> list[Sdf.Path]:
     new_shader_paths = []
 
-    def _clamp01(value):
+    def _clamp01(value: float | None) -> float | None:
         if value is None:
             return None
         return max(0.0, min(1.0, float(value)))
 
-    def _get_scalar_input(shader, names):
+    def _get_scalar_input(shader: UsdShade.Shader, names: list[str]) -> float | None:
         for name in names:
             inp = shader.GetInput(name)
             if not inp or not inp.HasAuthoredValueOpinion():
@@ -120,7 +122,7 @@ def sanitize_materials(stage):
     return new_shader_paths
 
 
-async def convert_asset(input_path, output_path):
+async def convert_asset(input_path: str, output_path: str) -> bool:
     import tempfile
 
     context = omni.usd.get_context()

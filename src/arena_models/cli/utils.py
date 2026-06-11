@@ -1,10 +1,10 @@
 """Utility functions for CLI operations."""
 
+
 import typer
-from typing import Optional
 
 
-def safe_echo(message: str, ctx: Optional[typer.Context] = None):
+def safe_echo(message: str, ctx: typer.Context | None = None):
     """Echo a message only if not in silent mode."""
     if ctx and ctx.obj and ctx.obj.get("silent", False):
         return

@@ -1,7 +1,7 @@
 import enum
 
 
-class ModelFormat(str, enum.Enum):
+class ModelFormat(enum.StrEnum):
     OBJ = "obj"
     FBX = "fbx"
     USDZ = "usdz"

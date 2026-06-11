@@ -1,12 +1,13 @@
 from __future__ import annotations
-from pathlib import Path
 
 import contextlib
 import functools
 import io
 import math
 import os
+import types
 import typing
+from pathlib import Path
 
 import bpy
 import mathutils
@@ -16,7 +17,6 @@ from arena_models.utils.logging import get_logger
 
 from ..CoordinateSystem import CoordinateSystem
 from ..io_utils import capture_all_output
-
 from . import ModelFormat
 
 logger = get_logger("ModelConverter")
@@ -33,7 +33,7 @@ class _ModelConverterExt(typing.Protocol):
     def save(cls, path: str) -> None: ...
 
     @classmethod
-    def inline(cls, coordinates: CoordinateSystem, load: typing.Callable, save: typing.Callable) -> typing.Type[_ModelConverterExt]:
+    def inline(cls, coordinates: CoordinateSystem, load: typing.Callable, save: typing.Callable) -> type[_ModelConverterExt]:
         class Impl(cls):
             @classmethod
             def coordinates(cls) -> CoordinateSystem:
@@ -54,7 +54,7 @@ class ModelConverter:
     _reset: bool
     _coordinates: CoordinateSystem
 
-    def __enter__(self):
+    def __enter__(self) -> typing.Self:
         # Create temporary files to act as a bridge
         self.__ctx = capture_all_output(self._stdout, self._stderr)
         self.__ctx.__enter__()
@@ -63,14 +63,14 @@ class ModelConverter:
 
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: types.TracebackType | None):
         self.__ctx.__exit__(exc_type, exc_val, exc_tb)
 
     __exts: typing.ClassVar[dict[ModelFormat, _ModelConverterExt]] = {}
 
     @classmethod
-    def register(cls, *ext: ModelFormat):
-        def decorator(subcls: typing.Type[_ModelConverterExt]):
+    def register(cls, *ext: ModelFormat) -> typing.Callable[[type[_ModelConverterExt]], None]:
+        def decorator(subcls: type[_ModelConverterExt]):
             for e in ext:
                 cls.__exts[e.lower()] = subcls
 
@@ -154,8 +154,8 @@ class ModelConverter:
                     coords.append(world_corner)
         if not coords:
             return BoundingBox.empty()
-        min_corner = mathutils.Vector(map(min, zip(*coords)))
-        max_corner = mathutils.Vector(map(max, zip(*coords)))
+        min_corner = mathutils.Vector(map(min, zip(*coords, strict=True)))
+        max_corner = mathutils.Vector(map(max, zip(*coords, strict=True)))
         return BoundingBox(
             (
                 (min_corner.x, max_corner.x),

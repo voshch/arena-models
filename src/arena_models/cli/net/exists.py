@@ -1,4 +1,3 @@
-import os
 
 import typer
 
@@ -23,7 +22,7 @@ def exists_command(
     safe_echo("Existence check completed successfully!", ctx)
 
 
-def add_to_cmd(cmd):
+def add_to_cmd(cmd: typer.Typer):
     """Add exists command to the network command group."""
     cmd.command("exists")(exists_command)
 

@@ -65,7 +65,7 @@ DATABASE_NAME = ".db"
 ANNOTATION_NAME = "annotation.yaml"
 
 
-def convert_list_str(value: typing.Any) -> list[str]:
+def convert_list_str(value: object) -> list[str]:
     if value is None:
         return []
     if isinstance(value, list):

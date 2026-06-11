@@ -38,7 +38,7 @@ def fetch_command(
     safe_echo("Fetch completed successfully!", ctx)
 
 
-def add_to_cmd(cmd):
+def add_to_cmd(cmd: typer.Typer):
     """Add fetch command to the network command group."""
     cmd.command("fetch")(fetch_command)
 

@@ -3,11 +3,11 @@
 import typer
 
 from .build import add_to_cmd as add_build
-from .query import add_to_cmd as add_query
 from .listall import add_to_cmd as add_list
+from .query import add_to_cmd as add_query
 
 
-def add_to_cmd(cmd):
+def add_to_cmd(cmd: typer.Typer):
     """Add database command group to the main CLI."""
 
     db_app = typer.Typer(

@@ -1,7 +1,9 @@
 """List command for database operations."""
 
 import os
+
 import typer
+
 from ...impl import AssetType
 from ..utils import safe_echo
 
@@ -29,7 +31,7 @@ def list_cmd(
             f"Invalid asset_type '{asset_type}'. Valid options: {', '.join(valid_types)}",
             ctx,
         )
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     safe_echo(f"Searching for {asset_type_enum.name} in database {database_path}", ctx)
 
@@ -40,7 +42,7 @@ def list_cmd(
         typer.echo(os.path.join(database_path, item.path))
 
 
-def add_to_cmd(db_cmd):
+def add_to_cmd(db_cmd: typer.Typer):
     db_cmd.command("list")(list_cmd)
 
 

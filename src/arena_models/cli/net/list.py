@@ -31,7 +31,7 @@ def list_command(
     safe_echo(f"Found {len(seen)} asset(s).", ctx)
 
 
-def add_to_cmd(cmd):
+def add_to_cmd(cmd: typer.Typer):
     """Add list command to the network command group."""
     cmd.command("list")(list_command)
 

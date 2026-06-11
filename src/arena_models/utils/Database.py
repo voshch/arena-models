@@ -1,16 +1,14 @@
-import typing
 import uuid
 from pathlib import Path
 
 import chromadb
 import chromadb.api.models.Collection
+import chromadb.api.types
 from chromadb.utils import embedding_functions
-
-import re
 
 from ..impl import Annotation
 
-TextOrEmbedding = typing.Text | typing.List[float]
+TextOrEmbedding = str | list[float]
 
 
 class Database:
@@ -18,7 +16,7 @@ class Database:
         self._client = chromadb.PersistentClient(path=str(path))
         self._embedding_function = embedding_functions.DefaultEmbeddingFunction()
 
-    def collection(self, name) -> chromadb.api.models.Collection.Collection:
+    def collection(self, name: str) -> chromadb.api.models.Collection.Collection:
         """Get or create a ChromaDB collection."""
         return self._client.get_or_create_collection(
             name=name,
@@ -33,11 +31,11 @@ class Database:
 
         self.collection(collection).upsert(documents=[annotation.as_text], metadatas=[metadata], ids=[unique_id])
 
-    def list_all(self, collection: str):
+    def list_all(self, collection: str) -> chromadb.api.types.GetResult:
         """List all paths in the collection."""
         return self.collection(collection).get()
 
-    def query(self, collection: str, embedding: TextOrEmbedding, num_results: int = 1):
+    def query(self, collection: str, embedding: TextOrEmbedding, num_results: int = 1) -> chromadb.api.types.QueryResult:
         """Query the collection for similar embeddings."""
 
         if isinstance(embedding, str):
@@ -50,7 +48,7 @@ class Database:
             return self._embedding_function([value])[0]
         return value
 
-    def get_distance(self, text1: TextOrEmbedding, text2: TextOrEmbedding):
+    def get_distance(self, text1: TextOrEmbedding, text2: TextOrEmbedding) -> float:
         """Get distance between two vectors"""
         embedding_text_1 = self._to_embedding(text1)
         embedding_text_2 = self._to_embedding(text2)

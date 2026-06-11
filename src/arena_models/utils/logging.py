@@ -35,19 +35,19 @@ def initialize(silent: bool = False, log_level: str = "WARNING"):
     _logger = logging.getLogger()
 
 
-def get_manager():
+def get_manager() -> enlighten.Manager:
     """Get the global progress manager instance."""
     return _manager
 
 
-def get_logger(name: str | None = None):
+def get_logger(name: str | None = None) -> logging.Logger:
     """Get a logger instance. If name is provided, return a child logger."""
     if name:
         return _logger.getChild(name)
     return _logger
 
 
-def format_file_size(size_bytes):
+def format_file_size(size_bytes: float) -> str:
     """Format file size in human-readable format."""
     size_bytes = int(size_bytes)
 

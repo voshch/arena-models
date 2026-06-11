@@ -1,7 +1,7 @@
 import abc
+import select
 import subprocess
 from pathlib import Path
-import select
 
 from arena_models.utils import logging
 
@@ -45,6 +45,7 @@ class UsdBaker(abc.ABC):
         self.output_dir: Path = Path(output_dir).resolve()
         self.logger = logging.get_logger(self.__class__.__name__)
 
+    @abc.abstractmethod
     def start(self): ...
 
     def cleanup(self):
