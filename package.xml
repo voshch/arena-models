@@ -8,8 +8,9 @@
   <maintainer email="dev@voshch.dev">Vova Shcherbyna</maintainer>
   <license>Apache-2.0</license>
 
-  <build_depend>ament_cmake_venv</build_depend>
-  <build_depend>ament_cmake_venv_pyenv</build_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_venv</buildtool_depend>
+  <buildtool_depend>ament_cmake_venv_uv</buildtool_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
