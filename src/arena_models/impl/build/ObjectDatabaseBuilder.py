@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import enum
 import json
 import math
 import os
@@ -10,8 +9,8 @@ from pathlib import Path
 
 import attrs
 
-from arena_models.impl import Annotation, AssetType, convert_list_str
-from arena_models.utils.geom import BoundingBox
+from arena_models import semantic
+from arena_models.impl import AssetType, SpatialAnnotation
 from arena_models.utils.logging import get_logger
 from arena_models.utils.ModelConverter import ModelFormat
 from arena_models.utils.ModelConverter.UsdBaker import UsdBaker
@@ -22,107 +21,15 @@ logger = get_logger("build.object")
 
 
 @attrs.define
-class ObjectAnnotation(Annotation):
-    class Face(str, enum.Enum):
-        POS_X = "+x"
-        NEG_X = "-x"
-        POS_Y = "+y"
-        NEG_Y = "-y"
-        XY = "xy"
-
-        @property
-        def angle(self) -> float:
-            return {
-                ObjectAnnotation.Face.NEG_X: 0.0,
-                ObjectAnnotation.Face.NEG_Y: +90.0,
-                ObjectAnnotation.Face.POS_X: -180.0,
-                ObjectAnnotation.Face.XY: -135.0,
-                ObjectAnnotation.Face.POS_Y: -90.0,
-            }[self]
-
-    bounding_box: BoundingBox = attrs.field(factory=BoundingBox.empty)
-    material: list[str] = attrs.field(factory=list, converter=convert_list_str)
-    color: list[str] = attrs.field(factory=list, converter=convert_list_str)
-    hoi: list[str] = attrs.field(factory=list, converter=convert_list_str)
-    face: Face = attrs.field(default=Face.NEG_Y)
-    note: str = attrs.field(default="")
-
+class ObjectAnnotation(SpatialAnnotation):
     @property
     def as_text(self):
-        sections = [self.name_text, " ".join(self.material), " ".join(self.color), " ".join(self.tags), self.desc, self.note]
+        sections = [self.name_text, semantic.words(self.tags), self.desc, self.note]
         return ". ".join(section for section in sections if section)
 
     @property
-    def as_metadata(self):
-        return {
-            **super().as_metadata,
-            "material": ",".join(self.material),
-            "color": ",".join(self.color),
-            "hoi": ",".join(self.hoi),
-            "face": self.face.value,
-            "bounding_box": json.dumps(list(self.bounding_box)),
-            "width": self.bounding_box.max_x - self.bounding_box.min_x,
-            "depth": self.bounding_box.max_y - self.bounding_box.min_y,
-            "height": self.bounding_box.max_z - self.bounding_box.min_z,
-            "volume": self.bounding_box.volume,
-            "note": self.note,
-        }
-
-    @classmethod
-    def _parse_face(cls, value: typing.Any) -> "ObjectAnnotation.Face":
-        if value is None or value == "":
-            return cls.Face.NEG_Y
-
-        if isinstance(value, cls.Face):
-            return value
-
-        # Preferred format: enum value strings like "-y", "+x", "xy"
-        if isinstance(value, str):
-            try:
-                return cls.Face(value)
-            except ValueError:
-                pass
-
-            # Backward-compatible: some databases stored numeric angles as strings
-            try:
-                value = float(value)
-            except ValueError:
-                return cls.Face.NEG_Y
-
-        # Backward-compatible: numeric angle values (legacy)
-        if isinstance(value, (int, float)):
-            angle_to_face = {
-                0.0: cls.Face.NEG_X,
-                90.0: cls.Face.NEG_Y,
-                -180.0: cls.Face.POS_X,
-                -135.0: cls.Face.XY,
-                -90.0: cls.Face.POS_Y,
-            }
-            return angle_to_face.get(float(value), cls.Face.NEG_Y)
-
-        return cls.Face.NEG_Y
-
-    @classmethod
-    def from_metadata(cls, metadata: dict):
-        return cls(
-            name=metadata.get("name", ""),
-            path=metadata.get("path", ""),
-            desc=metadata.get("desc", ""),
-            tags=tags.split(",") if (tags := metadata.get("tags")) else [],
-            material=material.split(",")
-            if (material := metadata.get("material"))
-            else [],
-            color=color.split(",") if (color := metadata.get("color")) else [],
-            hoi=hoi.split(",") if (hoi := metadata.get("hoi")) else [],
-            face=cls._parse_face(metadata.get("face")),
-            note=metadata.get("note", ""),
-            bounding_box=BoundingBox(map(tuple, json.loads(bounding_box)))
-            if (bounding_box := metadata.get("bounding_box"))
-            else BoundingBox.empty(),
-        )
-
-    @property
     def as_procthor(self) -> dict:
+        hoi = self.facets.get("hoi", [])
         return {
             "assetId": self.path,
             "bounding_box": {
@@ -132,9 +39,9 @@ class ObjectAnnotation(Annotation):
             },
             "objectType": self.desc,
             "tags": self.tags,
-            "primaryProperty": self.hoi[0] if self.hoi else "",
-            "secondaryProperties": self.hoi[1:],
-            "materials": [[material, material] for material in self.material],
+            "primaryProperty": hoi[0] if hoi else "",
+            "secondaryProperties": hoi[1:],
+            "materials": [[material, material] for material in self.facets.get("material", [])],
             "note": self.note,
         }
 

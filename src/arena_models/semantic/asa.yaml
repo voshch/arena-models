@@ -1,0 +1,110 @@
+asa: 1
+
+# labels grammar: every tag is key::path::value, lowercase [a-z0-9_]+ segments,
+# split on '::', last segment is the value, the rest is the facet key.
+# cardinality and vocabulary are lint dimensions, never hard gates.
+
+facets:
+  domain:
+    applies: [object, material, human]
+    cardinality: multi
+    recommend: true
+    open: true
+    embed: true
+    values: [common, hospital, office, residential, warehouse]
+
+  kind:
+    applies: [object, material]
+    cardinality: single
+    recommend: true
+    open: true
+    embed: true
+    values:
+      object: [appliance, bag, barrier, bed, bench, bin, box, cabinet, cart,
+               chair, container, cookware, counter, curtain, decor, desk,
+               dispenser, equipment, food, lamp, mirror, plant, safety,
+               sanitary, shelf, sign, sofa, stool, structure, table, tableware]
+      material: [asphalt, brick, ceramic, composite, concrete, fabric, gem,
+                 glass, gravel, ground, leather, light, metal, paint, paper,
+                 plaster, plastic, rubber, stone, tile, water, wood]
+
+  mount:
+    applies: [object]
+    cardinality: multi
+    open: false
+    embed: false
+    values: [ceiling, floor, surface, wall]
+
+  room:
+    applies: [object]
+    cardinality: multi
+    open: true
+    embed: true
+    values: [bathroom, bedroom, kitchen, living_room]
+
+  # interaction affordances, tag order is meaningful: the first hoi tag is the
+  # primary property in the ProcTHOR export
+  hoi:
+    applies: [object]
+    cardinality: multi
+    open: true
+    embed: true
+    values: [lie, see, sit, touch]
+
+  color:
+    applies: [object, material]
+    cardinality: multi
+    open: true
+    embed: true
+    values: [beige, black, blue, bronze, brown, copper, cream, gold, gray,
+             green, metallic, natural, orange, red, silver, tan, transparent,
+             white, yellow]
+
+  material:
+    applies: [object]
+    cardinality: multi
+    open: true
+    embed: true
+    values: [canvas, ceramic, fabric, glass, leather, metal, plastic,
+             porcelain, steel, stone, wood]
+
+  human::gender:
+    applies: [human]
+    cardinality: single
+    recommend: true
+    open: false
+    embed: true
+    values: [female, male]
+
+  human::ethnicity:
+    applies: [human]
+    cardinality: single
+    recommend: true
+    open: true
+    embed: true
+    values: [african, asian, caucasian]
+
+  human::age:
+    applies: [human]
+    cardinality: single
+    recommend: true
+    open: false
+    embed: true
+    values: [young, middleage, old]
+
+  human::role:
+    applies: [human]
+    cardinality: single
+    recommend: true
+    open: true
+    embed: true
+    values: [casual, doctor, nurse, office, patient, resident, worker]
+
+  origin:
+    applies: [object, material, human]
+    cardinality: single
+    open: true
+    embed: false
+    values: [makehuman, procthor]
+
+machines: {}   # chapter reserved

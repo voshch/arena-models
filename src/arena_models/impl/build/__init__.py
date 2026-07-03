@@ -62,9 +62,7 @@ class OptionRegistry:
             def __call__(self, name, *args, **kwargs):
                 if name in self._registry:
                     func = self._registry[name]
-                    return func.__get__(self._instance, type(self._instance)).__call__(
-                        *args, **kwargs
-                    )
+                    return func.__get__(self._instance, type(self._instance)).__call__(*args, **kwargs)
 
         return BoundRegistry(self._registry, instance)
 
@@ -73,17 +71,11 @@ AnnotationT = typing.TypeVar("AnnotationT", bound=Annotation)
 
 
 class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
-    __registry: typing.ClassVar[
-        dict[AssetType, typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]]
-    ] = {}
+    __registry: typing.ClassVar[dict[AssetType, typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]]] = {}
     _type: typing.ClassVar[AssetType]
 
     @classmethod
-    def register(
-        cls, type_: AssetType, /
-    ) -> typing.Callable[
-        [typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]], None
-    ]:
+    def register(cls, type_: AssetType, /) -> typing.Callable[[typing.Callable[[AssetType], typing.Type[DatabaseBuilder]]], None]:
         def wrapper(
             builder_cls: typing.Callable[[AssetType], typing.Type[DatabaseBuilder]],
         ) -> None:
@@ -177,9 +169,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
         def skip_existing(annotation: AnnotationT) -> bool:
             dest_path = self._dest_path(annotation)
 
-            if (
-                dest_path / ANNOTATION_NAME
-            ).exists() and self._overwrite == OverwriteMode.SKIP:
+            if (dest_path / ANNOTATION_NAME).exists() and self._overwrite == OverwriteMode.SKIP:
                 logger.info("Skipping existing entity at %s", annotation.path)
                 nonlocal skipped_count
                 skipped_count += 1
@@ -207,9 +197,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                         fn()
 
             status_bar.update(stage="Processing")
-            progress = manager.counter(
-                total=len(queue), desc="Entities", unit="entities", leave=False
-            )
+            progress = manager.counter(total=len(queue), desc="Entities", unit="entities", leave=False)
 
             with progress:
                 success = progress.add_subcounter("green")
@@ -268,9 +256,7 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                         fn()
 
             # actually looked these up by hand, LLMs won't replace me just yet
-            status_bar.update(
-                stage=f"Done ✓{success.count} ✗{failure.count} ➤{skipped.count}"
-            )
+            status_bar.update(stage=f"Done ✓{success.count} ✗{failure.count} ➤{skipped.count}")
 
         status_bar.close()
         logger.info("Database build complete.")
@@ -308,16 +294,12 @@ class DatabaseBuilder(abc.ABC, typing.Generic[AnnotationT]):
                 dirs.clear()
                 annotation = self.read_annotation_file(Path(root))
                 if isinstance(annotation, Exception):
-                    logger.warning(
-                        "Failed to read annotation file in %s: %s", root, annotation
-                    )
+                    logger.warning("Failed to read annotation file in %s: %s", root, annotation)
                 elif annotation is not None:
                     yield annotation
 
     @abc.abstractmethod
-    def process_entity(
-        self, annotation: AnnotationT, dest: Path
-    ) -> AnnotationT | None: ...
+    def process_entity(self, annotation: AnnotationT, dest: Path) -> AnnotationT | None: ...
 
     def _target_path(self, annotation: AnnotationT) -> Path:
         return Path(annotation.path).relative_to(self.input_path)
@@ -338,3 +320,10 @@ def lazy_object(type_: AssetType) -> typing.Type[DatabaseBuilder]:
     from .ObjectDatabaseBuilder import ObjectDatabaseBuilder
 
     return ObjectDatabaseBuilder
+
+
+@DatabaseBuilder.register(AssetType.HUMAN)
+def lazy_human(type_: AssetType) -> typing.Type[DatabaseBuilder]:
+    from .HumanDatabaseBuilder import HumanDatabaseBuilder
+
+    return HumanDatabaseBuilder

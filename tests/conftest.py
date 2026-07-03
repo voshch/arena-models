@@ -1,22 +1,19 @@
 import pytest
 
-from arena_models.impl import DATABASE_NAME
-from arena_models.impl.build.MaterialDatabaseBuilder import MaterialAnnotation
+from arena_models.impl import DATABASE_NAME, Annotation
 from arena_models.impl.build.ObjectDatabaseBuilder import ObjectAnnotation
 from arena_models.utils.Database import Database
 from arena_models.utils.geom import BoundingBox
 
 MATERIALS = [
-    MaterialAnnotation(
+    Annotation(
         name="OakWood",
         path="materials/oak",
         desc="light brown oak wood planks",
         tags=["wood"],
     ),
-    MaterialAnnotation(
-        name="RedBrick", path="materials/brick", desc="red clay brick wall"
-    ),
-    MaterialAnnotation(
+    Annotation(name="RedBrick", path="materials/brick", desc="red clay brick wall"),
+    Annotation(
         name="SteelPlate", path="materials/steel", desc="brushed steel metal plate"
     ),
 ]

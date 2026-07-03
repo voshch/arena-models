@@ -1,7 +1,15 @@
 from __future__ import annotations
 
+import typing
+
 
 class BoundingBox(tuple[tuple[float, float], tuple[float, float], tuple[float, float]]):
+    def __new__(cls, sides: typing.Iterable[typing.Iterable[float]]) -> typing.Self:
+        pairs = tuple((low, high) for low, high in sides)
+        if len(pairs) != 3:
+            raise ValueError(f"BoundingBox needs exactly 3 sides, got {len(pairs)}")
+        return super().__new__(cls, pairs)
+
     @property
     def min_x(self) -> float:
         return self[0][0]

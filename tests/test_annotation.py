@@ -1,31 +1,30 @@
-from arena_models.impl.build.MaterialDatabaseBuilder import MaterialAnnotation
+from arena_models.impl import Annotation
 
 
 def test_metadata_roundtrip():
-    annotation = MaterialAnnotation(
+    annotation = Annotation(
         name="OakWood_01",
         path="materials/oak",
         desc="oak wood planks",
         tags=["wood", "floor"],
-        color=["brown"],
     )
-    restored = MaterialAnnotation.from_metadata(annotation.as_metadata)
+    restored = Annotation.from_metadata(annotation.as_metadata)
     assert restored == annotation
 
 
 def test_name_text_splits_and_strips_counter():
-    annotation = MaterialAnnotation(name="OakWood_01", path="materials/oak")
+    annotation = Annotation(name="OakWood_01", path="materials/oak")
     assert annotation.name_text == "Oak Wood"
 
 
 def test_name_text_keeps_meaningful_digits():
-    assert MaterialAnnotation(name="Table_200cm", path="m/t").name_text == "Table 200cm"
-    assert MaterialAnnotation(name="01", path="m/01").name_text == "01"
+    assert Annotation(name="Table_200cm", path="m/t").name_text == "Table 200cm"
+    assert Annotation(name="01", path="m/01").name_text == "01"
 
 
 def test_as_text_includes_name_and_fields():
-    annotation = MaterialAnnotation(
-        name="OakWood_01", path="materials/oak", tags=["floor"], color=["brown"]
+    annotation = Annotation(
+        name="OakWood_01", path="materials/oak", tags=["floor", "color::brown"]
     )
     text = annotation.as_text
     assert "Oak Wood" in text
@@ -34,5 +33,33 @@ def test_as_text_includes_name_and_fields():
 
 
 def test_as_text_skips_empty_parts():
-    annotation = MaterialAnnotation(name="Brick", path="materials/brick")
+    annotation = Annotation(name="Brick", path="materials/brick")
     assert annotation.as_text == "Brick"
+
+
+def test_as_metadata_stamps_asa_and_defaults_to_zero():
+    assert Annotation(name="Brick", path="materials/brick").as_metadata["asa"] == 0
+    stamped = Annotation(name="Brick", path="materials/brick", asa=1)
+    assert stamped.as_metadata["asa"] == 1
+    assert Annotation.from_metadata(stamped.as_metadata).asa == 1
+
+
+def test_as_metadata_adds_facet_columns():
+    annotation = Annotation(
+        name="Brick",
+        path="materials/brick",
+        tags=["domain::office", "kind::brick", "legacybare"],
+    )
+    metadata = annotation.as_metadata
+    assert metadata["domain"] == "office"
+    assert metadata["kind"] == "brick"
+    assert "legacybare" not in metadata
+
+
+def test_facets_property_groups_by_key():
+    annotation = Annotation(
+        name="Brick",
+        path="materials/brick",
+        tags=["domain::office", "domain::hospital"],
+    )
+    assert annotation.facets == {"domain": ["office", "hospital"]}

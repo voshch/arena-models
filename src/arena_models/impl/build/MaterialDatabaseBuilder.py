@@ -6,7 +6,7 @@ import shutil
 
 import attrs
 
-from arena_models.impl import ANNOTATION_NAME, Annotation, AssetType, convert_list_str
+from arena_models.impl import ANNOTATION_NAME, Annotation, AssetType
 from arena_models.utils.logging import get_logger
 
 from . import DatabaseBuilder, OptionRegistry
@@ -16,35 +16,7 @@ logger = get_logger("build.material")
 
 @attrs.define
 class MaterialAnnotation(Annotation):
-    color: list[str] = attrs.field(factory=list, converter=convert_list_str)
-
-    @property
-    def as_text(self):
-        sections = [self.name_text, " ".join(self.color), " ".join(self.tags), self.desc]
-        return ". ".join(section for section in sections if section)
-
-    @property
-    def as_metadata(self):
-        return {
-            **super().as_metadata,
-            "color": ",".join(self.color),
-        }
-
-    @classmethod
-    def from_metadata(cls, metadata: dict):
-        return cls(
-            name=metadata.get("name", ""),
-            path=metadata.get("path", ""),
-            desc=metadata.get("desc", ""),
-            tags=tags.split(",") if (tags := metadata.get("tags")) else [],
-            color=color.split(",") if (color := metadata.get("color")) else [],
-        )
-
-    @property
-    def as_procthor(self) -> dict:
-        return {
-            "todo": None,
-        }
+    pass
 
 
 class MaterialDatabaseBuilder(DatabaseBuilder[MaterialAnnotation]):
@@ -84,7 +56,7 @@ class MaterialDatabaseBuilder(DatabaseBuilder[MaterialAnnotation]):
         self._procthor = {}
         self._pipeline.append(
             lambda annotation: self._procthor.update(
-                {annotation.path.replace(os.sep, "_"): annotation.as_procthor}
+                {annotation.path.replace(os.sep, "_"): {"todo": None}}
             )
         )
 

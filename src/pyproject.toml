@@ -41,6 +41,9 @@ Repository = "https://github.com/arena-models/arena-models"
 where = ["."]
 include = ["arena_models*"]
 
+[tool.setuptools.package-data]
+arena_models = ["semantic/asa.yaml"]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 320

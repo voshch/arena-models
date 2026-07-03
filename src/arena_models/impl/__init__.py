@@ -3,12 +3,14 @@
 import contextlib
 import contextvars
 import enum
+import json
 import re
 import typing
 
 import attrs
 import cattrs.preconf.pyyaml
 
+from arena_models import semantic
 from arena_models.utils.geom import BoundingBox
 from arena_models.utils.logging import get_logger
 
@@ -60,6 +62,7 @@ converter.register_unstructure_hook(BoundingBox, _unstructure_bounding_box)
 class AssetType(enum.Enum):
     OBJECT = "object"
     MATERIAL = "material"
+    HUMAN = "human"
 
 
 DATABASE_NAME = ".db"
@@ -70,7 +73,7 @@ def convert_list_str(value: object) -> list[str]:
     if value is None:
         return []
     if isinstance(value, list):
-        return value
+        return [str(item) for item in value]
     return [str(value)]
 
 
@@ -80,9 +83,12 @@ class Annotation:
     path: str
     desc: str = ""
     tags: list[str] = attrs.field(factory=list, converter=convert_list_str)
+    asa: int = 0
 
     @property
-    def as_text(self) -> str: ...
+    def as_text(self) -> str:
+        sections = [self.name_text, semantic.words(self.tags), self.desc]
+        return ". ".join(section for section in sections if section)
 
     @property
     def name_text(self) -> str:
@@ -92,12 +98,19 @@ class Annotation:
         return re.sub(r"(?:\s+\d+)+$", "", text)
 
     @property
+    def facets(self) -> dict[str, list[str]]:
+        """Tags grouped by ASA facet key, see arena_models.semantic."""
+        return semantic.parse_tags(self.tags)
+
+    @property
     def as_metadata(self) -> dict:
         return {
             "name": self.name,
             "path": self.path,
             "desc": self.desc,
             "tags": ",".join(self.tags),
+            "asa": self.asa,
+            **semantic.metadata_columns(self.tags),
         }
 
     @classmethod
@@ -106,5 +119,91 @@ class Annotation:
             name=metadata["name"],
             path=metadata["path"],
             desc=metadata.get("desc", ""),
-            tags=metadata.get("tags", []),
+            tags=tags.split(",") if (tags := metadata.get("tags")) else [],
+            asa=int(metadata.get("asa", 0)),
+        )
+
+
+class Face(enum.StrEnum):
+    POS_X = "+x"
+    NEG_X = "-x"
+    POS_Y = "+y"
+    NEG_Y = "-y"
+    XY = "xy"
+
+    @property
+    def angle(self) -> float:
+        return {
+            Face.NEG_X: 0.0,
+            Face.NEG_Y: +90.0,
+            Face.POS_X: -180.0,
+            Face.XY: -135.0,
+            Face.POS_Y: -90.0,
+        }[self]
+
+
+@attrs.define
+class SpatialAnnotation(Annotation):
+    bounding_box: BoundingBox = attrs.field(factory=BoundingBox.empty)
+    face: Face = attrs.field(default=Face.NEG_Y)
+    note: str = attrs.field(default="")
+
+    @classmethod
+    def _parse_face(cls, value: str | float | Face | None) -> Face:
+        if value is None or value == "":
+            return Face.NEG_Y
+
+        if isinstance(value, Face):
+            return value
+
+        # Preferred format: enum value strings like "-y", "+x", "xy"
+        if isinstance(value, str):
+            try:
+                return Face(value)
+            except ValueError:
+                pass
+
+            # Backward-compatible: some databases stored numeric angles as strings
+            try:
+                value = float(value)
+            except ValueError:
+                return Face.NEG_Y
+
+        # Backward-compatible: numeric angle values (legacy)
+        if isinstance(value, (int, float)):
+            angle_to_face = {
+                0.0: Face.NEG_X,
+                90.0: Face.NEG_Y,
+                -180.0: Face.POS_X,
+                -135.0: Face.XY,
+                -90.0: Face.POS_Y,
+            }
+            return angle_to_face.get(float(value), Face.NEG_Y)
+
+        return Face.NEG_Y
+
+    @property
+    def as_metadata(self) -> dict:
+        return {
+            **super().as_metadata,
+            "face": self.face.value,
+            "bounding_box": json.dumps(list(self.bounding_box)),
+            "width": self.bounding_box.max_x - self.bounding_box.min_x,
+            "depth": self.bounding_box.max_y - self.bounding_box.min_y,
+            "height": self.bounding_box.max_z - self.bounding_box.min_z,
+            "volume": self.bounding_box.volume,
+            "note": self.note,
+        }
+
+    @classmethod
+    def from_metadata(cls, metadata: dict) -> typing.Self:
+        return cls(
+            name=metadata.get("name", ""),
+            path=metadata.get("path", ""),
+            desc=metadata.get("desc", ""),
+            tags=tags.split(",") if (tags := metadata.get("tags")) else [],
+            asa=int(metadata.get("asa", 0)),
+            bounding_box=BoundingBox(json.loads(bounding_box)) if (bounding_box := metadata.get("bounding_box")) else BoundingBox.empty(),
+            face=cls._parse_face(metadata.get("face")),
+            note=metadata.get("note", ""),
         )

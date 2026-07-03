@@ -1,16 +1,13 @@
-from arena_models.impl import DATABASE_NAME
-from arena_models.impl.build.MaterialDatabaseBuilder import MaterialAnnotation
+from arena_models.impl import DATABASE_NAME, Annotation
 from arena_models.utils.Database import Database
 
 
 def test_store_upserts_by_path(tmp_path):
     db = Database(tmp_path / DATABASE_NAME)
-    db.store(
-        "material", MaterialAnnotation(name="OakWood", path="materials/oak", desc="oak")
-    )
+    db.store("material", Annotation(name="OakWood", path="materials/oak", desc="oak"))
     db.store(
         "material",
-        MaterialAnnotation(name="OakWood", path="materials/oak", desc="updated oak"),
+        Annotation(name="OakWood", path="materials/oak", desc="updated oak"),
     )
 
     result = db.list_all("material")
